@@ -1,2 +1,2 @@
-# NUSTimetableOptimiser
-NUS Timetable Optimiser
+# NUSTimetablePlanner
+NUS Timetable Planner
