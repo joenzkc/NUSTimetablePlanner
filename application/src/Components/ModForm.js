@@ -2,38 +2,36 @@ import React, {useState} from 'react'
 import IconButton from '@material-ui/core/IconButton'
 import SearchIcon from '@material-ui/icons/Search'
 
-const ModForm = ({mods, setMods}) => {
+const ModForm = ({searchTerm, setSearchTerm, setDisplaySearchResults}) => {
     return (
     <div id="ModForm">
-        <h2>Select your mods</h2>
-        <ModInput mods={mods} setMods={setMods} />
+        <ModInput 
+        searchTerm={searchTerm} 
+        setSearchTerm={setSearchTerm} 
+        setDisplaySearchResults={setDisplaySearchResults}/>
     </div>
     );
 }
 
-const ModInput = ({mods, setMods}) => {
+const ModInput = ({searchTerm, setSearchTerm, setDisplaySearchResults}) => {
     const defaultValue = "search for your mod"
-    const [newMod, setNewMod] = useState(
-        defaultValue
-    )
+    
+    const [newSearchTerm, setNewSearchTerm] = useState('')
+
     const handleSubmit= (event) => {
         event.preventDefault();
-        setMods([
-            ...mods, 
-            newMod
-        ])
-        setNewMod(defaultValue)
-        console.log(mods)
+        setDisplaySearchResults(true);
+        setSearchTerm(newSearchTerm)
     }
 
     const handleChange = (event) => {
-        setNewMod(event.target.value)
+        setNewSearchTerm(event.target.value)
     }
 
     return (
         <form onSubmit={handleSubmit}>
             Mod: 
-            <input value={newMod} onChange={handleChange}/>
+            <input onChange={handleChange}/>
             <IconButton onClick={handleSubmit}>
                 <SearchIcon/>
             </IconButton>

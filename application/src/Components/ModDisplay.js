@@ -1,10 +1,10 @@
 import React, { useState } from 'react'
 
 import IconButton from '@material-ui/core/IconButton'
-import SearchIcon from '@material-ui/icons/Search'
 import DeleteIcon from '@material-ui/icons/Delete'
 
 const ModDisplay = ({mods, setMods}) => {
+    console.log(mods)
     return (
         <ul id="ModDisplay">
             {mods.map(Display(setMods)(mods))}
