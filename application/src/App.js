@@ -20,25 +20,33 @@ function App() {
   const [searchTerm, setSearchTerm] = useState('');
   const [displaySearchResults, setDisplaySearchResults] = useState(false);
   const [displayConstraintForm, setDisplayConstraintForm] = useState(false);
+  const [constraints, setConstraints] = useState([])
 
   return (
     <div className="App">
       <Header />
       <TimeForm time={time} setTime={setTime} />
-      <SplitPane split="vertical" minSize={50} defaultSize={500}>
+      <SplitPane split="vertical" minSize={50} defaultSize={400}>
         <div>
           <h2>Select your mods</h2>
-          <ModForm searchTerm={searchTerm} setSearchTerm={setSearchTerm} setDisplaySearchResults={setDisplaySearchResults}/>
+          <ModForm 
+          searchTerm={searchTerm} 
+          setSearchTerm={setSearchTerm} 
+          setDisplaySearchResults={setDisplaySearchResults} 
+          setDisplayConstraintForm={setDisplayConstraintForm}/>
           <ModDisplay mods={mods} setMods={setMods} />
           <ModSubmit mods={mods} setDisplaySearchResults={setDisplaySearchResults} setDisplayConstraintForm={setDisplayConstraintForm}/>
           <Footer />
         </div>
         <div>
           <SearchResults searchTerm={searchTerm} setMods={setMods} mods={mods} displaySearchResults={displaySearchResults}/>
-          <ConstraintForm displayConstraintForm={displayConstraintForm}/>
+          <ConstraintForm 
+          displayConstraintForm={displayConstraintForm} 
+          mods={mods} 
+          constraints={constraints} 
+          setConstraints={setConstraints}/>
         </div>
       </SplitPane>
-
     </div>
   );
 }

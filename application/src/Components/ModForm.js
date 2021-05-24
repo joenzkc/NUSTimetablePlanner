@@ -2,18 +2,19 @@ import React, {useState} from 'react'
 import IconButton from '@material-ui/core/IconButton'
 import SearchIcon from '@material-ui/icons/Search'
 
-const ModForm = ({searchTerm, setSearchTerm, setDisplaySearchResults}) => {
+const ModForm = ({searchTerm, setSearchTerm, setDisplaySearchResults, setDisplayConstraintForm}) => {
     return (
     <div id="ModForm">
         <ModInput 
         searchTerm={searchTerm} 
         setSearchTerm={setSearchTerm} 
-        setDisplaySearchResults={setDisplaySearchResults}/>
+        setDisplaySearchResults={setDisplaySearchResults}
+        setDisplayConstraintForm={setDisplayConstraintForm}/>
     </div>
     );
 }
 
-const ModInput = ({searchTerm, setSearchTerm, setDisplaySearchResults}) => {
+const ModInput = ({searchTerm, setSearchTerm, setDisplaySearchResults, setDisplayConstraintForm}) => {
     const defaultValue = "search for your mod"
     
     const [newSearchTerm, setNewSearchTerm] = useState('')
@@ -21,6 +22,7 @@ const ModInput = ({searchTerm, setSearchTerm, setDisplaySearchResults}) => {
     const handleSubmit= (event) => {
         event.preventDefault();
         setDisplaySearchResults(true);
+        setDisplayConstraintForm(false);
         setSearchTerm(newSearchTerm)
     }
 
