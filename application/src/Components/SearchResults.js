@@ -5,7 +5,6 @@ import BlockIcon from '@material-ui/icons/Block';
 
 const SearchResults = ({searchTerm, setMods, mods, displaySearchResults}) => {
     if (!displaySearchResults) {
-        console.log("whether results are displayed", displaySearchResults)
         return (<div></div>);
     }
 

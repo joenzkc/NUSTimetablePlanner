@@ -26,9 +26,10 @@ function App() {
     <div className="App">
       <Header />
       <TimeForm time={time} setTime={setTime} />
+      <h2>Select your mods</h2>
       <SplitPane split="vertical" minSize={50} defaultSize={400}>
         <div>
-          <h2>Select your mods</h2>
+
           <ModForm 
           searchTerm={searchTerm} 
           setSearchTerm={setSearchTerm} 
