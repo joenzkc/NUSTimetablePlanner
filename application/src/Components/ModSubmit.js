@@ -1,17 +1,22 @@
-import React from 'react'
+import React from "react";
+import Button from "react-bootstrap/Button";
+import "bootstrap/dist/css/bootstrap.min.css";
 
-const ModSubmit = ({mods, setDisplaySearchResults, setDisplayConstraintForm}) => {
-    const handleSubmit= () => {
-        setDisplaySearchResults(false)
-        setDisplayConstraintForm(true)
-    }
-    
-    return (
-        <button id="SubmitMod" onClick={handleSubmit}>
-            Submit mods!
-        </button>
-    );
-}
+const ModSubmit = ({
+  mods,
+  setDisplaySearchResults,
+  setDisplayConstraintForm,
+}) => {
+  const handleSubmit = () => {
+    setDisplaySearchResults(false);
+    setDisplayConstraintForm(true);
+  };
 
+  return (
+    <Button id="SubmitMod" onClick={handleSubmit}>
+      Submit mods!
+    </Button>
+  );
+};
 
-export default ModSubmit
+export default ModSubmit;
