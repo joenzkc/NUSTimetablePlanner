@@ -9,6 +9,7 @@ import ModDisplay from "./Components/ModDisplay";
 import ModSubmit from "./Components/ModSubmit";
 import SearchResults from "./Components/SearchResults";
 import ConstraintForm from "./Components/ConstraintForm";
+import ConstraintDisplay from "./Components/ConstraintDisplay";
 import { Container, Row, Col, Form } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 
@@ -49,18 +50,23 @@ function App() {
               />
             </Col>
             <Col>
+              {displaySearchResults && 
               <SearchResults
                 searchTerm={searchTerm}
                 setMods={setMods}
                 mods={mods}
-                displaySearchResults={displaySearchResults}
               />
+              }
+              {displayConstraintForm &&               
               <ConstraintForm
-                displayConstraintForm={displayConstraintForm}
                 mods={mods}
                 constraints={constraints}
                 setConstraints={setConstraints}
-              />
+              />}
+              {displayConstraintForm && 
+              <ConstraintDisplay
+              constraints={constraints}
+              setConstraints={setConstraints}/>}
             </Col>
           </Row>
         </Form>

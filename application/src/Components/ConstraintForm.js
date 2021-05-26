@@ -1,55 +1,11 @@
 import React, { Fragment, useState } from 'react'
+import Constraints from './Constraints'
 
-//htmlCode should be substituted by a function that can generate 
-//the code using the information from NUSMods. Eg. (information from NUSMogs) => html code
-const dummyConstraints = [
-    {id: 0, 
-    type: "Fix a class", 
-    htmlCode:   setTime => 
-                <select onChange={handleChangeTime(setTime)}>
-                    <option>9am</option>
-                    <option>10am</option>
-                    <option>11am</option>
-                </select>}, 
-    {id: 1, 
-    type: "No lessons before",
-    htmlCode:   setTime => 
-                <select onChange={handleChangeTime(setTime)}>
-                    <option>12noon</option>
-                    <option>1pm</option>
-                </select>},
-    {id: 2, 
-    type: "End as early as possible",
-    htmlCode:   setTime => 
-                <select>
-                    <option>NIL</option>
-                </select>}, 
-    {id: 3, 
-    type: "No lessons on", 
-    htmlCode:   setTime => 
-                <select onChange={handleChangeTime}>
-                    <option>Monday</option>
-                </select>}, 
-    {id: 4, 
-    type: "No lessons from __ to __", 
-    htmlCode:   setTime => 
-                <Fragment>
-                <select>
-                    <option>1am</option>
-                </select>
-                <select>
-                    <option>2am</option>
-                </select>
-                </Fragment>
-                }
-]
+import { Container, Row, Col, Form, FormGroup, ListGroup, Dropdown } from "react-bootstrap";
+import "bootstrap/dist/css/bootstrap.min.css";
+import DropdownButton from 'react-bootstrap/DropdownButton';
 
-const handleChangeTime = setTime => 
-    (event) => {
-        setTime(event.target.value)
-    }
-
-const ConstraintForm = ({displayConstraintForm, mods, constraints, setConstraints}) => {
+const ConstraintForm = ({mods, constraints, setConstraints}) => {
     const [type, setType] = useState(0)
     //dunno why by default it is undefined
     const [mod, setMod] = useState(mods[0])
@@ -57,30 +13,46 @@ const ConstraintForm = ({displayConstraintForm, mods, constraints, setConstraint
     const [time, setTime] = useState("9am")
     const defaultMod = mods[0]
 
-    if (!displayConstraintForm) {
-        return (<div></div>);
-    } else {
-        return (
+    // <Dropdown onSelect={handleChange}>
+    //   <Dropdown.Toggle variant="Primary" id="dropdown-basic">
+    //     Year
+    //   </Dropdown.Toggle>
+    //   <Dropdown.Menu>
+    //     <Dropdown.Item>2021</Dropdown.Item>
+    //     <Dropdown.Item>2020</Dropdown.Item>
+    //   </Dropdown.Menu>
+    // </Dropdown>
+
+    return (
         <div>
             <h2>
                 Select your constraints
             </h2>
-            <form onSubmit={handleSubmit(setConstraints)(constraints)(type)(mod)(time)(defaultMod)}>
-                Mod: 
+            <Form onSubmit={handleSubmit(setConstraints, constraints)(type, mod, time, defaultMod)}>
+                <FormGroup>
+                {/* Constraint:
+                <select onChange={handleConstraintTypeChange(setType)}>
+                    {Constraints.map(ConstraintDisplay)}
+                </select> */}
+                <Dropdown onClick={handleConstraintTypeChange(setType)}>
+                <Dropdown.Toggle variant="Primary" id="dropdown-basic">
+                    Constraint: 
+                </Dropdown.Toggle>
+                <Dropdown.Menu>
+                    {Constraints.map(ConstraintDisplay)}
+                </Dropdown.Menu>
+                </Dropdown>
+                {/* Mod: 
                 <select onChange={handleModChange(setMod)}>
                     {mods.map(ModDisplay)}
                 </select>
-                Constraint:
-                <select onChange={handleConstraintTypeChange(setType)}>
-                    {dummyConstraints.map(ConstraintDisplay)}
-                </select>
-                {dummyConstraints[type].htmlCode(setTime)}
-                <button type="submit">
+                {Constraints[type].htmlCode(setTime)}
+                <button type="submit" onClick={handleSubmit(setConstraints, constraints)(type, mod, time, defaultMod)}>
                     submit constraints
-                </button>
-            </form>
+                </button> */}
+                </FormGroup>
+            </Form>
         </div>);
-    }
 }
 
 const handleModChange = setMod => 
@@ -89,15 +61,10 @@ const handleModChange = setMod =>
         setMod(mod)
     }
 
-const handleSubmit = setConstraints => 
-    constraints => 
-        type => 
-        mod => 
-        time => 
-        defaultMod => 
+const handleSubmit = (setConstraints, constraints) => 
+        (type, mod, time, defaultMod) => 
         (event) => 
             {   
-                console.log(mod)
                 event.preventDefault();
                 if (typeof mod === 'undefined') {
                     setConstraints([
@@ -120,9 +87,11 @@ const handleSubmit = setConstraints =>
                 }
             }
 
+
+
 const handleConstraintTypeChange = setType =>
     (event) => {
-        const type = dummyConstraints.map(x => x.type).findIndex(x => x === event.target.value)
+        const type = Constraints.map(x => x.type).findIndex(x => x === event.target.value)
         setType(type)
     }
 
@@ -132,10 +101,10 @@ const ModDisplay = mod => {
     );
 }
 
-const ConstraintDisplay = constraint => {
+const ConstraintDisplay = constraint => {   
     const type = constraint.type;
     return (
-        <option key={constraint.id}>{type}</option>
+        <Dropdown.Item key={constraint.id}>{type}</Dropdown.Item>
     );
 }
 

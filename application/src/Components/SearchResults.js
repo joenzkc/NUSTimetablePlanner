@@ -1,38 +1,34 @@
 import React from 'react'
 import AddIcon from '@material-ui/icons/Add'
 import IconButton from '@material-ui/core/IconButton'
-import BlockIcon from '@material-ui/icons/Block';
+import { Container, Row, Col, Form, ListGroup } from "react-bootstrap";
+import "bootstrap/dist/css/bootstrap.min.css";
 
-const SearchResults = ({searchTerm, setMods, mods, displaySearchResults}) => {
-    if (!displaySearchResults) {
-        return (<div></div>);
-    }
+const SearchResults = ({searchTerm, setMods, mods}) => {
 
     const dummyMods = ["EC2101", "CS2040S", "CS2030S", "CS2100"]
 
     const filterMods = dummyMods.filter(x => x.toUpperCase().includes(searchTerm.toUpperCase()));
+    const furtherFilteredMods = filterMods.filter(x => mods.findIndex(y => y === x) === -1)
 
     return (
-        <div>
-            {
-                filterMods.map(DisplayMod(setMods)(mods))
-            }
-        </div>
+        <Col>
+            <ListGroup>
+                {
+                    furtherFilteredMods.map(DisplayMod(setMods, mods))
+                }
+            </ListGroup>    
+        </Col>
     );
 }
 
-const DisplayMod = setMods => 
-    mods => 
+const DisplayMod = (setMods, mods) => 
         mod => {
             return (
-                <li key={mod}>
+                <ListGroup.Item key={mod}>
                     {mod}
-                    {mods.findIndex(x => x === mod) === -1 
-                        ? <AddButton setMods={setMods} mods={mods} mod={mod}/>
-                        : <CannotAddButton />
-                    }
-
-                </li>
+                    <AddButton setMods={setMods} mods={mods} mod={mod}/>
+                </ListGroup.Item>
             );
         }
 
@@ -40,14 +36,6 @@ const AddButton = ({setMods, mods, mod}) => {
     return (
         <IconButton onClick={() => addMod(setMods)(mods)(mod)}>
             <AddIcon />
-        </IconButton>
-    );
-}
-
-const CannotAddButton = () => {
-    return (
-        <IconButton>
-            <BlockIcon/>
         </IconButton>
     );
 }

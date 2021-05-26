@@ -3,28 +3,35 @@ import React, { useState } from 'react'
 import IconButton from '@material-ui/core/IconButton'
 import DeleteIcon from '@material-ui/icons/Delete'
 
+import { Container, Row, Col, Form, ListGroup } from "react-bootstrap";
+import "bootstrap/dist/css/bootstrap.min.css";
+
 const ModDisplay = ({mods, setMods}) => {
     return (
-        <ul id="ModDisplay">
-            {mods.map(Display(setMods)(mods))}
-        </ul>
+        <ListGroup id="ModDisplay">
+            {mods.map(Display(setMods, mods))}
+        </ListGroup>
     );
 }
 
-const Display = setMods => 
-    mods => 
+const Display = (setMods, mods) => 
         x => {
             return (
-            <li key={x}>
-                {x}
-                <IconButton onClick={() => deleteMod(setMods)(mods)(x)}>
-                    <DeleteIcon />
-                </IconButton>
-            </li>);
+            <Row>
+            <Col lg={10}>
+            <ListGroup.Item key={x}>
+            {x}
+            </ListGroup.Item>
+            </Col>
+            <Col lg={2}>
+            <IconButton onClick={() => deleteMod(setMods, mods)(x)}>
+                <DeleteIcon />
+            </IconButton>
+            </Col>
+            </Row>);
         };
 
-const deleteMod = setMods => 
-    mods => 
+const deleteMod = (setMods, mods) => 
         x => {
             const index = mods.findIndex(y => y === x);
             setMods([
