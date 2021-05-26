@@ -4,6 +4,7 @@ import Constraints from './Constraints'
 import { Container, Row, Col, Form, FormGroup, ListGroup, Dropdown } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 import DropdownButton from 'react-bootstrap/DropdownButton';
+import Button from "react-bootstrap/Button";
 
 const ConstraintForm = ({mods, constraints, setConstraints}) => {
     const [type, setType] = useState(0)
@@ -30,18 +31,23 @@ const ConstraintForm = ({mods, constraints, setConstraints}) => {
             </h2>
             <Form onSubmit={handleSubmit(setConstraints, constraints)(type, mod, time, defaultMod)}>
                 <FormGroup>
-                {/* Constraint:
-                <select onChange={handleConstraintTypeChange(setType)}>
-                    {Constraints.map(ConstraintDisplay)}
-                </select> */}
-                <Dropdown onClick={handleConstraintTypeChange(setType)}>
-                <Dropdown.Toggle variant="Primary" id="dropdown-basic">
-                    Constraint: 
-                </Dropdown.Toggle>
-                <Dropdown.Menu>
-                    {Constraints.map(ConstraintDisplay)}
-                </Dropdown.Menu>
+                <div class="btn-group">
+                <Dropdown>
+                    <DropdownButton title={Constraints[type].type} onSelect={handleConstraintTypeChange(setType, setTime)}>
+                        {Constraints.map(ConstraintDisplay)}
+                    </DropdownButton>
                 </Dropdown>
+                {Constraints[type].needToSpecifyMod && 
+                <Dropdown>
+                    <DropdownButton title={mod} onSelect={handleModChange(setMod)}>
+                        {mods.map(ModDisplay)}
+                    </DropdownButton>
+                </Dropdown>                
+                }
+                {Constraints[type].htmlCode(setTime, time)}
+                <Button type="submit" onClick={handleSubmit(setConstraints, constraints)(type, mod, time, defaultMod)}>
+                    Submit constraint
+                </Button>
                 {/* Mod: 
                 <select onChange={handleModChange(setMod)}>
                     {mods.map(ModDisplay)}
@@ -50,15 +56,15 @@ const ConstraintForm = ({mods, constraints, setConstraints}) => {
                 <button type="submit" onClick={handleSubmit(setConstraints, constraints)(type, mod, time, defaultMod)}>
                     submit constraints
                 </button> */}
+                </div>
                 </FormGroup>
             </Form>
         </div>);
 }
 
 const handleModChange = setMod => 
-    event => {
-        const mod = event.target.value;
-        setMod(mod)
+    input => {
+        setMod(input)
     }
 
 const handleSubmit = (setConstraints, constraints) => 
@@ -66,12 +72,14 @@ const handleSubmit = (setConstraints, constraints) =>
         (event) => 
             {   
                 event.preventDefault();
-                if (typeof mod === 'undefined') {
+                if (Constraints[type].needToSpecifyMod) {
                     setConstraints([
                         ...constraints, 
                         {
                             type: type, 
-                            mod: defaultMod, 
+                            mod: typeof mod === 'undefined'
+                                ? defaultMod
+                                : mod, 
                             time: time
                         }
                     ])
@@ -79,8 +87,8 @@ const handleSubmit = (setConstraints, constraints) =>
                     setConstraints([
                         ...constraints, 
                         {
-                            type: type, 
-                            mod: mod, 
+                            type: type,  
+                            mod: null,
                             time: time
                         }
                     ])
@@ -89,22 +97,23 @@ const handleSubmit = (setConstraints, constraints) =>
 
 
 
-const handleConstraintTypeChange = setType =>
-    (event) => {
-        const type = Constraints.map(x => x.type).findIndex(x => x === event.target.value)
-        setType(type)
+const handleConstraintTypeChange = (setType, setTime) =>
+    (input) => {
+        const index = Constraints.findIndex(x => x.type === input)
+        setType(index)
+        setTime(Constraints[index].defaultTime)
     }
 
 const ModDisplay = mod => {
     return (
-        <option key={mod}>{mod}</option>
+        <Dropdown.Item eventKey={mod}>{mod}</Dropdown.Item>
     );
 }
 
 const ConstraintDisplay = constraint => {   
     const type = constraint.type;
     return (
-        <Dropdown.Item key={constraint.id}>{type}</Dropdown.Item>
+        <Dropdown.Item eventKey={constraint.type}>{type}</Dropdown.Item>
     );
 }
 

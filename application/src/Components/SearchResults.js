@@ -34,14 +34,13 @@ const DisplayMod = (setMods, mods) =>
 
 const AddButton = ({setMods, mods, mod}) => {
     return (
-        <IconButton onClick={() => addMod(setMods)(mods)(mod)}>
-            <AddIcon />
-        </IconButton>
+        // <IconButton >
+            <AddIcon onClick={() => addMod(setMods, mods)(mod)} style={{cursor: "pointer"}}/>
+        // </IconButton>
     );
 }
 
-const addMod = setMods => 
-    mods => 
+const addMod = (setMods, mods) => 
         mod => {
                 const newMods = [...mods, mod]
                 setMods(newMods)

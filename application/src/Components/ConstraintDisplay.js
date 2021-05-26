@@ -2,27 +2,27 @@ import React, {useState} from 'react'
 
 import IconButton from '@material-ui/core/IconButton'
 import DeleteIcon from '@material-ui/icons/Delete'
-
 import Constraints from './Constraints'
+import { Container, Row, Col, Form, ListGroup } from "react-bootstrap";
+import "bootstrap/dist/css/bootstrap.min.css";
 
 const ConstraintDisplay = ({constraints, setConstraints}) => {
     return (
-        <ul id="ConstraintDisplay">
-            <h3>Constraints are</h3>
+        <ListGroup>
             {constraints.map(Display(setConstraints, constraints))}
-        </ul>
+        </ListGroup>
     );
 }
 
 const Display = (setConstraints, constraints) => 
         x => {
             return (
-            <li>
-                {x.mod} {Constraints[x.type].type} {x.time} 
+            <ListGroup.Item>
+                {Constraints[x.type].type} {Constraints[x.type].needToSpecifyMod && x.mod} {x.time !== null && x.time} 
                 <IconButton onClick={() => deleteConstraint(setConstraints, constraints)(x)}>
                     <DeleteIcon />
                 </IconButton>
-            </li>);
+            </ListGroup.Item>);
         };
 
 const deleteConstraint = (setConstraints, constraints) => 
