@@ -4,6 +4,7 @@ import { Dropdown, DropdownButton, Row, Col } from "react-bootstrap";
 const TimeForm = ({ time, setTime }) => {
   return (
     <div className="btn-group" id="TimeForm">
+      <h6>Choose the semester</h6>
       <YearForm setTime={setTime} time={time} />
       <SemForm setTime={setTime} time={time} />
       {/* <Row>
@@ -37,8 +38,8 @@ const YearForm = ({ setTime, time }) => {
     // </form>
     <Dropdown>
       <DropdownButton title={time.year} onSelect={handleChange}>
-        <Dropdown.Item eventKey="2021">2021</Dropdown.Item>
-        <Dropdown.Item eventKey="2020">2020</Dropdown.Item>
+        <Dropdown.Item eventKey="2020-2021">2020-2021</Dropdown.Item>
+        <Dropdown.Item eventKey="2019-2020">2019-2020</Dropdown.Item>
       </DropdownButton>
     </Dropdown>
     // <Dropdown>

@@ -18,8 +18,8 @@ const Display = (setMods, mods) =>
             return (
             <Row>
             <Col lg={10}>
-            <ListGroup.Item key={x}>
-            {x}
+            <ListGroup.Item key={x.moduleCode}>
+            {x.moduleCode} {x.title}
             </ListGroup.Item>
             </Col>
             <Col lg={2}>

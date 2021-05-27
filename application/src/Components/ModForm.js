@@ -64,14 +64,6 @@ const ModInput = ({
         </Row>
       </FormGroup>
     </Form>
-
-    // <form onSubmit={handleSubmit}>
-    //     Mod:
-    //     <input onChange={handleChange}/>
-    //     <IconButton onClick={handleSubmit}>
-    //         <SearchIcon/>
-    //     </IconButton>
-    // </form>
   );
 };
 

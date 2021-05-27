@@ -8,7 +8,7 @@ import DropdownButton from 'react-bootstrap/DropdownButton';
 //defaultTime for fix a class should also be changed from being hardcoded
 
 const standardDisplayCode = (constraint, type) => 
-<span> {type} {Constraints[constraint.type].needToSpecifyMod && constraint.mod} {constraint.time !== null && constraint.time} </span>
+<span> {type} {Constraints[constraint.type].needToSpecifyMod && constraint.mod.moduleCode} {constraint.time !== null && constraint.time} </span>
 
 const Constraints = [
     {id: 0, 

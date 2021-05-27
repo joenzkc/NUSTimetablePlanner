@@ -39,7 +39,7 @@ const ConstraintForm = ({mods, constraints, setConstraints}) => {
                 </Dropdown>
                 {Constraints[type].needToSpecifyMod && 
                 <Dropdown>
-                    <DropdownButton title={mod} onSelect={handleModChange(setMod)}>
+                    <DropdownButton title={mod.moduleCode} onSelect={handleModChange(setMod)}>
                         {mods.map(ModDisplay)}
                     </DropdownButton>
                 </Dropdown>                
@@ -97,7 +97,7 @@ const handleConstraintTypeChange = (setType, setTime) =>
 
 const ModDisplay = mod => {
     return (
-        <Dropdown.Item eventKey={mod}>{mod}</Dropdown.Item>
+        <Dropdown.Item eventKey={mod.moduleCode}>{mod.moduleCode}</Dropdown.Item>
     );
 }
 
