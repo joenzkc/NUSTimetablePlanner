@@ -73,9 +73,14 @@ function App() {
               setConstraints={setConstraints}/>}
               {displayConstraintForm && 
               constraints.length !== 0 && 
+              <div class="btn-group">
               <Button id="Clear constraints" onClick={() => setConstraints([])}>
                 Clear constraints
-              </Button>}
+              </Button>
+              <Button id ="Submit constraints" onClick={() => console.log("timetable")}>
+                Submit constraints
+              </Button>
+              </div>}
             </Col>
           </Row>
         </Form>

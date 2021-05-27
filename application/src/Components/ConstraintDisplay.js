@@ -18,7 +18,7 @@ const Display = (setConstraints, constraints) =>
         x => {
             return (
             <ListGroup.Item>
-                {Constraints[x.type].type} {Constraints[x.type].needToSpecifyMod && x.mod} {x.time !== null && x.time} 
+                {Constraints[x.type].displayCode(x)}
                 <IconButton onClick={() => deleteConstraint(setConstraints, constraints)(x)}>
                     <DeleteIcon />
                 </IconButton>

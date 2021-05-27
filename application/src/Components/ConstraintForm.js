@@ -44,7 +44,7 @@ const ConstraintForm = ({mods, constraints, setConstraints}) => {
                     </DropdownButton>
                 </Dropdown>                
                 }
-                {Constraints[type].htmlCode(setTime, time)}
+                {Constraints[type].optionCode(setTime, time)}
                 <Button type="submit" onClick={handleSubmit(setConstraints, constraints)(type, mod, time, defaultMod)}>
                     Submit constraint
                 </Button>
@@ -72,27 +72,18 @@ const handleSubmit = (setConstraints, constraints) =>
         (event) => 
             {   
                 event.preventDefault();
-                if (Constraints[type].needToSpecifyMod) {
                     setConstraints([
                         ...constraints, 
                         {
                             type: type, 
-                            mod: typeof mod === 'undefined'
-                                ? defaultMod
-                                : mod, 
+                            mod: Constraints[type].needToSpecifyMod
+                                ? typeof mod === 'undefined'
+                                    ? defaultMod
+                                    : mod
+                                : null, 
                             time: time
                         }
                     ])
-                } else {
-                    setConstraints([
-                        ...constraints, 
-                        {
-                            type: type,  
-                            mod: null,
-                            time: time
-                        }
-                    ])
-                }
             }
 
 

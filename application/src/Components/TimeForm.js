@@ -3,7 +3,7 @@ import { Dropdown, DropdownButton, Row, Col } from "react-bootstrap";
 
 const TimeForm = ({ time, setTime }) => {
   return (
-    <div class="btn-group" id="TimeForm">
+    <div className="btn-group" id="TimeForm">
       <YearForm setTime={setTime} time={time} />
       <SemForm setTime={setTime} time={time} />
       {/* <Row>

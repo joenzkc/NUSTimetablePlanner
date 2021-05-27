@@ -9,8 +9,12 @@ const ModSubmit = ({
 }) => {
   
   const handleSubmit = () => {
-    setDisplaySearchResults(false);
-    setDisplayConstraintForm(true);
+    if (mods.length === 0) {
+      window.alert("No mods selected! Please select some mods")
+    } else {
+      setDisplaySearchResults(false);
+      setDisplayConstraintForm(true);
+    } 
   };
 
   return (
