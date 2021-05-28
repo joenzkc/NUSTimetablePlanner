@@ -9,6 +9,8 @@ const ModForm = ({
   setSearchTerm,
   setDisplaySearchResults,
   setDisplayConstraintForm,
+  tentativeTime, 
+  setTime, 
 }) => {
   return (
     <div id="ModForm">
@@ -17,6 +19,8 @@ const ModForm = ({
         setSearchTerm={setSearchTerm}
         setDisplaySearchResults={setDisplaySearchResults}
         setDisplayConstraintForm={setDisplayConstraintForm}
+        tentativeTime={tentativeTime}
+        setTime={setTime}
       />
     </div>
   );
@@ -27,14 +31,21 @@ const ModInput = ({
   setSearchTerm,
   setDisplaySearchResults,
   setDisplayConstraintForm,
+  tentativeTime, 
+  setTime
 }) => {
   const [newSearchTerm, setNewSearchTerm] = useState("");
 
   const handleSubmit = (event) => {
-    event.preventDefault();
-    setDisplaySearchResults(true);
-    setDisplayConstraintForm(false);
-    setSearchTerm(newSearchTerm);
+    if (tentativeTime.year === "Year" || tentativeTime.sem === "sem") {
+      window.alert("Please enter the year and semester!")
+    } else {
+      setTime(tentativeTime);
+      event.preventDefault();
+      setDisplaySearchResults(true);
+      setDisplayConstraintForm(false);
+      setSearchTerm(newSearchTerm);
+    }
   };
 
   const handleChange = (event) => {

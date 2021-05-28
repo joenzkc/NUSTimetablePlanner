@@ -6,23 +6,15 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import DropdownButton from 'react-bootstrap/DropdownButton';
 import Button from "react-bootstrap/Button";
 
-const ConstraintForm = ({mods, constraints, setConstraints}) => {
+const ConstraintForm = ({mods, constraints, setConstraints, yearSem}) => {
     const [type, setType] = useState(0)
     //dunno why by default it is undefined
+    const [modCod, setModCod] = useState(mods[0].moduleCode)
     const [mod, setMod] = useState(mods[0])
     //Change default for this.
-    const [time, setTime] = useState("9am")
-    const defaultMod = mods[0]
-
-    // <Dropdown onSelect={handleChange}>
-    //   <Dropdown.Toggle variant="Primary" id="dropdown-basic">
-    //     Year
-    //   </Dropdown.Toggle>
-    //   <Dropdown.Menu>
-    //     <Dropdown.Item>2021</Dropdown.Item>
-    //     <Dropdown.Item>2020</Dropdown.Item>
-    //   </Dropdown.Menu>
-    // </Dropdown>
+    const [time, setTime] = useState(Constraints[0].defaultTime(mods[0], yearSem))
+    const defaultMod = mods[0].moduleCode
+    console.log("current mod is ", mod)
 
     return (
         <div>
@@ -33,38 +25,31 @@ const ConstraintForm = ({mods, constraints, setConstraints}) => {
                 <FormGroup>
                 <div class="btn-group">
                 <Dropdown>
-                    <DropdownButton title={Constraints[type].type} onSelect={handleConstraintTypeChange(setType, setTime)}>
+                    <DropdownButton title={Constraints[type].type} onSelect={handleConstraintTypeChange(setType, setTime, mod, yearSem)}>
                         {Constraints.map(ConstraintDisplay)}
                     </DropdownButton>
                 </Dropdown>
                 {Constraints[type].needToSpecifyMod && 
                 <Dropdown>
-                    <DropdownButton title={mod.moduleCode} onSelect={handleModChange(setMod)}>
+                    <DropdownButton title={modCod} onSelect={handleModChange(setModCod, setMod, mods, modCod)}>
                         {mods.map(ModDisplay)}
                     </DropdownButton>
                 </Dropdown>                
                 }
-                {Constraints[type].optionCode(setTime, time)}
+                {Constraints[type].optionCode(setTime, time, mod, yearSem)}
                 <Button type="submit" onClick={handleSubmit(setConstraints, constraints)(type, mod, time, defaultMod)}>
                     Submit constraint
                 </Button>
-                {/* Mod: 
-                <select onChange={handleModChange(setMod)}>
-                    {mods.map(ModDisplay)}
-                </select>
-                {Constraints[type].htmlCode(setTime)}
-                <button type="submit" onClick={handleSubmit(setConstraints, constraints)(type, mod, time, defaultMod)}>
-                    submit constraints
-                </button> */}
                 </div>
                 </FormGroup>
             </Form>
         </div>);
 }
 
-const handleModChange = setMod => 
+const handleModChange = (setModCod, setMod,     mods, modCod) => 
     input => {
-        setMod(input)
+        setModCod(input)
+        setMod(mods.filter(y => y.moduleCode === modCod)[0])
     }
 
 const handleSubmit = (setConstraints, constraints) => 
@@ -72,6 +57,7 @@ const handleSubmit = (setConstraints, constraints) =>
         (event) => 
             {   
                 event.preventDefault();
+                if (Constraints[type].checkValid(time)) {
                     setConstraints([
                         ...constraints, 
                         {
@@ -84,20 +70,24 @@ const handleSubmit = (setConstraints, constraints) =>
                             time: time
                         }
                     ])
+                } else {
+                    //make this more detailed
+                    window.alert("Not valid constraint!")
+                }
             }
 
 
 
-const handleConstraintTypeChange = (setType, setTime) =>
+const handleConstraintTypeChange = (setType, setTime, mod, semYear) =>
     (input) => {
         const index = Constraints.findIndex(x => x.type === input)
         setType(index)
-        setTime(Constraints[index].defaultTime)
+        setTime(Constraints[index].defaultTime(mod, semYear))
     }
 
-const ModDisplay = mod => {
+const ModDisplay = x => {
     return (
-        <Dropdown.Item eventKey={mod.moduleCode}>{mod.moduleCode}</Dropdown.Item>
+        <Dropdown.Item eventKey={x.moduleCode}>{x.moduleCode}</Dropdown.Item>
     );
 }
 

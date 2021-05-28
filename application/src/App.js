@@ -18,6 +18,10 @@ function App() {
     year: "Year",
     sem: "Sem",
   });
+  const [tentativeTime, setTentativeTime] = useState({
+    year: "Year", 
+    sem: "sem"
+  })
 
   const [mods, setMods] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
@@ -30,7 +34,7 @@ function App() {
       <Container>
         <Header />
         <Row>
-          <TimeForm time={time} setTime={setTime} />
+          <TimeForm time={tentativeTime} setTime={setTentativeTime} />
         </Row>
         <Form>
           <Row>
@@ -41,6 +45,8 @@ function App() {
                 setSearchTerm={setSearchTerm}
                 setDisplaySearchResults={setDisplaySearchResults}
                 setDisplayConstraintForm={setDisplayConstraintForm}
+                tentativeTime={tentativeTime}
+                setTime={setTime}
               />
               <ModDisplay mods={mods} setMods={setMods} />
               <ModSubmit
@@ -66,6 +72,7 @@ function App() {
                 mods={mods}
                 constraints={constraints}
                 setConstraints={setConstraints}
+                yearSem={time}
               />}
               {displayConstraintForm && 
               constraints.length !== 0 && 
