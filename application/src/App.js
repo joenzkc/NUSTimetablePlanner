@@ -28,7 +28,7 @@ function App() {
   const [displaySearchResults, setDisplaySearchResults] = useState(false);
   const [displayConstraintForm, setDisplayConstraintForm] = useState(false);
   const [constraints, setConstraints] = useState([]);
-
+  
   return (
     <div className="App">
       <Container>
