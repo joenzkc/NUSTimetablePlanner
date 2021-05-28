@@ -71,7 +71,10 @@ const Constraints = [
     optionCode:   (setTime, time, mod, yearSem) => 
             optionCodeForFixClass(setTime, time, mod, yearSem), 
     displayCode: constraint => standardDisplayCode(constraint, "Fix a class: "), 
-    checkValid: (time) => time != "Choose a class"}, 
+    checkValid: (time, currentConstraints) => {
+        return {valid: time != "Choose a class", 
+                message: "Choose a class",} 
+        }}, 
     {id: 1, 
     type: "No lessons before",
     defaultTime: (mod, yearSem) => "0600",
@@ -83,7 +86,9 @@ const Constraints = [
                     </DropdownButton>
                 </Dropdown>, 
     displayCode: constraint => standardDisplayCode(constraint, "No lessons before"), 
-    checkValid: (time) => true},
+    checkValid: (time, currentConstraints) => {
+        return {valid: true, message: "I shouldnt be appearing"}
+    }},
     {id: 2, 
     type: "No lessons on", 
     defaultTime: (mod, yearSem) => "Monday",
@@ -95,7 +100,7 @@ const Constraints = [
                     </DropdownButton>
                 </Dropdown>, 
     displayCode: constraint => standardDisplayCode(constraint, "No lessons on"),
-    checkValid: (time) => true}, 
+    checkValid: (time, currentConstraints) => {return {valid: true, message: "I shouldnt be appearing"}}}, 
     {id: 3, 
     type: "No lessons on __ from __ to __", 
     defaultTime: (mod, yearSem) => ["Monday", "0600", "0600"],
@@ -116,7 +121,8 @@ const Constraints = [
                 </Dropdown>, 
     displayCode: constraint => 
         <span>No lessons on {constraint.time[0]} from {constraint.time[1]} to {constraint.time[2]} </span>, 
-    checkValid: (time) => parseInt(time[1]) <= parseInt(time[2])
+    checkValid: (time, currentConstraints) => {
+        return {valid: parseInt(time[1]) <= parseInt(time[2]), message: "Starting time is before ending time"}}
                 },
     {id: 4, 
         type: "End as early as possible",
@@ -125,14 +131,21 @@ const Constraints = [
         optionCode:   (setTime, time, mod, yearSem) => 
                         <span></span>, 
         displayCode: constraint => standardDisplayCode(constraint, "End as early as possible"), 
-        checkValid: (time) => true},
+        checkValid: (time, currentConstraints) => {
+            return {valid: currentConstraints.findIndex(x => x.type === 4) === -1, 
+                    message: "Already added!"}
+        }},
     {id: 5, 
         type: "Start as late as possible", 
         defaultTime: (mod, yearSem) => null, 
         needToSpecifyMod: false, 
         optionCode: (setTime, time, mod, yearSem) => <span></span>, 
         displayCode: constraint => standardDisplayCode(constraint, "Start as late as possible"), 
-        checkValid: (time) => true}
+        checkValid: (time, currentConstraints) => {
+            console.log("current constraints are", currentConstraints )
+            return {valid: currentConstraints.findIndex(x => x.type === 5) === -1, 
+                    message: "Already added!"}
+    }}
 ]
 
 const handleChangeTime = setTime => 

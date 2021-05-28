@@ -57,7 +57,8 @@ const handleSubmit = (setConstraints, constraints) =>
         (event) => 
             {   
                 event.preventDefault();
-                if (Constraints[type].checkValid(time)) {
+                const check = Constraints[type].checkValid(time, constraints)
+                if (check.valid) {
                     setConstraints([
                         ...constraints, 
                         {
@@ -72,7 +73,7 @@ const handleSubmit = (setConstraints, constraints) =>
                     ])
                 } else {
                     //make this more detailed
-                    window.alert("Not valid constraint!")
+                    window.alert(check.message)
                 }
             }
 
