@@ -14,7 +14,7 @@ const ModDisplay = ({ mods, setMods }) => {
 
 const Display = (setMods, mods) => (x) => {
   return (
-    <Paper>
+    <ListGroup.Item key={x.moduleCode}>
       <Row>
         <Col lg={10}>
           {x.moduleCode} {x.title}
@@ -25,7 +25,7 @@ const Display = (setMods, mods) => (x) => {
           </IconButton>
         </Col>
       </Row>
-    </Paper>
+    </ListGroup.Item>
   );
 };
 

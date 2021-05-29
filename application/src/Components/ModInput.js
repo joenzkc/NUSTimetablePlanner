@@ -35,7 +35,7 @@ const useStyles = makeStyles((theme) => ({
   textField: {
     marginLeft: theme.spacing(1),
     marginRight: theme.spacing(1),
-    width: 400,
+    width: 300,
   },
 }));
 
@@ -64,27 +64,27 @@ const ModInput = ({
 
   return (
     <div>
-      <Paper className={classes.root}>
-        <form onSubmit={handleSubmit}>
-          <TextField
-            label="Search for a module"
-            id="margin-normal"
-            name="name"
-            className={classes.textField}
-            onChange={handleChange}
-            helperText="Enter a mod number e.g CS1010, GER1000"
-          />
-          <Button
-            type="submit"
-            variant="contained"
-            color="primary"
-            className={classes.button}
-            onClick={handleSubmit}
-          >
-            Search
-          </Button>
-        </form>
-      </Paper>
+      {/* <Paper className={classes.root}> */}
+      <form onSubmit={handleSubmit}>
+        <TextField
+          label="Search for a module"
+          id="margin-normal"
+          name="name"
+          className={classes.textField}
+          onChange={handleChange}
+          helperText="Enter a mod number e.g CS1010, GER1000"
+        />
+        <Button
+          type="submit"
+          variant="contained"
+          color="primary"
+          className={classes.button}
+          onClick={handleSubmit}
+        >
+          Search
+        </Button>
+      </form>
+      {/* </Paper> */}
     </div>
   );
 };
