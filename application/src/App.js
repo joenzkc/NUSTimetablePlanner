@@ -29,11 +29,11 @@ const useStyles = makeStyles((theme) => ({
 function App() {
   const classes = useStyles();
   const [time, setTime] = useState({
-    year: "2021-2022",
+    year: "2020-2021",
     sem: "1",
   });
   const [tentativeTime, setTentativeTime] = useState({
-    year: "2021-2022",
+    year: "2020-2021",
     sem: "1",
   });
 
@@ -42,6 +42,8 @@ function App() {
   const [displaySearchResults, setDisplaySearchResults] = useState(false);
   const [displayConstraintForm, setDisplayConstraintForm] = useState(false);
   const [constraints, setConstraints] = useState([]);
+  const [modTimetables, setModTimetables] = useState([]);
+  console.log("mods timetables are", modTimetables)
 
   return (
     <Router>
@@ -82,7 +84,7 @@ function App() {
                       setDisplaySearchResults={setDisplaySearchResults}
                       setDisplayConstraintForm={setDisplayConstraintForm}
                     />
-                    <Button id="Clear mods" onClick={() => setMods([])}>
+                    <Button id="Clear mods" onClick={() => {setMods([]); setDisplayConstraintForm(false)}}>
                       Clear mods
                     </Button>
                   </Col>
@@ -101,6 +103,8 @@ function App() {
                         constraints={constraints}
                         setConstraints={setConstraints}
                         yearSem={time}
+                        setModTimetables={setModTimetables}
+                        modTimetables={modTimetables}
                       />
                     )}
                     {displayConstraintForm && constraints.length !== 0 && (
