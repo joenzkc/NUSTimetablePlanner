@@ -7,8 +7,9 @@ import { IconButton } from "@material-ui/core";
 
 const SearchResults = ({ searchTerm, setMods, mods, time }) => {
   const [allMods, setAllMods] = useState([]);
-
+  
   const link = "https://api.nusmods.com/v2/" + time.year + "/moduleList.json";
+  
   useEffect(() => {
     axios.get(link).then((response) => {
       setAllMods(response.data);

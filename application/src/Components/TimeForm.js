@@ -11,14 +11,14 @@ const TimeForm = ({ time, setTime }) => {
 };
 
 const YearandSemForm = ({ time, setTime }) => {
-  const [title, setTitle] = useState("Sem 1 2021");
+  const [title, setTitle] = useState("Sem 1 2020/21");
 
   const handleChange = (event) => {
     setTitle(event);
     console.log(event);
     const sem = Number(event.charAt(4));
-    const year = Number(event.substring(6));
-    if (sem == 1) {
+    const year = Number(event.substring(6, 10));
+    if (sem === 1) {
       const yearEnd = year + 1; //ie if 2020, then 2021 so 2020-2021
       const yearRange = year.toString() + "-" + yearEnd.toString();
       setTime({
@@ -43,10 +43,10 @@ const YearandSemForm = ({ time, setTime }) => {
       onSelect={handleChange}
       id="dropdown-variants-secondary"
     >
-      <Dropdown.Item eventKey="Sem 1 2021">Sem 1 2021</Dropdown.Item>
-      <Dropdown.Item eventKey="Sem 2 2021">Sem 2 2021</Dropdown.Item>
-      <Dropdown.Item eventKey="Sem 1 2020">Sem 1 2020</Dropdown.Item>
-      <Dropdown.Item eventKey="Sem 2 2020">Sem 2 2020</Dropdown.Item>
+      <Dropdown.Item eventKey="Sem 1 2020/21">Sem 1 2020/21</Dropdown.Item>
+      <Dropdown.Item eventKey="Sem 2 2020/21">Sem 2 2020/21</Dropdown.Item>
+      <Dropdown.Item eventKey="Sem 1 2019/20">Sem 1 2019/20</Dropdown.Item>
+      <Dropdown.Item eventKey="Sem 2 2019/20">Sem 2 2019/20</Dropdown.Item>
     </DropdownButton>
   );
 };

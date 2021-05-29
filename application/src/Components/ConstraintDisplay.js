@@ -17,12 +17,12 @@ const ConstraintDisplay = ({constraints, setConstraints}) => {
 const Display = (setConstraints, constraints) => 
         x => {
             return (
-            <ListGroup.Item>
+            <ListGroup.Item key={constraints.id}>
                 {Constraints[x.type].displayCode(x)}
                 <IconButton onClick={() => deleteConstraint(setConstraints, constraints)(x)}>
                     <DeleteIcon />
                 </IconButton>
-            </ListGroup.Item>);
+            </ListGroup.Item>); 
         };
 
 const deleteConstraint = (setConstraints, constraints) => 
