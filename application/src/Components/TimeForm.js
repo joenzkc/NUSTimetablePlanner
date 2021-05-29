@@ -21,7 +21,6 @@ const TimeForm = ({ time, setTime }) => {
 
 const YearForm = ({ setTime, time }) => {
   const handleChange = (input) => {
-    console.log(input)
     setTime({
       year: input,
       sem: time.sem,

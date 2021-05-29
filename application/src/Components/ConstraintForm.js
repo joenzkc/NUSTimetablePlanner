@@ -12,9 +12,8 @@ const ConstraintForm = ({mods, constraints, setConstraints, yearSem}) => {
     const [modCod, setModCod] = useState(mods[0].moduleCode)
     const [mod, setMod] = useState(mods[0])
     //Change default for this.
-    const [time, setTime] = useState(Constraints[0].defaultTime(mods[0], yearSem))
+    const [time, setTime] = useState(Constraints[0].defaultTime)
     const defaultMod = mods[0].moduleCode
-    console.log("current mod is ", mod)
 
     return (
         <div>
@@ -31,7 +30,7 @@ const ConstraintForm = ({mods, constraints, setConstraints, yearSem}) => {
                 </Dropdown>
                 {Constraints[type].needToSpecifyMod && 
                 <Dropdown>
-                    <DropdownButton title={modCod} onSelect={handleModChange(setModCod, setMod, mods, modCod)}>
+                    <DropdownButton title={modCod} onSelect={handleModChange(setModCod, setMod, mods, modCod, type, setTime)}>
                         {mods.map(ModDisplay)}
                     </DropdownButton>
                 </Dropdown>                
@@ -46,10 +45,11 @@ const ConstraintForm = ({mods, constraints, setConstraints, yearSem}) => {
         </div>);
 }
 
-const handleModChange = (setModCod, setMod,     mods, modCod) => 
+const handleModChange = (setModCod, setMod, mods, modCod, type, setTime) => 
     input => {
         setModCod(input)
         setMod(mods.filter(y => y.moduleCode === modCod)[0])
+        setTime(Constraints[type].defaultTime)
     }
 
 const handleSubmit = (setConstraints, constraints) => 
@@ -83,7 +83,7 @@ const handleConstraintTypeChange = (setType, setTime, mod, semYear) =>
     (input) => {
         const index = Constraints.findIndex(x => x.type === input)
         setType(index)
-        setTime(Constraints[index].defaultTime(mod, semYear))
+        setTime(Constraints[index].defaultTime)
     }
 
 const ModDisplay = x => {

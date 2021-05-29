@@ -54,6 +54,7 @@ const TimeOption =
                         <Dropdown.Item eventKey="1800">1800</Dropdown.Item>
                         <Dropdown.Item eventKey="1900">1900</Dropdown.Item>
         </Fragment>
+
 const DayOption = 
     <Fragment>
         <Dropdown.Item eventKey ="Monday">Monday</Dropdown.Item>
@@ -66,7 +67,7 @@ const DayOption =
 const Constraints = [
     {id: 0, 
     type: "Fix a class: ", 
-    defaultTime: DefaultTimeFixClass,
+    defaultTime: "Choose a class",
     needToSpecifyMod: true,
     optionCode:   (setTime, time, mod, yearSem) => 
             optionCodeForFixClass(setTime, time, mod, yearSem), 
@@ -77,7 +78,7 @@ const Constraints = [
         }}, 
     {id: 1, 
     type: "No lessons before",
-    defaultTime: (mod, yearSem) => "0600",
+    defaultTime: "0600",
     needToSpecifyMod: false,
     optionCode:   (setTime, time, mod, yearSem) =>
                 <Dropdown>
@@ -91,7 +92,7 @@ const Constraints = [
     }},
     {id: 2, 
     type: "No lessons on", 
-    defaultTime: (mod, yearSem) => "Monday",
+    defaultTime: "Monday",
     needToSpecifyMod: false,
     optionCode:   (setTime, time, mod, yearSem) => 
                 <Dropdown>
@@ -103,7 +104,7 @@ const Constraints = [
     checkValid: (time, currentConstraints) => {return {valid: true, message: "I shouldnt be appearing"}}}, 
     {id: 3, 
     type: "No lessons on __ from __ to __", 
-    defaultTime: (mod, yearSem) => ["Monday", "0600", "0600"],
+    defaultTime: ["Monday", "0600", "0600"],
     needToSpecifyMod: false,
     optionCode:   (setTime, time, mod, yearSem) => 
                 <Dropdown>
@@ -126,7 +127,7 @@ const Constraints = [
                 },
     {id: 4, 
         type: "End as early as possible",
-        defaultTime: (mod, yearSem) => null,
+        defaultTime: null,
         needToSpecifyMod: false,
         optionCode:   (setTime, time, mod, yearSem) => 
                         <span></span>, 
@@ -137,7 +138,7 @@ const Constraints = [
         }},
     {id: 5, 
         type: "Start as late as possible", 
-        defaultTime: (mod, yearSem) => null, 
+        defaultTime: null, 
         needToSpecifyMod: false, 
         optionCode: (setTime, time, mod, yearSem) => <span></span>, 
         displayCode: constraint => standardDisplayCode(constraint, "Start as late as possible"), 
@@ -176,7 +177,6 @@ const optionCodeForFixClass = (setTime, time, mod, yearSem) => {
 const ClassesDisplay = ({mod, yearSem}) => {
     const link = 'https://api.nusmods.com/v2/' + yearSem.year + "/modules/" + mod.moduleCode + ".json";
     const [timetable, setTimetable] = useState([])
-    useEffect(() => {
         axios
           .get(link)
           .then(response => {
@@ -184,7 +184,6 @@ const ClassesDisplay = ({mod, yearSem}) => {
             const thisSemData = SemesterData.filter(x => x.semester === parseInt(yearSem.sem))
             setTimetable(thisSemData[0].timetable)
           })
-      }, [])
     return timetable.map(lesson => 
         <Dropdown.Item eventKey={lesson.lessonType + " " + lesson.day + " from " + lesson.startTime + " to " + lesson.endTime}>
             {lesson.lessonType + " " + lesson.day + " from " + lesson.startTime + " to " + lesson.endTime}

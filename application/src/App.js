@@ -10,6 +10,7 @@ import ModSubmit from "./Components/ModSubmit";
 import SearchResults from "./Components/SearchResults";
 import ConstraintForm from "./Components/ConstraintForm";
 import ConstraintDisplay from "./Components/ConstraintDisplay";
+import Timetable from "./Components/Timetable"
 import { Container, Row, Col, Form, ListGroup, Button } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 
@@ -23,11 +24,13 @@ function App() {
     sem: "sem"
   })
 
-  const [mods, setMods] = useState([]);
+  const [mods, setMods] = useState([]); //these only have mod code, semester and title
   const [searchTerm, setSearchTerm] = useState("");
   const [displaySearchResults, setDisplaySearchResults] = useState(false);
   const [displayConstraintForm, setDisplayConstraintForm] = useState(false);
+  const [displayTimetable, setDisplayTimetable] = useState(false);
   const [constraints, setConstraints] = useState([]);
+  const [modTimetable, setModTimetable] = useState([]) //this is to store the timetables for the submitted mods
   
   return (
     <div className="App">
@@ -53,6 +56,8 @@ function App() {
                 mods={mods}
                 setDisplaySearchResults={setDisplaySearchResults}
                 setDisplayConstraintForm={setDisplayConstraintForm}
+                setModTimetable={setModTimetable}
+                yearSem={time}
               />
               <Button id="Clear mods" onClick={() => setMods([])}>
                 Clear mods
@@ -85,12 +90,13 @@ function App() {
               <Button id="Clear constraints" onClick={() => setConstraints([])}>
                 Clear constraints
               </Button>
-              <Button id ="Submit constraints" onClick={() => console.log("timetable")}>
+              <Button id ="Submit constraints" onClick={() => setDisplayTimetable(true)}>
                 Submit constraints
               </Button>
               </div>}
             </Col>
           </Row>
+          {displayTimetable && <Timetable mods={mods} constraints={constraints} yearSem={time}/>}
         </Form>
         <Footer />
       </Container>
