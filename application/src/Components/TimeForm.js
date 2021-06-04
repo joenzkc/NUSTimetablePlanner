@@ -1,21 +1,22 @@
 import React, { useState } from "react";
 import { Dropdown, DropdownButton, Row, Col } from "react-bootstrap";
 
-const TimeForm = ({ time, setTime }) => {
+const TimeForm = ({setTime, setMods, setDisplaySearchResults}) => {
   //time = tentativeTime, setTime = setTentative time
   return (
     <div className="btn-group" id="TimeForm">
-      <YearandSemForm time={time} setTime={setTime} />
+      <YearandSemForm setTime={setTime} setMods={setMods} setDisplaySearchResults={setDisplaySearchResults}/>
     </div>
   );
 };
 
-const YearandSemForm = ({ time, setTime }) => {
+const YearandSemForm = ({setTime, setMods, setDisplaySearchResults }) => {
   const [title, setTitle] = useState("Sem 1 2020/21");
 
   const handleChange = (event) => {
+    setMods([])
+    setDisplaySearchResults(false)
     setTitle(event);
-    console.log(event);
     const sem = Number(event.charAt(4));
     const year = Number(event.substring(6, 10));
     if (sem === 1) {
@@ -36,6 +37,12 @@ const YearandSemForm = ({ time, setTime }) => {
       });
     }
   };
+
+  // const cYear = new Date().getUTCFullYear();
+  // const cMonth = new Date().getMonth();
+
+  // const earliestYear = 2019;
+  // if (cMonth )
 
   return (
     <DropdownButton

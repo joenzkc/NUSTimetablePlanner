@@ -14,7 +14,7 @@ const SearchResults = ({ searchTerm, setMods, mods, time }) => {
     axios.get(link).then((response) => {
       setAllMods(response.data);
     });
-  }, []);
+  }, [link]);
 
   const filterModsSearchTerm = allMods.filter((x) =>
     x.moduleCode.toUpperCase().includes(searchTerm.toUpperCase())
@@ -23,6 +23,7 @@ const SearchResults = ({ searchTerm, setMods, mods, time }) => {
   const filterModsSem = filterModsSearchTerm.filter(
     (mod) => mod.semesters.findIndex((y) => y === parseInt(time.sem)) !== -1
   );
+
   const furtherFilteredMods = filterModsSem.filter(
     (x) => mods.findIndex((y) => y === x) === -1
   );

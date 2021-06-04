@@ -7,7 +7,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import DropdownButton from 'react-bootstrap/DropdownButton';
 import Button from "react-bootstrap/Button";
 
-const ConstraintForm = ({mods, constraints, setConstraints, yearSem, setModTimetables, modTimetables}) => {
+const ConstraintForm = ({mods, constraints, setConstraints, actualTimet}) => {
     const [type, setType] = useState(0)
     //dunno why by default it is undefined
     const [modCod, setModCod] = useState(mods[0].moduleCode)
@@ -25,18 +25,19 @@ const ConstraintForm = ({mods, constraints, setConstraints, yearSem, setModTimet
                 <FormGroup>
                 <div className="btn-group">
                 <Dropdown>
-                    <DropdownButton title={Constraints[type].type} onSelect={handleConstraintTypeChange(setType, setTime, mod, yearSem)}>
+                    <DropdownButton title={Constraints[type].type} onSelect={handleConstraintTypeChange(setType, setTime)}>
                         {Constraints.map(ConstraintDisplay)}
                     </DropdownButton>
                 </Dropdown>
-                {Constraints[type].needToSpecifyMod && 
+                {Constraints[type].needToSpecifyMod &&  
                 <Dropdown>
                     <DropdownButton title={modCod} onSelect={handleModChange(setModCod, setMod, mods, modCod, type, setTime)}>
                         {mods.map(ModDisplay)}
                     </DropdownButton>
-                </Dropdown>                
+                </Dropdown>        
                 }
-                {Constraints[type].optionCode(setTime, time, mod, yearSem, setModTimetables, modTimetables)}
+                {actualTimet.length !== 0 && 
+                Constraints[type].optionCode(setTime, time, actualTimet.filter(x => x.moduleCode === modCod)[0])}
                 <Button type="submit" onClick={handleSubmit(setConstraints, constraints)(type, mod, time, defaultMod)}>
                     Submit constraint
                 </Button>
@@ -49,7 +50,7 @@ const ConstraintForm = ({mods, constraints, setConstraints, yearSem, setModTimet
 const handleModChange = (setModCod, setMod, mods, modCod, type, setTime) => 
     input => {
         setModCod(input)
-        setMod(mods.filter(y => y.moduleCode === modCod)[0])
+        setMod(mods.filter(y => y.moduleCode === input)[0])
         setTime(Constraints[type].defaultTime)
     }
 
@@ -74,7 +75,6 @@ const handleSubmit = (setConstraints, constraints) =>
                     }
                 ])
             } else {
-                //make this more detailed
                 window.alert(check.message)
             }
         }
@@ -82,16 +82,17 @@ const handleSubmit = (setConstraints, constraints) =>
 
 
 
-const handleConstraintTypeChange = (setType, setTime, mod, semYear) =>
+const handleConstraintTypeChange = (setType, setTime) =>
     (input) => {
         const index = Constraints.findIndex(x => x.type === input)
         setType(index)
         setTime(Constraints[index].defaultTime)
     }
 
-const ModDisplay = x => {
+const ModDisplay = 
+    mod => {
     return (
-        <Dropdown.Item eventKey={x.moduleCode} key={x.moduleCode}>{x.moduleCode}</Dropdown.Item>
+        <Dropdown.Item eventKey={mod.moduleCode} key={mod.moduleCode}>{mod.moduleCode}</Dropdown.Item>
     );
 }
 

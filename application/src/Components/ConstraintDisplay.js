@@ -18,7 +18,7 @@ const Display = (setConstraints, constraints) =>
         x => {
             return (
             <ListGroup.Item key={constraints.id}>
-                {Constraints[x.type].displayCode(x)}
+                {Constraints[x.type].displayCode(x, true)}
                 <IconButton onClick={() => deleteConstraint(setConstraints, constraints)(x)}>
                     <DeleteIcon />
                 </IconButton>
