@@ -55,7 +55,6 @@ const ModInput = ({
     setDisplaySearchResults(true);
     setDisplayConstraintForm(false);
     setSearchTerm(newSearchTerm);
-    console.log(event.target.value);
   };
 
   const handleChange = (event) => {
