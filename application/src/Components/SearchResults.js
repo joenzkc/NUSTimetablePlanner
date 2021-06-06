@@ -1,15 +1,34 @@
 import React, { useEffect, useState } from "react";
 import AddIcon from "@material-ui/icons/Add";
-import { Container, Row, Col, Form, ListGroup } from "react-bootstrap";
+import { Col, ListGroup } from "react-bootstrap";
+import { makeStyles } from "@material-ui/core/styles";
 import "bootstrap/dist/css/bootstrap.min.css";
 import axios from "axios";
-import { IconButton } from "@material-ui/core";
+import {
+  IconButton,
+  List,
+  ListItem,
+  ListItemText,
+  ListItemIcon,
+  Card,
+} from "@material-ui/core";
+
+const useStyles = makeStyles((theme) => ({
+  modCode: {
+    fontWeight: 600,
+  },
+  root: {
+    width: "100%",
+    backgroundColor: theme.palette.background.paper,
+  },
+}));
 
 const SearchResults = ({ searchTerm, setMods, mods, time }) => {
   const [allMods, setAllMods] = useState([]);
-  
+  const classes = useStyles();
+
   const link = "https://api.nusmods.com/v2/" + time.year + "/moduleList.json";
-  
+
   useEffect(() => {
     axios.get(link).then((response) => {
       setAllMods(response.data);
@@ -28,35 +47,31 @@ const SearchResults = ({ searchTerm, setMods, mods, time }) => {
     (x) => mods.findIndex((y) => y === x) === -1
   );
 
+  const DisplayMod = (setMods, mods) => (mod) => {
+    return (
+      <Card>
+        <List className={classes.root}>
+          <ListItem>
+            <ListItemText>
+              {mod.moduleCode} {mod.title}
+            </ListItemText>
+            <ListItemIcon>
+              <IconButton edge="end" onClick={() => addMod(setMods, mods)(mod)}>
+                <AddIcon />
+              </IconButton>
+            </ListItemIcon>
+          </ListItem>
+        </List>
+      </Card>
+    );
+  };
+
   return (
     <Col>
       <ListGroup>
         {furtherFilteredMods.map(DisplayMod(setMods, mods))}
       </ListGroup>
     </Col>
-  );
-};
-
-const DisplayMod = (setMods, mods) => (mod) => {
-  return (
-    <ListGroup.Item key={mod.moduleCode}>
-      <Row>
-        <Col lg={10}>
-          {mod.moduleCode} {mod.title}
-        </Col>
-        <Col lg={2}>
-          <AddButton setMods={setMods} mods={mods} mod={mod} />
-        </Col>
-      </Row>
-    </ListGroup.Item>
-  );
-};
-
-const AddButton = ({ setMods, mods, mod }) => {
-  return (
-    <IconButton onClick={() => addMod(setMods, mods)(mod)}>
-      <AddIcon style={{ cursor: "pointer" }} />
-    </IconButton>
   );
 };
 
