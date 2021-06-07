@@ -109,6 +109,28 @@ function App() {
     setActualTimet([]);
   }
 
+  function shuffleArray(array) {
+    for (var i = array.length - 1; i > 0; i--) {
+        var j = Math.floor(Math.random() * (i + 1));
+        var temp = array[i];
+        array[i] = array[j];
+        array[j] = temp;
+    }
+  }
+
+  const reshuffle = () => {
+    const copyTimetable = JSON.parse(JSON.stringify(actualTimet));
+    const mapped = copyTimetable.map(x => {
+      shuffleArray(x.lessons)
+      return ({
+      moduleCode: x.moduleCode,
+      lessons: x.lessons
+      });
+    })
+    shuffleArray(mapped)
+    setActualTimet(mapped);
+  }
+
   return (
     <Router>
       <div className="App">
@@ -209,6 +231,8 @@ function App() {
                     {displayConstraintForm && 
                     <SubmitConstraint
                       setDisplayTimetable={setDisplayTimetable}
+                      setConstraints={setConstraints}
+                      tentativeConstraints={tentativeConstraints}
                     />
                     }
                   </Col>
@@ -219,6 +243,11 @@ function App() {
                   constraints={constraints}
                   actualTimet={actualTimet}
                 />
+              )}
+              {displayTimetable && (
+                <Button onClick={reshuffle}>
+                  Generate another
+                </Button>
               )}
             </Route>
             <Route exact path="/help" component={Help} />

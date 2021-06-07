@@ -11,7 +11,6 @@ const Timetable = ({constraints, actualTimet}) => {
     if (!ConstrictConflict(constraints)) {
         return <h1>LOL</h1> //return empty timetable
     }
-    console.log("constraints are", constraints)
     const sortedConstraints = constraints.map(x => x).sort((x, y) => x.type - y.type);
     const lessonType = actualTimet.map(LessonTypes)
     const noLessonTypesOriginal = lessonType.map(mod => mod.length)
