@@ -1,14 +1,6 @@
 import React, { useState } from "react";
-import { Form, Row, Col } from "react-bootstrap";
-import IconButton from "@material-ui/core/IconButton";
-import SearchIcon from "@material-ui/icons/Search";
-import { FormGroup, Paper, Icon } from "@material-ui/core";
-import {
-  fade,
-  ThemeProvider,
-  withStyles,
-  makeStyles,
-} from "@material-ui/core/styles";
+
+import { makeStyles } from "@material-ui/core/styles";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 
@@ -35,7 +27,7 @@ const useStyles = makeStyles((theme) => ({
   textField: {
     marginLeft: theme.spacing(1),
     marginRight: theme.spacing(1),
-    width: 300,
+    width: 320,
   },
 }));
 
@@ -63,27 +55,24 @@ const ModInput = ({
 
   return (
     <div>
-      {/* <Paper className={classes.root}> */}
       <form onSubmit={handleSubmit}>
         <TextField
-          label="Search for a module"
+          label="Search for a module. Try 'CS' or 'GER'"
           id="margin-normal"
           name="name"
           className={classes.textField}
           onChange={handleChange}
-          helperText="Enter a mod number e.g CS1010, GER1000"
         />
         <Button
           type="submit"
           variant="contained"
-          color="primary"
+          color="default"
           className={classes.button}
           onClick={handleSubmit}
         >
           Search
         </Button>
       </form>
-      {/* </Paper> */}
     </div>
   );
 };

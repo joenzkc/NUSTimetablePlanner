@@ -1,13 +1,10 @@
 import React from "react-dom";
-import { Navbar, Nav, NavDropdown, Form, FormControl } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { makeStyles } from "@material-ui/core/styles";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
-import IconButton from "@material-ui/core/IconButton";
-import MenuIcon from "@material-ui/icons/Menu";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -23,15 +20,27 @@ const useStyles = makeStyles((theme) => ({
 
 const Header = () => {
   const classes = useStyles();
+  const navStyle = {
+    color: "white",
+    textDecoration: "none",
+  };
 
   return (
     <div className={classes.root}>
-      <AppBar position="static">
+      <AppBar position="static" style={{ backgroundColor: "#f3f5f8" }}>
         <Toolbar>
-          <Typography variant="h6" className={classes.title}>
-            NUS Timetable Planner
-          </Typography>
-          <Button color="inherit">Help</Button>
+          <Link to="/" className={classes.title} style={navStyle}>
+            <Typography
+              variant="h5"
+              className={classes.title}
+              style={{ color: "#ff5138" }}
+            >
+              NUS Timetable Planner
+            </Typography>
+          </Link>
+          <Link style={navStyle} to="/help">
+            <Button style={{ color: "#ff5138" }}>Help</Button>
+          </Link>
         </Toolbar>
       </AppBar>
     </div>
