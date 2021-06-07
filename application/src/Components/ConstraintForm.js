@@ -7,7 +7,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import DropdownButton from 'react-bootstrap/DropdownButton';
 import Button from "react-bootstrap/Button";
 
-const ConstraintForm = ({mods, constraints, setConstraints, actualTimet}) => {
+const ConstraintForm = ({mods, tentativeConstraints, setTentativeConstraints, actualTimet}) => {
     const [type, setType] = useState(0)
     //dunno why by default it is undefined
     const [modCod, setModCod] = useState(mods[0].moduleCode)
@@ -21,7 +21,7 @@ const ConstraintForm = ({mods, constraints, setConstraints, actualTimet}) => {
             <h2>
                 Select your constraints
             </h2>
-            <Form onSubmit={handleSubmit(setConstraints, constraints)(type, mod, time, defaultMod)}>
+            <Form onSubmit={handleSubmit(setTentativeConstraints, tentativeConstraints)(type, mod, time, defaultMod)}>
                 <FormGroup>
                 <div className="btn-group">
                 <Dropdown>
@@ -38,7 +38,7 @@ const ConstraintForm = ({mods, constraints, setConstraints, actualTimet}) => {
                 }
                 {actualTimet.length !== 0 && 
                 Constraints[type].optionCode(setTime, time, actualTimet.filter(x => x.moduleCode === modCod)[0])}
-                <Button type="submit" onClick={handleSubmit(setConstraints, constraints)(type, mod, time, defaultMod)}>
+                <Button type="submit" onClick={handleSubmit(setTentativeConstraints, tentativeConstraints)(type, mod, time, defaultMod)}>
                     Submit constraint
                 </Button>
                 </div>
@@ -54,17 +54,17 @@ const handleModChange = (setModCod, setMod, mods, modCod, type, setTime) =>
         setTime(Constraints[type].defaultTime)
     }
 
-const handleSubmit = (setConstraints, constraints) => 
+const handleSubmit = (setTentativeConstraints, tentativeConstraints) => 
     (type, mod, time, defaultMod) => 
     (event) => 
         {   
             event.preventDefault();
-            const check = Constraints[type].checkValid(time, constraints)
+            const check = Constraints[type].checkValid(time, tentativeConstraints)
             if (check.valid) {
-                setConstraints([
-                    ...constraints, 
+                setTentativeConstraints([
+                    ...tentativeConstraints, 
                     {
-                        id: constraints.length + 1, 
+                        id: tentativeConstraints.length + 1, 
                         type: type, 
                         mod: Constraints[type].needToSpecifyMod
                             ? typeof mod === 'undefined'

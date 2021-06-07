@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react'
 import axios from 'axios'
 
 import Constraints from "./Constraints"
+import Timetable_lib from 'react-timetable-events'
+import moment from 'moment';
 
 const Days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
 
@@ -9,6 +11,7 @@ const Timetable = ({constraints, actualTimet}) => {
     if (!ConstrictConflict(constraints)) {
         return <h1>LOL</h1> //return empty timetable
     }
+    console.log("constraints are", constraints)
     const sortedConstraints = constraints.map(x => x).sort((x, y) => x.type - y.type);
     const lessonType = actualTimet.map(LessonTypes)
     const noLessonTypesOriginal = lessonType.map(mod => mod.length)
@@ -32,51 +35,110 @@ const Timetable = ({constraints, actualTimet}) => {
     }
 
     let Timetable = new Array(5).fill(0).map(() => new Array(28).fill(null)); // a 5 x 28 array for each weekday and from 7am to 9pm
-    validLessons = SetConfirmed(Timetable, validLessons, lessonType)
-    if (validLessons === null) {
-        return <h1>LOL</h1>
-    }
-    console.log("timetable is", Timetable)
-    console.log("valid lessons are", validLessons)
-    console.log("new lesson type is", lessonType)
 
     const endEarly = sortedConstraints.findIndex(x => x.type === 4) !== -1;
     
     const startLate = sortedConstraints.findIndex(x => x.type === 5) !== -1;
-    console.log("start late is", startLate, sortedConstraints)
-    const confirmedTimetable = GeneratePossible(Timetable, validLessons, lessonType, endEarly, startLate)
-    const htmlCodeForTimet = TimetableGenerator(confirmedTimetable);
-    if (htmlCodeForTimet === null) {
-        window.alert("Not possible");
-        return <h1>LOL</h1>
+    const online = sortedConstraints.findIndex(x => x.type === 6) !== -1;
+    const offline = sortedConstraints.findIndex(x => x.type === 7) !== -1;
+    const confirmedLessons = GeneratePossible(Timetable, validLessons, lessonType, endEarly, startLate, online, offline, [])
+    return TimetableGenerator(confirmedLessons);
+}
+
+const TimetableGenerator = (confirmedLessons) => {
+    let events = {
+        monday: [], 
+        tuesday: [], 
+        wednesday: [], 
+        thursday: [], 
+        friday: []
     }
-    return htmlCodeForTimet
+    let currentId = 1
+    for (let i = 0; i < confirmedLessons.length; i++) {
+        const currentLesson = confirmedLessons[i];
+        const newEvent = {
+            id: currentId, 
+            name: currentLesson.moduleCode + " " + currentLesson.lesson.classNo + " " + currentLesson.lesson.venue,
+            type: currentLesson.lesson.lessonType, 
+            startTime: moment(currentLesson.lesson.startTime.substring(0, 2) + ":" + 
+                currentLesson.lesson.startTime.substring(2, 4), 'HH:mm'), 
+            endTime: moment(currentLesson.lesson.endTime.substring(0, 2) + ":" + 
+                currentLesson.lesson.endTime.substring(2, 4), 'HH:mm')
+        }
+        switch (Days.findIndex(x => x === currentLesson.lesson.day)) {
+            case 0: 
+                events = {
+                    ...events, monday: [...events.monday, newEvent]
+                }
+            break; 
+            case 1: 
+                events = {
+                    ...events, tuesday: [...events.tuesday, newEvent]
+                }
+            break;
+            case 2: 
+                events = {
+                    ...events, wednesday: [...events.wednesday, newEvent]
+                }
+            break;
+            case 3: 
+                events = {
+                    ...events, thursday: [...events.thursday, newEvent]
+                }
+            break;
+            case 4: 
+                events = {
+                    ...events, friday: [...events.friday, newEvent]
+                }
+        }
+    }
+    return <Timetable_lib events={events} />
 }
 
 //this function generates a possible timetable
-function GeneratePossible(Timetable, validLessons, lessonType, endEarly, startLate) {
+function GeneratePossible(Timetable, validLessons, lessonType, endEarly, startLate, online, offline, confirmedLesson) {
     //When all lessonTypes are done and lesson type is an empty arr
     if (lessonType.map(x => x.length).reduce((x, y) => x + y, 0) === 0) {
-        return Timetable;
+        return confirmedLesson;
     }
 
     //when there are no valid lessons left
     if (validLessons.map(x => x.length).reduce((x, y) => x + y, 0) === 0) {
         return null;
     }
-
     const firstIndex = lessonType.map(x => x.length).findIndex(x => x !== 0);
     const firstMod = validLessons[firstIndex]; //this is the first mod in which there is still unconfirmed lesson types
     const firstLessonTypes = lessonType[firstIndex];
     const firstLessonT = firstLessonTypes[0];
     const lessonsOfMod = firstMod.lessons;
     if (startLate) {  
-        lessonsOfMod.sort((x, y) => parseInt(y.startTime) - parseInt(x.startTime))
+        BubbleSort(lessonsOfMod, (x, y) => parseInt(y.startTime) - parseInt(x.startTime))
     }
     if (endEarly) {
-        console.log("coming into startlate", lessonsOfMod)
-        lessonsOfMod.sort((x, y) => parseInt(x.endTime) - parseInt(y.endTime))
-        console.log("after sorting", lessonsOfMod)
+        BubbleSort(lessonsOfMod, (x, y) => parseInt(x.endTime) - parseInt(y.endTime))
+    }
+    if (online) {
+        BubbleSort(lessonsOfMod, (x, y) => {
+            if (x.venue === "E-Learn_C" && y.venue === "E-Learn_C") {
+                return 0;
+            } else if (x.venue === "E-Learn_C") {
+                return -1; 
+            } else {
+                return 1;
+            }
+        })
+    }
+
+    if (offline) {
+        BubbleSort(lessonsOfMod, (x, y) => {
+            if (x.venue === "E-Learn_C" && y.venue === "E-Learn_C") {
+                return 0;
+            } else if (x.venue === "E-Learn_C") {
+                return 1;
+            } else {
+                return -1;
+            }
+        })
     }
     const lessonOfThatType = lessonsOfMod.filter(x => x.lessonType === firstLessonT);
     const classNoOfThatType = lessonOfThatType.map(x => x.classNo).filter((item, i, ar) => ar.indexOf(item) === i);
@@ -119,7 +181,13 @@ function GeneratePossible(Timetable, validLessons, lessonType, endEarly, startLa
             lessonType: removeLessonT
         }]
 
-        const Possible = GeneratePossible(copyTimetable, newValidLesson, copyLessonType, endEarly, startLate);
+        const copyConfirmedLesson = JSON.parse(JSON.stringify(confirmedLesson))
+        const allLessonsToPush = firstMod.lessons.filter(x => x.classNo === classNo);
+        for (let i = 0; i < allLessonsToPush.length; i++) {
+            copyConfirmedLesson.push({moduleCode: firstMod.moduleCode, lesson: allLessonsToPush[i]})
+        }
+        const Possible = GeneratePossible(copyTimetable, newValidLesson, 
+            copyLessonType, endEarly, startLate, online, offline, copyConfirmedLesson);
         if (Possible !== null) {
             return Possible;
         }
@@ -128,47 +196,47 @@ function GeneratePossible(Timetable, validLessons, lessonType, endEarly, startLa
 }
 
 //This function adds classes of which it is the only valid class of its lessontype in its mod
-const SetConfirmed = (Timetable, validLesson, lessonType) => {
-    let newValidLesson = [...validLesson]
-    for (let i = 0; i < validLesson.length; i++) {
-        const currentLessons = validLesson[i].lessons;
-        const modLessonType = lessonType[i];
-        for (let j = 0; j < modLessonType.length; j++) {
-            const currentLessonType = modLessonType[j];
-            const lessonOfThatType = currentLessons.filter(lesson => lesson.lessonType === currentLessonType)
-            const uniqueLessonNo = lessonOfThatType.map(x => x.classNo).filter((item, i, ar) => ar.indexOf(item) === i)
-            if (uniqueLessonNo.length === 1) {
-                if (!(lessonOfThatType.reduce((x, y) => AddClass(y, Timetable, validLesson[i].moduleCode) && x, true))) {
-                    window.alert("Not possible due to clashes");
-                    return null;
-                };
-                const newLessonT =  modLessonType.filter(x => x !== currentLessonType)
-                lessonType.splice(i, 1, 
-                   newLessonT)
-                const removeConfirmed = 
-                    currentLessons.filter(lesson => uniqueLessonNo.findIndex(each => each === lesson.classNo) === -1)
-                let firstSlice = validLesson.slice(0, i)
-                let secondSlice = validLesson.slice(i + 1, validLesson.length)
+// const SetConfirmed = (Timetable, validLesson, lessonType) => {
+//     let newValidLesson = [...validLesson]
+//     for (let i = 0; i < validLesson.length; i++) {
+//         const currentLessons = validLesson[i].lessons;
+//         const modLessonType = lessonType[i];
+//         for (let j = 0; j < modLessonType.length; j++) {
+//             const currentLessonType = modLessonType[j];
+//             const lessonOfThatType = currentLessons.filter(lesson => lesson.lessonType === currentLessonType)
+//             const uniqueLessonNo = lessonOfThatType.map(x => x.classNo).filter((item, i, ar) => ar.indexOf(item) === i)
+//             if (uniqueLessonNo.length === 1) {
+//                 if (!(lessonOfThatType.reduce((x, y) => AddClass(y, Timetable, validLesson[i].moduleCode) && x, true))) {
+//                     window.alert("Not possible due to clashes");
+//                     return null;
+//                 };
+//                 const newLessonT =  modLessonType.filter(x => x !== currentLessonType)
+//                 lessonType.splice(i, 1, 
+//                    newLessonT)
+//                 const removeConfirmed = 
+//                     currentLessons.filter(lesson => uniqueLessonNo.findIndex(each => each === lesson.classNo) === -1)
+//                 let firstSlice = validLesson.slice(0, i)
+//                 let secondSlice = validLesson.slice(i + 1, validLesson.length)
                 
-                for (let k = 0; k < lessonOfThatType.length; k++) {
-                    const dummyConstraint = {
-                        id: null,
-                        type: 3,
-                        time: [lessonOfThatType[k].day, lessonOfThatType[k].startTime, lessonOfThatType[k].endTime]
-                    }
-                    firstSlice = firstSlice.map(Constraints[3].filterMods(dummyConstraint))
-                    secondSlice = secondSlice.map(Constraints[3].filterMods(dummyConstraint))
-                }
-                newValidLesson = [...firstSlice, {
-                    moduleCode: validLesson[i].moduleCode, 
-                    lessons: removeConfirmed
-                }
-                    , ...secondSlice]
-            }
-        }
-    }
-    return newValidLesson;
-}
+//                 for (let k = 0; k < lessonOfThatType.length; k++) {
+//                     const dummyConstraint = {
+//                         id: null,
+//                         type: 3,
+//                         time: [lessonOfThatType[k].day, lessonOfThatType[k].startTime, lessonOfThatType[k].endTime]
+//                     }
+//                     firstSlice = firstSlice.map(Constraints[3].filterMods(dummyConstraint))
+//                     secondSlice = secondSlice.map(Constraints[3].filterMods(dummyConstraint))
+//                 }
+//                 newValidLesson = [...firstSlice, {
+//                     moduleCode: validLesson[i].moduleCode, 
+//                     lessons: removeConfirmed
+//                 }
+//                     , ...secondSlice]
+//             }
+//         }
+//     }
+//     return newValidLesson;
+// }
 
 
 //This function is to generate a array of lesson types for this mod
@@ -253,6 +321,12 @@ const ConstrictConflict = (constraints) => {
             }
         }
     }
+
+    const type6 = constraints.findIndex(x => x.type === 6);
+    const type7 = constraints.findIndex(x => x.type === 7)
+    if (type6 !== -1 &&  type7 !== -1) {
+        Alert(constraints[type6], constraints[type7]);;
+    }
     return true;
 }
 
@@ -266,36 +340,38 @@ const Alert = (constraint1, constraint2) => {
 const Times = [...Array(2100).keys()].slice(1).
     filter(x => x >= 700 && (x % 100 === 0 || x % 100 === 30))
 
-const TimetableGenerator = (lessons) => {
-    return (
-    <table>
-        <tr>
-            <th></th>
-            {Times.map(x => <th>{x}</th>)}
-        </tr>
-        {lessons.map((day, index) => {
-            return (
-                <tr>
-                    <th>{Days[index]}</th>
-                    {day.map(lesson => {
-                        if (lesson === null) {
-                            return (<th></th>)
-                        } else {
-                            return (<th> {lesson.moduleCode} {lesson.lesson.classNo}</th>)
-                        }
-                        }
-                    )}
-                </tr>);
-        }
-            )}  
-    </table>
-    );
-}
+// const TimetableGenerator = (lessons) => {
+//     return (
+//     <table>
+//         <tr>
+//             <th></th>
+//             {Times.map(x => <th>{x}</th>)}
+//         </tr>
+//         {lessons.map((day, index) => {
+//             return (
+//                 <tr>
+//                     <th>{Days[index]}</th>
+//                     {day.map(lesson => {
+//                         if (lesson === null) {
+//                             return (<th></th>)
+//                         } else {
+//                             return (<th> {lesson.moduleCode} {lesson.lesson.classNo} {lesson.lesson.venue} </th>)
+//                         }
+//                         }
+//                     )}
+//                 </tr>);
+//         }
+//             )}  
+//     </table>
+//     );
+// }
 
-const BubbleSort = (array) => {
+
+
+const BubbleSort = (array, compareFunction) => {
     for (let i = 0; i < array.length; i++) {
         for (let j = i + 1; j < array.length; j++) {
-            if (array[i] > array[j]) {
+            if (compareFunction(array[i], array[j]) > 0) {
                 const temp = array[i];
                 array[i] = array[j];
                 array[j] = temp;

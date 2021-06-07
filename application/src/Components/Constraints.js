@@ -204,6 +204,26 @@ const Constraints = [
         checkValid: (time, currentConstraints) => {
             return {valid: currentConstraints.findIndex(x => x.type === 5) === -1, 
                     message: "Already added!"}}, 
+        filterMods: constraint => mod => mod}, 
+    {id: 6, 
+        type: "Maximise online classes", 
+        defaultTime: null, 
+        needToSpecifyMod: false, 
+        optionCode: (setTime, time, actualTimet) => <span></span>, 
+        displayCode: (constraint, needSpan) => standardDisplayCode(constraint, "Maximise online classes", needSpan), 
+        checkValid: (time, currentConstraints) => {
+            return {valid: currentConstraints.findIndex(x => x.type === 6) === -1, 
+                    message: "Already added!"}}, 
+        filterMods: constraint => mod => mod}, 
+    {id: 7, 
+        type: "Maximise offline classes", 
+        defaultTime: null, 
+        needToSpecifyMod: false, 
+        optionCode: (setTime, time, actualTimet) => <span></span>, 
+        displayCode: (constraint, needSpan) => standardDisplayCode(constraint, "Maximise offline classes", needSpan), 
+        checkValid: (time, currentConstraints) => {
+            return {valid: currentConstraints.findIndex(x => x.type === 7) === -1, 
+                message: "Already added!"}}, 
         filterMods: constraint => mod => mod}
 ]
 

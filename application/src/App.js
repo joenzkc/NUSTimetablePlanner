@@ -48,6 +48,7 @@ function App() {
   const [displayConstraintForm, setDisplayConstraintForm] = useState(false);
   const [displayTimetable, setDisplayTimetable] = useState(false);
   const [constraints, setConstraints] = useState([]);
+  const [tentativeConstraints, setTentativeConstraints] = useState([]);
 
   useEffect(() => {
     const Mapped = mods.map(mod => {
@@ -82,6 +83,17 @@ function App() {
       }
   }, [promiseTimetable.length])
 
+  const restart = () => {
+    setDisplayConstraintForm(false);
+    setDisplaySearchResults(false);
+    setDisplayTimetable(false);
+    setMods([]);
+    setTentativeConstraints([]);
+    setConstraints([]);
+    setPromiseTimetable([]);
+    setActualTimet([]);
+  }
+
   return (
     <Router>
       <div className="App">
@@ -98,8 +110,7 @@ function App() {
                         <Col lg={3}>
                           <TimeForm
                             setTime={setTentativeTime}
-                            setMods={setMods}
-                            setDisplaySearchResults={setDisplaySearchResults}
+                            restart={restart}
                           />
                         </Col>
                         <Col lg={9}>
@@ -153,18 +164,20 @@ function App() {
                     {displayConstraintForm && (
                       <ConstraintForm
                         mods={mods}
-                        constraints={constraints}
-                        setConstraints={setConstraints}
+                        tentativeConstraints = {tentativeConstraints}
+                        setTentativeConstraints={setTentativeConstraints}
                         actualTimet={actualTimet}
-                      />
-                    )}
-                    {displayConstraintForm && constraints.length !== 0 && (
-                      <ConstraintDisplay
-                        constraints={constraints}
                         setConstraints={setConstraints}
                       />
                     )}
-                    {displayConstraintForm && constraints.length !== 0 && (
+                    {displayConstraintForm && tentativeConstraints.length !== 0 && (
+                      <ConstraintDisplay
+                        constraints={tentativeConstraints}
+                        setConstraints={setTentativeConstraints}
+                        setDisplayTimetable={setDisplayTimetable}
+                      />
+                    )}
+                    {displayConstraintForm && tentativeConstraints.length !== 0 && (
                       <div class="btn-group">
                         <Button
                           id="Clear constraints"
@@ -189,17 +202,19 @@ function App() {
                         
                       </div>
                     )}
-                    <Button
+                    {displayConstraintForm && <Button
                           id="Submit constraints"
-                          onClick={() => setDisplayTimetable(true)}
+                          onClick={() => {setConstraints(tentativeConstraints); setDisplayTimetable(true)}}
                         >
                           Submit constraints
                       </Button>
+                    }
                   </Col>
                 </Row>
               </Form>
               {displayTimetable &&
               <Timetable constraints={constraints} actualTimet={actualTimet}/>}
+              <div class="timetable"></div>
             </Route>
             <Route exact path="/help">
               <Help />
@@ -208,6 +223,7 @@ function App() {
           <Footer />
         </Container>
       </div>
+      <script src="scripts/timetable.min.js"></script>
     </Router>
     
   );
