@@ -50,6 +50,20 @@ const DayOption =
         <Dropdown.Item eventKey ="Friday" key="Friday">Friday</Dropdown.Item>
     </Fragment>
 
+const BubbleSort = (array, compareFunction) => {
+    const copy = JSON.parse(JSON.stringify(array))
+    for (let i = 0; i < copy.length; i++) {
+        for (let j = 0; j < copy.length - i - 1; j++) {
+            if (compareFunction(copy[j], copy[j + 1]) > 0) {
+                const temp = copy[j];
+                copy[j] = copy[j + 1];
+                copy[j + 1] = temp;
+            }
+        }
+    }
+    return copy;
+}
+
 //Filters mods if users decides to fix a class
 const filterClassesForFixClass = constraint => mod => {
     const modCode = constraint.mod.moduleCode;
@@ -125,7 +139,7 @@ const Constraints = [
         return {valid: time != "Choose a class", 
                 message: "Choose a class",} 
         }, 
-    filterMods: filterClassesForFixClass}, 
+    filterMods: constraint => mods => mods.map(filterClassesForFixClass(constraint))}, 
     {id: 1, 
     type: "No lessons before",
     defaultTime: "0600",
@@ -140,7 +154,7 @@ const Constraints = [
     checkValid: (time, currentConstraints) => {
         return {valid: true, message: "I shouldnt be appearing"}
     }, 
-    filterMods: filterClassesForNoLessonsBefore},
+    filterMods: constraint => mods => mods.map(filterClassesForNoLessonsBefore(constraint))},
     {id: 2, 
     type: "No lessons on", 
     defaultTime: "Monday",
@@ -153,7 +167,7 @@ const Constraints = [
                 </Dropdown>, 
     displayCode: (constraint, needSpan) => standardDisplayCode(constraint, "No lessons on", needSpan),
     checkValid: (time, currentConstraints) => {return {valid: true, message: "I shouldnt be appearing"}}, 
-    filterMods: filterClassesForNoLessonsOn}, 
+    filterMods: constraint => mods => mods.map(filterClassesForNoLessonsOn(constraint))}, 
     {id: 3, 
     type: "No lessons on __ from __ to __", 
     defaultTime: ["Monday", "0600", "0600"],
@@ -176,13 +190,13 @@ const Constraints = [
         if (needSpan) {
             return (<span>No lessons on {constraint.time[0]} from {constraint.time[1]} to {constraint.time[2]} </span>);
         } else {
-            return "No lessons on" + constraint.time[0] + "from" + constraint.time[1] +  "to" + constraint.time[2];
+            return "No lessons on " + constraint.time[0] + " from " + constraint.time[1] +  " to " + constraint.time[2];
         }
     } 
         , 
     checkValid: (time, currentConstraints) => {
         return {valid: parseInt(time[1]) <= parseInt(time[2]), message: "Starting time is before ending time"}}, 
-    filterMods: filterClassesForNoLessonsFromTo},
+    filterMods: constraint => mods => mods.map(filterClassesForNoLessonsFromTo(constraint))},
     {id: 4, 
         type: "End as early as possible",
         defaultTime: null,
@@ -193,7 +207,10 @@ const Constraints = [
         checkValid: (time, currentConstraints) => {
             return {valid: currentConstraints.findIndex(x => x.type === 4) === -1, 
                     message: "Already added!"}},
-        filterMods: constraint => mod => mod,
+        filterMods: constraint => mods => mods.map(x => {
+            return ({moduleCode: x.moduleCode, 
+                    lessons: BubbleSort(x.lessons, (z, y) => parseInt(z.endTime) - parseInt(y.endTime))});
+        })
         },
     {id: 5, 
         type: "Start as late as possible", 
@@ -204,7 +221,10 @@ const Constraints = [
         checkValid: (time, currentConstraints) => {
             return {valid: currentConstraints.findIndex(x => x.type === 5) === -1, 
                     message: "Already added!"}}, 
-        filterMods: constraint => mod => mod}, 
+        filterMods: constraint => mods => mods.map(x => {
+            return ({moduleCode: x.moduleCode, 
+                lessons: BubbleSort(x.lessons, (z, y) => parseInt(y.startTime) - parseInt(z.startTime))});
+        })} , 
     {id: 6, 
         type: "Maximise online classes", 
         defaultTime: null, 
@@ -214,7 +234,20 @@ const Constraints = [
         checkValid: (time, currentConstraints) => {
             return {valid: currentConstraints.findIndex(x => x.type === 6) === -1, 
                     message: "Already added!"}}, 
-        filterMods: constraint => mod => mod}, 
+        filterMods: constraint => mods => mods.map(mod => {
+            return ({
+                moduleCode: mod.moduleCode, 
+                lessons: BubbleSort(mod.lessons, (x, y) => {
+                    if (x.venue === "E-Learn_C" && y.venue === "E-Learn_C") {
+                        return 0;
+                    } else if (x.venue === "E-Learn_C") {
+                        return -1; 
+                    } else {
+                        return 1;
+                    }
+                })
+            });
+        })}, 
     {id: 7, 
         type: "Maximise offline classes", 
         defaultTime: null, 
@@ -224,7 +257,20 @@ const Constraints = [
         checkValid: (time, currentConstraints) => {
             return {valid: currentConstraints.findIndex(x => x.type === 7) === -1, 
                 message: "Already added!"}}, 
-        filterMods: constraint => mod => mod}
+        filterMods: constraint => mods => mods.map(mod => {
+            return ({
+                moduleCode: mod.moduleCode, 
+                lessons: BubbleSort(mod.lessons, (x, y) => {
+                    if (x.venue === "E-Learn_C" && y.venue === "E-Learn_C") {
+                        return 0;
+                    } else if (x.venue === "E-Learn_C") {
+                        return 1;
+                    } else {
+                        return -1;
+                    }
+                })
+            });
+        })}
 ]
 
 const handleChangeTime = setTime => 

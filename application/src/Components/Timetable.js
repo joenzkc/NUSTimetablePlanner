@@ -9,9 +9,10 @@ const Days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
 
 const Timetable = ({constraints, actualTimet}) => {
     if (!ConstrictConflict(constraints)) {
-        return <h1>LOL</h1> //return empty timetable
+        return <h1><Timetable_lib/></h1> //return empty timetable
     }
     const sortedConstraints = constraints.map(x => x).sort((x, y) => x.type - y.type);
+    console.log("constraints are", sortedConstraints)
     const lessonType = actualTimet.map(LessonTypes)
     const noLessonTypesOriginal = lessonType.map(mod => mod.length)
     let validLessons = [...actualTimet];
@@ -20,7 +21,10 @@ const Timetable = ({constraints, actualTimet}) => {
     //if it still possible to proceed
     for (var i = 0; i < sortedConstraints.length; i++) {
         const currentConstraint = sortedConstraints[i];
-        validLessons = validLessons.map(Constraints[currentConstraint.type].filterMods(currentConstraint))
+        //validLessons = validLessons.map(Constraints[currentConstraint.type].filterMods(currentConstraint))
+        console.log("before filtering", validLessons)
+        validLessons = Constraints[currentConstraint.type].filterMods(currentConstraint)(validLessons)
+        console.log("valid lessons are", validLessons)
         const noLessonTypesFiltered = validLessons.map(LessonTypes).map(x => x.length);
         for (var j = 0; j < noLessonTypesFiltered.length; j++) {
             const filteredNo = noLessonTypesFiltered[j];
@@ -28,22 +32,16 @@ const Timetable = ({constraints, actualTimet}) => {
             if (filteredNo !== originalNo) {
                 window.alert("Not possible. Consider removing " +
                     Constraints[currentConstraint.type].displayCode(currentConstraint, false))
-                return <h1>LOL</h1>
+                return <Timetable_lib />
             }
         }
     }
 
     let Timetable = new Array(5).fill(0).map(() => new Array(28).fill(null)); // a 5 x 28 array for each weekday and from 7am to 9pm
-
-    const endEarly = sortedConstraints.findIndex(x => x.type === 4) !== -1;
-    
-    const startLate = sortedConstraints.findIndex(x => x.type === 5) !== -1;
-    const online = sortedConstraints.findIndex(x => x.type === 6) !== -1;
-    const offline = sortedConstraints.findIndex(x => x.type === 7) !== -1;
-    const confirmedLessons = GeneratePossible(Timetable, validLessons, lessonType, endEarly, startLate, online, offline, [])
+    const confirmedLessons = GeneratePossible(Timetable, validLessons, lessonType, [])
     if (confirmedLessons === null) {
         window.alert("Not possible to generate timetable due to clashes")
-        return <h1>LOL</h1>
+        return <Timetable_lib />
     }
     return TimetableGenerator(confirmedLessons);
 }
@@ -61,7 +59,9 @@ const TimetableGenerator = (confirmedLessons) => {
         const currentLesson = confirmedLessons[i];
         const newEvent = {
             id: currentId, 
-            name: currentLesson.moduleCode + " " + currentLesson.lesson.classNo + " " + currentLesson.lesson.venue,
+            name: currentLesson.moduleCode + " " + 
+                currentLesson.lesson.classNo + " " + currentLesson.lesson.lessonType + 
+                " " + currentLesson.lesson.venue,
             type: currentLesson.lesson.lessonType, 
             startTime: moment(currentLesson.lesson.startTime.substring(0, 2) + ":" + 
                 currentLesson.lesson.startTime.substring(2, 4), 'HH:mm'), 
@@ -99,7 +99,7 @@ const TimetableGenerator = (confirmedLessons) => {
 }
 
 //this function generates a possible timetable
-function GeneratePossible(Timetable, validLessons, lessonType, endEarly, startLate, online, offline, confirmedLesson) {
+function GeneratePossible(Timetable, validLessons, lessonType, confirmedLesson) {
     //When all lessonTypes are done and lesson type is an empty arr
     if (lessonType.map(x => x.length).reduce((x, y) => x + y, 0) === 0) {
         return confirmedLesson;
@@ -114,35 +114,6 @@ function GeneratePossible(Timetable, validLessons, lessonType, endEarly, startLa
     const firstLessonTypes = lessonType[firstIndex];
     const firstLessonT = firstLessonTypes[0];
     const lessonsOfMod = firstMod.lessons;
-    if (startLate) {  
-        BubbleSort(lessonsOfMod, (x, y) => parseInt(y.startTime) - parseInt(x.startTime))
-    }
-    if (endEarly) {
-        BubbleSort(lessonsOfMod, (x, y) => parseInt(x.endTime) - parseInt(y.endTime))
-    }
-    if (online) {
-        BubbleSort(lessonsOfMod, (x, y) => {
-            if (x.venue === "E-Learn_C" && y.venue === "E-Learn_C") {
-                return 0;
-            } else if (x.venue === "E-Learn_C") {
-                return -1; 
-            } else {
-                return 1;
-            }
-        })
-    }
-
-    if (offline) {
-        BubbleSort(lessonsOfMod, (x, y) => {
-            if (x.venue === "E-Learn_C" && y.venue === "E-Learn_C") {
-                return 0;
-            } else if (x.venue === "E-Learn_C") {
-                return 1;
-            } else {
-                return -1;
-            }
-        })
-    }
     const lessonOfThatType = lessonsOfMod.filter(x => x.lessonType === firstLessonT);
     const classNoOfThatType = lessonOfThatType.map(x => x.classNo).filter((item, i, ar) => ar.indexOf(item) === i);
     let store = [];
@@ -169,8 +140,8 @@ function GeneratePossible(Timetable, validLessons, lessonType, endEarly, startLa
                 type: 3,
                 time: [classOfClassNo[k].day, classOfClassNo[k].startTime, classOfClassNo[k].endTime]
             }
-            firstSlice = firstSlice.map(Constraints[3].filterMods(dummyConstraint))
-            secondSlice = secondSlice.map(Constraints[3].filterMods(dummyConstraint))
+            firstSlice = Constraints[3].filterMods(dummyConstraint)(firstSlice)
+            secondSlice = Constraints[3].filterMods(dummyConstraint)(secondSlice)
         }
         const newValidLesson = [...firstSlice, {
             moduleCode: firstMod.moduleCode, 
@@ -190,7 +161,7 @@ function GeneratePossible(Timetable, validLessons, lessonType, endEarly, startLa
             copyConfirmedLesson.push({moduleCode: firstMod.moduleCode, lesson: allLessonsToPush[i]})
         }
         const Possible = GeneratePossible(copyTimetable, newValidLesson, 
-            copyLessonType, endEarly, startLate, online, offline, copyConfirmedLesson);
+            copyLessonType, copyConfirmedLesson);
         if (Possible !== null) {
             return Possible;
         }
@@ -316,7 +287,7 @@ const ConstrictConflict = (constraints) => {
             const cDay = NoLessonsFrom[j].time[0]
             const sTime = parseInt(NoLessonsFrom[j].time[1])
             const eTime = parseInt(NoLessonsFrom[j].time[2])
-            if (cDay === day && ((sTime >= startTime && sTime <= endTime) || (eTime >= startTime && eTime <= endTime))) {
+            if (cDay === day && ((startTime >= sTime && startTime <= eTime) || (endTime >= sTime && endTime <= eTime))) {
                 Alert(NoLessonsFrom[j], CurrentFixClassConstraints);
                 return false;
             } else {
@@ -325,10 +296,12 @@ const ConstrictConflict = (constraints) => {
         }
     }
 
+    //checks if there is conflict between maximise online class and offline classes
     const type6 = constraints.findIndex(x => x.type === 6);
     const type7 = constraints.findIndex(x => x.type === 7)
     if (type6 !== -1 &&  type7 !== -1) {
         Alert(constraints[type6], constraints[type7]);;
+        return false;
     }
     return true;
 }

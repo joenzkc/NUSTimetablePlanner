@@ -213,6 +213,7 @@ function App() {
                                   label: "Yes",
                                   onClick: () => {
                                     setConstraints([]);
+                                    setTentativeConstraints([]);
                                     setDisplayTimetable(false);
                                   },
                                 },
