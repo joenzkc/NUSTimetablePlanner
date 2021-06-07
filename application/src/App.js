@@ -206,9 +206,11 @@ function App() {
                         </Button>
                       </div>
                     )}
+                    {displayConstraintForm && 
                     <SubmitConstraint
                       setDisplayTimetable={setDisplayTimetable}
                     />
+                    }
                   </Col>
                 </Row>
               </Form>

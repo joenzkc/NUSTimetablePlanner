@@ -32,6 +32,12 @@ const SearchResults = ({ searchTerm, setMods, mods, time }) => {
   useEffect(() => {
     axios.get(link).then((response) => {
       setAllMods(response.data);
+    }).catch(err => {
+      if (err.response.status === 404) {
+        window.alert("Sorry, data regarding modules is not available yet");
+      } else {
+        throw err;
+      }
     });
   }, [link]);
 
@@ -69,7 +75,9 @@ const SearchResults = ({ searchTerm, setMods, mods, time }) => {
   return (
     <Col>
       <ListGroup>
-        {furtherFilteredMods.map(DisplayMod(setMods, mods))}
+        {furtherFilteredMods.length === 0
+          ? <span> Sorry, no search results </span>
+          : furtherFilteredMods.map(DisplayMod(setMods, mods))}
       </ListGroup>
     </Col>
   );

@@ -46,14 +46,13 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const TimeForm = ({ setTime, setMods, setDisplaySearchResults }) => {
+const TimeForm = ({ setTime, restart}) => {
   //time = tentativeTime, setTime = setTentative time
   return (
     <div className="btn-group" id="TimeForm">
       <YearandSemForm
         setTime={setTime}
-        setMods={setMods}
-        setDisplaySearchResults={setDisplaySearchResults}
+        restart={restart}
       />
     </div>
   );
@@ -65,22 +64,35 @@ const YearandSemForm = ({setTime, restart}) => {
 
   const handleChange = (event) => {
     restart();
-    setTitle(event);
-    const sem = Number(event.charAt(4));
-    const year = Number(event.substring(6, 10));
-    const finalYear = Number("20" + event.substring(11, 13));
+    const time = event.target.value;
+    setTitle(time);
+    const sem = Number(time.charAt(4));
+    const year = Number(time.substring(6, 10));
+    const finalYear = Number("20" + time.substring(11, 13));
     setTime({year: year.toString() + "-" + finalYear.toString(), 
             sem: sem.toString()})
   };
 
   const cYear = new Date().getUTCFullYear();
-  const cMonth = new Date().getMonth();
-
+  // const cMonth = new Date().getMonth();
+  const cMonth = 11;
   const earliestYear = 2019;
 
-  if (cMonth <=6) {
-
+  const yearStore = [];
+  for (let i = earliestYear; i < cYear; i++) {
+    yearStore.push("Sem 1 " + i + "/" + ((i + 1) % 100).toString());
+    yearStore.push("Sem 2 " + i + "/" + ((i + 1) % 100).toString()); 
   }
+
+  
+  if (cMonth > 6) {
+    yearStore.push("Sem 1 " + cYear + "/" + ((cYear + 1)% 100).toString())
+  }
+
+  if (cMonth > 11) {
+    yearStore.push("Sem 2 " + cYear + "/" + ((cYear + 1)% 100).toString())
+  }
+
 
   return (
     <div>
@@ -93,10 +105,11 @@ const YearandSemForm = ({setTime, restart}) => {
         >
           <InputLabel>{title}</InputLabel>
           <option aria-label="None" value="" />
-          <option value={"Sem 1 2020/21"}>Sem 1 2020/21</option>
+          {yearStore.map(x => <option value={x}>{x}</option>)}
+          {/* <option value={"Sem 1 2020/21"}>Sem 1 2020/21</option>
           <option value={"Sem 2 2020/21"}>Sem 2 2020/21</option>
           <option value={"Sem 1 2019/20"}>Sem 1 2019/20</option>
-          <option value={"Sem 2 2019/20"}>Sem 2 2019/20</option>
+          <option value={"Sem 2 2019/20"}>Sem 2 2019/20</option> */}
         </NativeSelect>
       </FormControl>
     </div>

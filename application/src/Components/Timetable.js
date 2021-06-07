@@ -42,6 +42,10 @@ const Timetable = ({constraints, actualTimet}) => {
     const online = sortedConstraints.findIndex(x => x.type === 6) !== -1;
     const offline = sortedConstraints.findIndex(x => x.type === 7) !== -1;
     const confirmedLessons = GeneratePossible(Timetable, validLessons, lessonType, endEarly, startLate, online, offline, [])
+    if (confirmedLessons === null) {
+        window.alert("Not possible to generate timetable due to clashes")
+        return <h1>LOL</h1>
+    }
     return TimetableGenerator(confirmedLessons);
 }
 
