@@ -1,12 +1,21 @@
 import React from "react";
 import Button from "@material-ui/core/Button";
 import "bootstrap/dist/css/bootstrap.min.css";
+import { makeStyles } from "@material-ui/core/styles";
+
+const useStyles = makeStyles((theme) => ({
+  root: {
+    marginTop: theme.spacing(1),
+  },
+}));
 
 const ModSubmit = ({
   mods,
   setDisplaySearchResults,
   setDisplayConstraintForm,
 }) => {
+  const classes = useStyles();
+
   const handleSubmit = () => {
     if (mods.length === 0) {
       window.alert("No mods selected! Please select some mods");
@@ -17,7 +26,7 @@ const ModSubmit = ({
   };
 
   return (
-    <Button variant="contained" onClick={handleSubmit}>
+    <Button className={classes.root} variant="contained" onClick={handleSubmit}>
       Submit mods!
     </Button>
   );

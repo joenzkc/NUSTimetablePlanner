@@ -5,10 +5,16 @@ import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
+import EventAvailableIcon from "@material-ui/icons/EventAvailable";
 
 const useStyles = makeStyles((theme) => ({
+  icon: {
+    color: "#ff5138",
+    marginRight: theme.spacing(2),
+  },
   root: {
     flexGrow: 1,
+    marginBottom: theme.spacing(1),
   },
   menuButton: {
     marginRight: theme.spacing(2),
@@ -27,14 +33,19 @@ const Header = () => {
 
   return (
     <div className={classes.root}>
-      <AppBar position="static" style={{ backgroundColor: "#f3f5f8" }}>
+      <AppBar
+        position="relative"
+        style={{ backgroundColor: "#f3f5f8" }}
+        elevation={1}
+      >
         <Toolbar>
           <Link to="/" className={classes.title} style={navStyle}>
             <Typography
-              variant="h5"
+              variant="h6"
               className={classes.title}
               style={{ color: "#ff5138" }}
             >
+              <EventAvailableIcon className={classes.icon} />
               NUS Timetable Planner
             </Typography>
           </Link>

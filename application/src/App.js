@@ -25,6 +25,7 @@ import SubmitConstraint from "./Components/SubmitConstraint";
 const useStyles = makeStyles((theme) => ({
   root: {
     padding: theme.spacing(3, 2),
+    marginBottom: theme.spacing(1),
   },
   container: {
     display: "flex",
@@ -107,29 +108,29 @@ function App() {
     setConstraints([]);
     setPromiseTimetable([]);
     setActualTimet([]);
-  }
+  };
 
   function shuffleArray(array) {
     for (var i = array.length - 1; i > 0; i--) {
-        var j = Math.floor(Math.random() * (i + 1));
-        var temp = array[i];
-        array[i] = array[j];
-        array[j] = temp;
+      var j = Math.floor(Math.random() * (i + 1));
+      var temp = array[i];
+      array[i] = array[j];
+      array[j] = temp;
     }
   }
 
   const reshuffle = () => {
     const copyTimetable = JSON.parse(JSON.stringify(actualTimet));
-    const mapped = copyTimetable.map(x => {
-      shuffleArray(x.lessons)
-      return ({
-      moduleCode: x.moduleCode,
-      lessons: x.lessons
-      });
-    })
-    shuffleArray(mapped)
+    const mapped = copyTimetable.map((x) => {
+      shuffleArray(x.lessons);
+      return {
+        moduleCode: x.moduleCode,
+        lessons: x.lessons,
+      };
+    });
+    shuffleArray(mapped);
     setActualTimet(mapped);
-  }
+  };
 
   return (
     <Router>
@@ -186,56 +187,58 @@ function App() {
                     {displayConstraintForm && (
                       <ConstraintForm
                         mods={mods}
-                        tentativeConstraints = {tentativeConstraints}
+                        tentativeConstraints={tentativeConstraints}
                         setTentativeConstraints={setTentativeConstraints}
                         actualTimet={actualTimet}
                         setConstraints={setConstraints}
                       />
                     )}
-                    {displayConstraintForm && tentativeConstraints.length !== 0 && (
-                      <ConstraintDisplay
-                        constraints={tentativeConstraints}
-                        setConstraints={setTentativeConstraints}
+                    {displayConstraintForm &&
+                      tentativeConstraints.length !== 0 && (
+                        <ConstraintDisplay
+                          constraints={tentativeConstraints}
+                          setConstraints={setTentativeConstraints}
+                          setDisplayTimetable={setDisplayTimetable}
+                        />
+                      )}
+                    {displayConstraintForm &&
+                      tentativeConstraints.length !== 0 && (
+                        <div class="btn-group">
+                          <Button
+                            id="Clear constraints"
+                            onClick={() => {
+                              confirmAlert({
+                                title: "Confirm to delete",
+                                message:
+                                  "Are you sure you want to clear constraints?",
+                                buttons: [
+                                  {
+                                    label: "Yes",
+                                    onClick: () => {
+                                      setConstraints([]);
+                                      setTentativeConstraints([]);
+                                      setDisplayTimetable(false);
+                                    },
+                                  },
+                                  {
+                                    label: "No",
+                                    onClick: () => {},
+                                  },
+                                ],
+                              });
+                            }}
+                          >
+                            Clear constraints
+                          </Button>
+                        </div>
+                      )}
+                    {displayConstraintForm && (
+                      <SubmitConstraint
                         setDisplayTimetable={setDisplayTimetable}
+                        setConstraints={setConstraints}
+                        tentativeConstraints={tentativeConstraints}
                       />
                     )}
-                    {displayConstraintForm && tentativeConstraints.length !== 0 && (
-                      <div class="btn-group">
-                        <Button
-                          id="Clear constraints"
-                          onClick={() => {
-                            confirmAlert({
-                              title: "Confirm to delete",
-                              message:
-                                "Are you sure you want to clear constraints?",
-                              buttons: [
-                                {
-                                  label: "Yes",
-                                  onClick: () => {
-                                    setConstraints([]);
-                                    setTentativeConstraints([]);
-                                    setDisplayTimetable(false);
-                                  },
-                                },
-                                {
-                                  label: "No",
-                                  onClick: () => {},
-                                },
-                              ],
-                            });
-                          }}
-                        >
-                          Clear constraints
-                        </Button>
-                      </div>
-                    )}
-                    {displayConstraintForm && 
-                    <SubmitConstraint
-                      setDisplayTimetable={setDisplayTimetable}
-                      setConstraints={setConstraints}
-                      tentativeConstraints={tentativeConstraints}
-                    />
-                    }
                   </Col>
                 </Row>
               </Form>
@@ -246,14 +249,12 @@ function App() {
                 />
               )}
               {displayTimetable && (
-                <Button onClick={reshuffle}>
-                  Generate another
-                </Button>
+                <Button onClick={reshuffle}>Generate another</Button>
               )}
             </Route>
             <Route exact path="/help" component={Help} />
           </Switch>
-          <Footer />
+          {/* <Footer /> */}
         </Container>
       </div>
       <script src="scripts/timetable.min.js"></script>
