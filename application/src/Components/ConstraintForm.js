@@ -115,7 +115,7 @@ const ConstraintForm = ({
         <NativeSelect
           labedId="label"
           native
-          onSelect={handleConstraintTypeChange(setType, setTime)}
+          onChange={handleConstraintTypeChange(setType, setTime)}
         >
           {Constraints.map(ConstraintDisplay)}
         </NativeSelect>
@@ -159,9 +159,10 @@ const ConstraintForm = ({
 };
 
 const handleModChange =
-  (setModCod, setMod, mods, modCod, type, setTime) => (input) => {
-    setModCod(input);
-    setMod(mods.filter((y) => y.moduleCode === input)[0]);
+  (setModCod, setMod, mods, modCod, type, setTime) => (event) => {
+    console.log(event.target.value);
+    setModCod(event.target.value);
+    setMod(mods.filter((y) => y.moduleCode === event.target.value)[0]);
     setTime(Constraints[type].defaultTime);
   };
 
@@ -190,8 +191,8 @@ const handleSubmit =
     }
   };
 
-const handleConstraintTypeChange = (setType, setTime) => (input) => {
-  const index = Constraints.findIndex((x) => x.type === input);
+const handleConstraintTypeChange = (setType, setTime) => (event) => {
+  const index = Constraints.findIndex((x) => x.type === event.target.value);
   setType(index);
   setTime(Constraints[index].defaultTime);
 };
