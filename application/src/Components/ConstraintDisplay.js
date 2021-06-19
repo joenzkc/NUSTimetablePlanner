@@ -3,28 +3,53 @@ import React from "react";
 import IconButton from "@material-ui/core/IconButton";
 import DeleteIcon from "@material-ui/icons/Delete";
 import Constraints from "./Constraints";
-import { ListGroup } from "react-bootstrap";
+import {
+  List,
+  ListItem,
+  ListItemText,
+  ListItemIcon,
+  Divider,
+  Card,
+  makeStyles,
+} from "@material-ui/core";
 import "bootstrap/dist/css/bootstrap.min.css";
 
-const ConstraintDisplay = ({ constraints, setConstraints }) => {
-  return (
-    <ListGroup>
-      {constraints.map(Display(setConstraints, constraints))}
-    </ListGroup>
-  );
-};
+const useStyles = makeStyles((theme) => ({
+  modCode: {
+    fontWeight: 600,
+  },
+  root: {
+    width: "100%",
+    backgroundColor: theme.palette.background.paper,
+  },
+}));
 
-const Display = (setConstraints, constraints) => (x) => {
-  return (
-    <ListGroup.Item key={constraints.id}>
-      {Constraints[x.type].displayCode(x, true)}
-      <IconButton
-        onClick={() => deleteConstraint(setConstraints, constraints)(x)}
-      >
-        <DeleteIcon />
-      </IconButton>
-    </ListGroup.Item>
-  );
+const ConstraintDisplay = ({ constraints, setConstraints }) => {
+  const classes = useStyles();
+  const Display = (setConstraints, constraints) => (x) => {
+    return (
+      <Card>
+        <List className={classes.root}>
+          <ListItem>
+            <ListItemText>
+              {Constraints[x.type].displayCode(x, true)}
+            </ListItemText>
+            <ListItemIcon>
+              <IconButton
+                edge="end"
+                onClick={() => deleteConstraint(setConstraints, constraints)(x)}
+              >
+                <DeleteIcon />
+              </IconButton>
+            </ListItemIcon>
+          </ListItem>
+          <Divider />
+        </List>
+      </Card>
+    );
+  };
+
+  return <Card>{constraints.map(Display(setConstraints, constraints))}</Card>;
 };
 
 const deleteConstraint = (setConstraints, constraints) => (x) => {

@@ -1,17 +1,6 @@
-import React, { Fragment, useState, useEffect } from "react";
-import {
-  Container,
-  Row,
-  Col,
-  Form,
-  FormGroup,
-  ListGroup,
-  Dropdown,
-} from "react-bootstrap";
+import React, { Fragment } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
-import DropdownButton from "react-bootstrap/DropdownButton";
-import axios from "axios";
-import { FormControl, InputLabel, NativeSelect } from "@material-ui/core";
+import { FormControl, NativeSelect } from "@material-ui/core";
 
 //maybe condense the filter mods code now got a lot of repeats
 const standardDisplayCode = (constraint, type, needSpan) => {
@@ -38,22 +27,6 @@ const standardDisplayCode = (constraint, type, needSpan) => {
 
 const TimeOption = (
   <Fragment>
-    {/* <Dropdown.Item eventKey="0600">0600</Dropdown.Item>
-                <Dropdown.Item eventKey="0700">0700</Dropdown.Item>
-                        <Dropdown.Item eventKey="0800" key="0800">0800</Dropdown.Item>
-                        <Dropdown.Item eventKey="0900" key="0900">0900</Dropdown.Item>
-                        <Dropdown.Item eventKey="1000" key="1000">1000</Dropdown.Item>
-                        <Dropdown.Item eventKey="1100" key="1100">1100</Dropdown.Item>
-                        <Dropdown.Item eventKey="1200" key="1200">1200</Dropdown.Item>
-                        <Dropdown.Item eventKey="1300" key="1300">1300</Dropdown.Item>
-                        <Dropdown.Item eventKey="1400" key="1400">1400</Dropdown.Item>
-                        <Dropdown.Item eventKey="1500" key="1500">1500</Dropdown.Item>
-                        <Dropdown.Item eventKey="1600" key="1600">1600</Dropdown.Item>
-                        <Dropdown.Item eventKey="1700" key="1700">1700</Dropdown.Item>
-                        <Dropdown.Item eventKey="1800" key="1800">1800</Dropdown.Item>
-                        <Dropdown.Item eventKey="1900" key="1900">1900</Dropdown.Item>
-                        <Dropdown.Item eventKey="0600">0600</Dropdown.Item> */}
-    {/* <Dropdown.Item eventKey="0700">0700</Dropdown.Item> */}
     <option value="0800">0800</option>
     <option value="0900">0900</option>
     <option value="1000">1000</option>
@@ -71,11 +44,6 @@ const TimeOption = (
 
 const DayOption = (
   <Fragment>
-    {/* <Dropdown.Item eventKey ="Monday" key="Monday">Monday</Dropdown.Item>
-        <Dropdown.Item eventKey ="Tuesday" key="Tuesday">Tuesday</Dropdown.Item>
-        <Dropdown.Item eventKey ="Wednesday" key="Wednesday">Wednesday</Dropdown.Item>
-        <Dropdown.Item eventKey ="Thursday" key="Thursday">Thursday</Dropdown.Item>
-        <Dropdown.Item eventKey ="Friday" key="Friday">Friday</Dropdown.Item> */}
     <option value="Monday">Monday</option>
     <option value="Tuesday">Tuesday</option>
     <option value="Wednesday">Wednesday</option>
@@ -181,7 +149,7 @@ const Constraints = [
     displayCode: (constraint, needSpan) =>
       standardDisplayCode(constraint, "Fix a class: ", needSpan),
     checkValid: (time, currentConstraints) => {
-      return { valid: time != "Choose a class", message: "Choose a class" };
+      return { valid: time !== "Choose a class", message: "Choose a class" };
     },
     filterMods: (constraint) => (mods) =>
       mods.map(filterClassesForFixClass(constraint)),
@@ -197,8 +165,8 @@ const Constraints = [
       //         {TimeOption}
       //     </DropdownButton>
       // </Dropdown>,
-      <FormControl>
-        <InputLabel>{time}</InputLabel>
+      <FormControl style={{ minWidth: 100, marginTop: 16 }}>
+        {/* <InputLabel>{time}</InputLabel> */}
         <NativeSelect onChange={handleChangeTime(setTime)}>
           {TimeOption}
         </NativeSelect>
@@ -223,8 +191,8 @@ const Constraints = [
       //         {DayOption}
       //     </DropdownButton>
       // </Dropdown>,
-      <FormControl>
-        <InputLabel>{time}</InputLabel>
+      <FormControl style={{ minWidth: 100, margin: 5, marginTop: 16 }}>
+        {/* <InputLabel>{time}</InputLabel> */}
         <NativeSelect onChange={handleChangeTime(setTime)}>
           {DayOption}
         </NativeSelect>
@@ -244,22 +212,11 @@ const Constraints = [
     defaultTime: ["Monday", "0600", "0600"],
     needToSpecifyMod: false,
     optionCode: (setTime, time, actualTimet) => (
-      // <Dropdown>
-      //     <div className="btn-group">
-      //     <DropdownButton title={time[0]} onSelect={handleStartTimeChange(setTime, time, 0)}>
-      //         {DayOption}
-      //     </DropdownButton>
-      //     <DropdownButton title={time[1]} onSelect={handleStartTimeChange(setTime, time, 1)}>
-      //         {TimeOption}
-      //     </DropdownButton>
-      //     <DropdownButton title={time[2]} onSelect={handleStartTimeChange(setTime, time, 2)}>
-      //         {TimeOption}
-      //     </DropdownButton>
-      //     </div>
-      // </Dropdown>,
       <div>
-        <FormControl>
-          <InputLabel>{time[0]}</InputLabel>
+        {/* <Grid container spacing={2}>
+          <Grid item xs={3}> */}
+        <FormControl style={{ minWidth: 100, margin: 5, marginTop: 16 }}>
+          {/* <InputLabel>{time[0]}</InputLabel> */}
           <NativeSelect
             native
             onChange={handleStartTimeChange(setTime, time, 0)}
@@ -267,17 +224,22 @@ const Constraints = [
             {DayOption}
           </NativeSelect>
         </FormControl>
-        <FormControl>
-          <InputLabel>title={time[1]}</InputLabel>
+        {/* </Grid>
+          <Grid item xs={2}> */}
+        <FormControl style={{ minWidth: 100, margin: 5, marginTop: 16 }}>
+          {/* <InputLabel>title={time[1]}</InputLabel> */}
           <NativeSelect
             native
             onChange={handleStartTimeChange(setTime, time, 1)}
+            minWidth={150}
           >
             {TimeOption}
           </NativeSelect>
         </FormControl>
-        <FormControl>
-          <InputLabel>{time[2]}</InputLabel>
+        {/* </Grid>
+          <Grid item xs={2}> */}
+        <FormControl style={{ minWidth: 100, margin: 5, marginTop: 16 }}>
+          {/* <InputLabel>{time[2]}</InputLabel> */}
           <NativeSelect
             native
             onChange={handleStartTimeChange(setTime, time, 2)}
@@ -285,6 +247,8 @@ const Constraints = [
             {TimeOption}
           </NativeSelect>
         </FormControl>
+        {/* </Grid>
+        </Grid> */}
       </div>
     ),
     displayCode: (constraint, needSpan) => {
@@ -446,8 +410,8 @@ const optionCodeForFixClass = (setTime, time, actualTimet) => {
     //         <ClassesDisplay actualTimet={actualTimet}/>
     //     </DropdownButton>
     // </Dropdown>
-    <FormControl>
-      <InputLabel>{time}</InputLabel>
+    <FormControl style={{ minWidth: 100, margin: 5, marginTop: 16 }}>
+      {/* <InputLabel>{time}</InputLabel> */}
       <NativeSelect onChange={handleChangeTime(setTime)}>
         <ClassesDisplay actualTimet={actualTimet} />
       </NativeSelect>

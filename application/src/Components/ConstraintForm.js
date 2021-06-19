@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState } from "react";
+import React, { useState } from "react";
 import Constraints from "./Constraints";
 import {
   makeStyles,
@@ -6,17 +6,12 @@ import {
   Paper,
   FormControl,
   InputLabel,
-  Select,
   NativeSelect,
-  withStyles,
-  MenuItem,
+  Grid,
+  Button,
 } from "@material-ui/core";
-// import axios from "axios";
 
-import { Form, FormGroup, Dropdown } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
-import DropdownButton from "react-bootstrap/DropdownButton";
-import Button from "react-bootstrap/Button";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -31,6 +26,7 @@ const useStyles = makeStyles((theme) => ({
     minWidth: 100,
     marginRight: theme.spacing(1),
   },
+  button: { marginTop: theme.spacing(1), marginRight: theme.spacing(1) },
 }));
 
 const ConstraintForm = ({
@@ -49,111 +45,59 @@ const ConstraintForm = ({
   const defaultMod = mods[0].moduleCode;
 
   return (
-    // <Paper className={classes.root}>
-    //   <Typography variant="h6" display="block">
-    //     Select your constraints
-    //   </Typography>
-    //   <Form
-    //   // onSubmit={handleSubmit(setTentativeConstraints, tentativeConstraints)(
-    //   //   type,
-    //   //   mod,
-    //   //   time,
-    //   //   defaultMod
-    //   // )}
-    //   >
-    //     <FormGroup>
-    //       <div className="btn-group">
-    //         <Dropdown>
-    //           <DropdownButton
-    //             title={Constraints[type].type}
-    //             onSelect={handleConstraintTypeChange(setType, setTime)}
-    //           >
-    //             {Constraints.map(ConstraintDisplay)}
-    //           </DropdownButton>
-    //         </Dropdown>
-    //         {Constraints[type].needToSpecifyMod && (
-    //   <Dropdown>
-    //     <DropdownButton
-    //       title={modCod}
-    //       onSelect={handleModChange(
-    //         setModCod,
-    //         setMod,
-    //         mods,
-    //         modCod,
-    //         type,
-    //         setTime
-    //       )}
-    //     >
-    //       {mods.map(ModDisplay)}
-    //     </DropdownButton>
-    //   </Dropdown>
-    //         )}
-    //         {actualTimet.length !== 0 &&
-    //           Constraints[type].optionCode(
-    //             setTime,
-    //             time,
-    //             actualTimet.filter((x) => x.moduleCode === modCod)[0]
-    //           )}
-    //         <Button
-    //           type="submit"
-    //           onClick={handleSubmit(
-    //             setTentativeConstraints,
-    //             tentativeConstraints
-    //           )(type, mod, time, defaultMod)}
-    //         >
-    //           Submit constraint
-    //         </Button>
-    //       </div>
-    //     </FormGroup>
-    //   </Form>
-    // </Paper>
-
     <Paper className={classes.root}>
-      <Typography variant="h6">Select your constraints</Typography>
-      <FormControl className={classes.formControl}>
-        <InputLabel id="label">{Constraints[type].type}</InputLabel>
-        <NativeSelect
-          labedId="label"
-          native
-          onChange={handleConstraintTypeChange(setType, setTime)}
-        >
-          {Constraints.map(ConstraintDisplay)}
-        </NativeSelect>
-      </FormControl>
-      {Constraints[type].needToSpecifyMod && (
-        <FormControl className={classes.formControl}>
-          <InputLabel> Module </InputLabel>
-          <NativeSelect
-            onChange={handleModChange(
-              setModCod,
-              setMod,
-              mods,
-              modCod,
-              type,
-              setTime
+      <Grid container>
+        <Grid item xs={12}>
+          <Typography variant="button">Select your constraints</Typography>
+        </Grid>
+        <Grid item xs={12}>
+          <FormControl className={classes.formControl}>
+            <InputLabel id="label">{Constraints[type].type}</InputLabel>
+            <NativeSelect
+              labedId="label"
+              native
+              onChange={handleConstraintTypeChange(setType, setTime)}
+            >
+              {Constraints.map(ConstraintDisplay)}
+            </NativeSelect>
+          </FormControl>
+          {Constraints[type].needToSpecifyMod && (
+            <FormControl className={classes.formControl}>
+              <InputLabel> Module </InputLabel>
+              <NativeSelect
+                onChange={handleModChange(
+                  setModCod,
+                  setMod,
+                  mods,
+                  modCod,
+                  type,
+                  setTime
+                )}
+              >
+                {mods.map(ModDisplay)}
+              </NativeSelect>
+            </FormControl>
+          )}
+          {actualTimet.length !== 0 &&
+            Constraints[type].optionCode(
+              setTime,
+              time,
+              actualTimet.filter((x) => x.moduleCode === modCod)[0]
             )}
+        </Grid>
+        <Grid item xs={12}>
+          <Button
+            className={classes.button}
+            variant="contained"
+            onClick={handleSubmit(
+              setTentativeConstraints,
+              tentativeConstraints
+            )(type, mod, time, defaultMod)}
           >
-            {mods.map(ModDisplay)}
-          </NativeSelect>
-        </FormControl>
-      )}
-      {actualTimet.length !== 0 &&
-        Constraints[type].optionCode(
-          setTime,
-          time,
-          actualTimet.filter((x) => x.moduleCode === modCod)[0]
-        )}
-      <Button
-        type="submit"
-        onClick={handleSubmit(setTentativeConstraints, tentativeConstraints)(
-          type,
-          mod,
-          time,
-          defaultMod
-        )}
-      >
-        Submit Constraint
-      </Button>
+            Add Constraint
+          </Button>
+        </Grid>
+      </Grid>
     </Paper>
   );
 };
