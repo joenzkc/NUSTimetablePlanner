@@ -160,13 +160,7 @@ const Constraints = [
     defaultTime: "0600",
     needToSpecifyMod: false,
     optionCode: (setTime, time, actualTimet) => (
-      // <Dropdown>
-      //     <DropdownButton title={time} onSelect={handleChangeTime(setTime)}>
-      //         {TimeOption}
-      //     </DropdownButton>
-      // </Dropdown>,
-      <FormControl style={{ minWidth: 100, marginTop: 16 }}>
-        {/* <InputLabel>{time}</InputLabel> */}
+      <FormControl style={{ minWidth: 100, marginTop: 17 }}>
         <NativeSelect onChange={handleChangeTime(setTime)}>
           {TimeOption}
         </NativeSelect>
@@ -398,7 +392,7 @@ const handleChangeTime = (setTime) => (event) => {
 const handleStartTimeChange = (setTime, time, index) => (input) => {
   setTime([
     ...time.slice(0, index),
-    input,
+    input.target.value,
     ...time.slice(index + 1, time.length),
   ]);
 };
