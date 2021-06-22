@@ -7,7 +7,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import DropdownButton from 'react-bootstrap/DropdownButton';
 import Button from "react-bootstrap/Button";
 
-const ConstraintForm = ({mods, tentativeConstraints, setTentativeConstraints, actualTimet}) => {
+const ConstraintForm = ({mods, tentativeConstraints, setTentativeConstraints, actualTimet, yearSem, setActualTimet}) => {
     const [type, setType] = useState(0)
     //dunno why by default it is undefined
     const [modCod, setModCod] = useState(mods[0].moduleCode)
@@ -37,7 +37,7 @@ const ConstraintForm = ({mods, tentativeConstraints, setTentativeConstraints, ac
                 </Dropdown>        
                 }
                 {actualTimet.length !== 0 && 
-                Constraints[type].optionCode(setTime, time, actualTimet.filter(x => x.moduleCode === modCod)[0])}
+                OptionCode(actualTimet, setTime, time, modCod, yearSem, setActualTimet, type)}
                 <Button type="submit" onClick={handleSubmit(setTentativeConstraints, tentativeConstraints)(type, mod, time, defaultMod)}>
                     Submit constraint
                 </Button>
@@ -45,6 +45,32 @@ const ConstraintForm = ({mods, tentativeConstraints, setTentativeConstraints, ac
                 </FormGroup>
             </Form>
         </div>);
+}
+
+const OptionCode = (actualTimet, setTime, time, moduleCode, yearSem, setActualTimet, type) => {
+    const maybeClass = actualTimet.filter(x => x.moduleCode === moduleCode);
+    console.log("maybe class is", maybeClass, "moduleCode is", moduleCode)
+    if (maybeClass.length === 0) {
+        console.log("actual time t is", actualTimet)
+        axios.get("https://api.nusmods.com/v2/" +
+            yearSem.year +
+            "/modules/" +
+            moduleCode +
+            ".json").then((response) => {
+                const thisSemData = response.data.semesterData.filter(x => x.semester === parseInt(yearSem.sem))
+                console.log("this sem data is",thisSemData)
+                setActualTimet([...actualTimet], {
+                    moduleCode: moduleCode, 
+                    lessons: thisSemData[0].timetable
+                })
+                return Constraints[type].optionCode(setTime, time, {
+                    moduleCode: moduleCode, 
+                    lessons: thisSemData[0].timetable
+                })
+            })
+    } else {
+        return Constraints[type].optionCode(setTime, time, actualTimet.filter(x => x.moduleCode === moduleCode)[0])
+    }
 }
 
 const handleModChange = (setModCod, setMod, mods, modCod, type, setTime) => 

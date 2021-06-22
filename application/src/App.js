@@ -34,7 +34,7 @@ const useStyles = makeStyles((theme) => ({
 
 function App() {
   const classes = useStyles();
-  const [time, setTime] = useState({
+  const [time, setTime] = useState(JSON.parse(localStorage.getItem('time')) || {
     year: "2020-2021",
     sem: "1",
   });
@@ -43,14 +43,40 @@ function App() {
     sem: "1",
   });
 
-  const [mods, setMods] = useState([]);
-  const [promiseTimetable, setPromiseTimetable] = useState([]); //this stores a promise of the mod timetable
+  const [mods, setMods] = useState(
+    JSON.parse(localStorage.getItem('mods')) || []);
+  const [promiseTimetable, setPromiseTimetable] = 
+    useState([]); //this stores a promise of the mod timetable
   const [searchTerm, setSearchTerm] = useState("");
   const [displaySearchResults, setDisplaySearchResults] = useState(false);
   const [displayConstraintForm, setDisplayConstraintForm] = useState(false);
   const [displayTimetable, setDisplayTimetable] = useState(false);
   const [constraints, setConstraints] = useState([]);
-  const [tentativeConstraints, setTentativeConstraints] = useState([]);
+  const [tentativeConstraints, setTentativeConstraints] = 
+    useState(JSON.parse(localStorage.getItem('tentativeConstraints')) || []);
+  const [actualTimet, setActualTimet] = useState(
+    JSON.parse(localStorage.getItem('actualTimet')) || new Array(promiseTimetable.length)
+  );
+
+  useEffect(() => {
+    localStorage.setItem('mods', JSON.stringify(mods))
+  }, [JSON.stringify(mods)]);
+
+  useEffect(() => {
+    localStorage.setItem('tentativeConstraints', JSON.stringify(tentativeConstraints))
+    }
+  , [JSON.stringify(tentativeConstraints)
+  ])
+
+  useEffect(() => {
+    localStorage.setItem('time', JSON.stringify(time));
+  }, [JSON.stringify(time)])
+
+  useEffect(() => {
+    localStorage.setItem('actualTimet', JSON.stringify(actualTimet))}
+  , [JSON.stringify(actualTimet)
+  ])
+
 
   useEffect(() => {
     const Mapped = mods.map((mod) => {
@@ -75,11 +101,10 @@ function App() {
       };
     });
     setPromiseTimetable(Mapped);
+    localStorage.setItem('promiseTimetable', JSON.stringify(Mapped));
   }, [mods.length]);
 
-  const [actualTimet, setActualTimet] = useState(
-    new Array(promiseTimetable.length)
-  );
+  
 
   useEffect(() => {
     for (let i = 0; i < promiseTimetable.length; i++) {
@@ -97,6 +122,7 @@ function App() {
       });
     }
   }, [promiseTimetable.length]);
+
 
   const restart = () => {
     setDisplayConstraintForm(false);
@@ -123,11 +149,11 @@ function App() {
     const mapped = copyTimetable.map(x => {
       shuffleArray(x.lessons)
       return ({
-      moduleCode: x.moduleCode,
-      lessons: x.lessons
+        moduleCode: x.moduleCode,
+        lessons: x.lessons
       });
     })
-    shuffleArray(mapped)
+    shuffleArray(mapped);
     setActualTimet(mapped);
   }
 
@@ -172,6 +198,7 @@ function App() {
                       setDisplayConstraintForm={setDisplayConstraintForm}
                       setDisplayTimetable={setDisplayTimetable}
                       setConstraints={setConstraints}
+                      setTentativeConstraints={setTentativeConstraints}
                     />
                   </Col>
                   <Col>
@@ -190,6 +217,8 @@ function App() {
                         setTentativeConstraints={setTentativeConstraints}
                         actualTimet={actualTimet}
                         setConstraints={setConstraints}
+                        yearSem={time}
+                        setActualTimet={setActualTimet}
                       />
                     )}
                     {displayConstraintForm && tentativeConstraints.length !== 0 && (

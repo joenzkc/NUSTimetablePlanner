@@ -7,6 +7,7 @@ const ClearModsButton = ({
   setDisplayConstraintForm,
   setDisplayTimetable,
   setConstraints,
+  setTentativeConstraints
 }) => {
   const handleSubmit = () => {
     confirmAlert({
@@ -20,6 +21,7 @@ const ClearModsButton = ({
             setDisplayConstraintForm(false);
             setDisplayTimetable(false);
             setConstraints([]);
+            setTentativeConstraints([]);
           },
         },
         {

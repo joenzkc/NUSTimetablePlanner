@@ -12,7 +12,6 @@ const Timetable = ({constraints, actualTimet}) => {
         return <h1><Timetable_lib/></h1> //return empty timetable
     }
     const sortedConstraints = constraints.map(x => x).sort((x, y) => x.type - y.type);
-    console.log("constraints are", sortedConstraints)
     const lessonType = actualTimet.map(LessonTypes)
     const noLessonTypesOriginal = lessonType.map(mod => mod.length)
     let validLessons = [...actualTimet];
@@ -21,10 +20,7 @@ const Timetable = ({constraints, actualTimet}) => {
     //if it still possible to proceed
     for (var i = 0; i < sortedConstraints.length; i++) {
         const currentConstraint = sortedConstraints[i];
-        //validLessons = validLessons.map(Constraints[currentConstraint.type].filterMods(currentConstraint))
-        console.log("before filtering", validLessons)
         validLessons = Constraints[currentConstraint.type].filterMods(currentConstraint)(validLessons)
-        console.log("valid lessons are", validLessons)
         const noLessonTypesFiltered = validLessons.map(LessonTypes).map(x => x.length);
         for (var j = 0; j < noLessonTypesFiltered.length; j++) {
             const filteredNo = noLessonTypesFiltered[j];
