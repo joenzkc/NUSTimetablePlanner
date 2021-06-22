@@ -3,7 +3,6 @@ import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import axios from "axios";
 
 import Header from "./Components/Header";
-import Footer from "./Components/Footer";
 import TimeForm from "./Components/TimeForm";
 import ModInput from "./Components/ModInput";
 import ModDisplay from "./Components/ModDisplay";
@@ -13,22 +12,26 @@ import ConstraintForm from "./Components/ConstraintForm";
 import ConstraintDisplay from "./Components/ConstraintDisplay";
 import Timetable from "./Components/Timetable";
 import Help from "./Components/Help";
-import { Container, Row, Col, Form, ListGroup, Button } from "react-bootstrap";
+import { Container, Row, Col, Form, Button } from "react-bootstrap";
 import CssBaseline from "@material-ui/core/CssBaseline";
-import { FormGroup, Paper, Icon, makeStyles, Card } from "@material-ui/core";
+import { makeStyles, Card } from "@material-ui/core";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { confirmAlert } from "react-confirm-alert";
 import "react-confirm-alert/src/react-confirm-alert.css";
 import ClearModsButton from "./Components/ClearModsButton";
 import SubmitConstraint from "./Components/SubmitConstraint";
+import ClearConstraintsButton from "./Components/ClearConstraintsButton";
 
 const useStyles = makeStyles((theme) => ({
   root: {
     padding: theme.spacing(3, 2),
+    marginBottom: theme.spacing(1),
   },
   container: {
     display: "flex",
     flexWrap: "wrap",
+  },
+  button: {
+    marginRight: theme.spacing(1),
   },
 }));
 
@@ -133,14 +136,14 @@ function App() {
     setConstraints([]);
     setPromiseTimetable([]);
     setActualTimet([]);
-  }
+  };
 
   function shuffleArray(array) {
     for (var i = array.length - 1; i > 0; i--) {
-        var j = Math.floor(Math.random() * (i + 1));
-        var temp = array[i];
-        array[i] = array[j];
-        array[j] = temp;
+      var j = Math.floor(Math.random() * (i + 1));
+      var temp = array[i];
+      array[i] = array[j];
+      array[j] = temp;
     }
   }
 
@@ -155,7 +158,7 @@ function App() {
     })
     shuffleArray(mapped);
     setActualTimet(mapped);
-  }
+  };
 
   return (
     <Router>
@@ -189,6 +192,7 @@ function App() {
                     </Card>
                     <ModDisplay mods={mods} setMods={setMods} />
                     <ModSubmit
+                      className={classes.button}
                       mods={mods}
                       setDisplaySearchResults={setDisplaySearchResults}
                       setDisplayConstraintForm={setDisplayConstraintForm}
@@ -213,7 +217,7 @@ function App() {
                     {displayConstraintForm && (
                       <ConstraintForm
                         mods={mods}
-                        tentativeConstraints = {tentativeConstraints}
+                        tentativeConstraints={tentativeConstraints}
                         setTentativeConstraints={setTentativeConstraints}
                         actualTimet={actualTimet}
                         setConstraints={setConstraints}
@@ -221,50 +225,29 @@ function App() {
                         setActualTimet={setActualTimet}
                       />
                     )}
-                    {displayConstraintForm && tentativeConstraints.length !== 0 && (
-                      <ConstraintDisplay
-                        constraints={tentativeConstraints}
-                        setConstraints={setTentativeConstraints}
+                    {displayConstraintForm &&
+                      tentativeConstraints.length !== 0 && (
+                        <ConstraintDisplay
+                          constraints={tentativeConstraints}
+                          setConstraints={setTentativeConstraints}
+                          setDisplayTimetable={setDisplayTimetable}
+                        />
+                      )}
+                    {displayConstraintForm &&
+                      tentativeConstraints.length !== 0 && (
+                        <ClearConstraintsButton
+                          setConstraints={setConstraints}
+                          setTentativeConstraints={setTentativeConstraints}
+                          setDisplayTimetable={setDisplayTimetable}
+                        />
+                      )}
+                    {displayConstraintForm && (
+                      <SubmitConstraint
                         setDisplayTimetable={setDisplayTimetable}
+                        setConstraints={setConstraints}
+                        tentativeConstraints={tentativeConstraints}
                       />
                     )}
-                    {displayConstraintForm && tentativeConstraints.length !== 0 && (
-                      <div class="btn-group">
-                        <Button
-                          id="Clear constraints"
-                          onClick={() => {
-                            confirmAlert({
-                              title: "Confirm to delete",
-                              message:
-                                "Are you sure you want to clear constraints?",
-                              buttons: [
-                                {
-                                  label: "Yes",
-                                  onClick: () => {
-                                    setConstraints([]);
-                                    setTentativeConstraints([]);
-                                    setDisplayTimetable(false);
-                                  },
-                                },
-                                {
-                                  label: "No",
-                                  onClick: () => {},
-                                },
-                              ],
-                            });
-                          }}
-                        >
-                          Clear constraints
-                        </Button>
-                      </div>
-                    )}
-                    {displayConstraintForm && 
-                    <SubmitConstraint
-                      setDisplayTimetable={setDisplayTimetable}
-                      setConstraints={setConstraints}
-                      tentativeConstraints={tentativeConstraints}
-                    />
-                    }
                   </Col>
                 </Row>
               </Form>
@@ -275,14 +258,12 @@ function App() {
                 />
               )}
               {displayTimetable && (
-                <Button onClick={reshuffle}>
-                  Generate another
-                </Button>
+                <Button onClick={reshuffle}>Generate another</Button>
               )}
             </Route>
             <Route exact path="/help" component={Help} />
           </Switch>
-          <Footer />
+          {/* <Footer /> */}
         </Container>
       </div>
       <script src="scripts/timetable.min.js"></script>

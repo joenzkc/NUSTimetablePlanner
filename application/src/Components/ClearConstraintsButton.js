@@ -6,30 +6,27 @@ import { makeStyles } from "@material-ui/core/styles";
 const useStyles = makeStyles((theme) => ({
   root: {
     marginTop: theme.spacing(1),
+    marginRight: theme.spacing(1),
   },
 }));
 
-const ClearModsButton = ({
-  setMods,
-  setDisplayConstraintForm,
-  setDisplayTimetable,
+const ClearConstraintsButton = ({
   setConstraints,
-  setTentativeConstraints
+  setTentativeConstraints,
+  setDisplayTimetable,
 }) => {
   const classes = useStyles();
   const handleSubmit = () => {
     confirmAlert({
-      title: "Clear all mods?",
+      title: "Clear all constraints?",
       message: "Click yes to continue",
       buttons: [
         {
           label: "Yes",
           onClick: () => {
-            setMods([]);
-            setDisplayConstraintForm(false);
-            setDisplayTimetable(false);
             setConstraints([]);
             setTentativeConstraints([]);
+            setDisplayTimetable(false);
           },
         },
         {
@@ -42,9 +39,9 @@ const ClearModsButton = ({
 
   return (
     <Button className={classes.root} onClick={handleSubmit} variant="contained">
-      Clear mods
+      Clear constraints
     </Button>
   );
 };
 
-export default ClearModsButton;
+export default ClearConstraintsButton;

@@ -19,7 +19,6 @@ const useStyles = makeStyles((theme) => ({
   },
   root: {
     width: "100%",
-    marginLeft: theme.spacing(1),
     backgroundColor: theme.palette.background.paper,
   },
 }));

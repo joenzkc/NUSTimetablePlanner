@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { Dropdown, DropdownButton, Row, Col } from "react-bootstrap";
 import { makeStyles, withStyles } from "@material-ui/core/styles";
 import InputLabel from "@material-ui/core/InputLabel";
 import { FormControl, NativeSelect, InputBase } from "@material-ui/core";
@@ -46,19 +45,16 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const TimeForm = ({ setTime, restart}) => {
+const TimeForm = ({ setTime, restart }) => {
   //time = tentativeTime, setTime = setTentative time
   return (
     <div className="btn-group" id="TimeForm">
-      <YearandSemForm
-        setTime={setTime}
-        restart={restart}
-      />
+      <YearandSemForm setTime={setTime} restart={restart} />
     </div>
   );
 };
 
-const YearandSemForm = ({setTime, restart}) => {
+const YearandSemForm = ({ setTime, restart }) => {
   const [title, setTitle] = useState("Sem 1 2020/21");
   const classes = useStyles();
 
@@ -69,8 +65,10 @@ const YearandSemForm = ({setTime, restart}) => {
     const sem = Number(time.charAt(4));
     const year = Number(time.substring(6, 10));
     const finalYear = Number("20" + time.substring(11, 13));
-    setTime({year: year.toString() + "-" + finalYear.toString(), 
-            sem: sem.toString()})
+    setTime({
+      year: year.toString() + "-" + finalYear.toString(),
+      sem: sem.toString(),
+    });
   };
 
   const cYear = new Date().getUTCFullYear();
@@ -81,18 +79,16 @@ const YearandSemForm = ({setTime, restart}) => {
   const yearStore = [];
   for (let i = earliestYear; i < cYear; i++) {
     yearStore.push("Sem 1 " + i + "/" + ((i + 1) % 100).toString());
-    yearStore.push("Sem 2 " + i + "/" + ((i + 1) % 100).toString()); 
+    yearStore.push("Sem 2 " + i + "/" + ((i + 1) % 100).toString());
   }
 
-  
   if (cMonth > 6) {
-    yearStore.push("Sem 1 " + cYear + "/" + ((cYear + 1)% 100).toString())
+    yearStore.push("Sem 1 " + cYear + "/" + ((cYear + 1) % 100).toString());
   }
 
   if (cMonth > 11) {
-    yearStore.push("Sem 2 " + cYear + "/" + ((cYear + 1)% 100).toString())
+    yearStore.push("Sem 2 " + cYear + "/" + ((cYear + 1) % 100).toString());
   }
-
 
   return (
     <div>
@@ -105,11 +101,9 @@ const YearandSemForm = ({setTime, restart}) => {
         >
           <InputLabel>{title}</InputLabel>
           <option aria-label="None" value="" />
-          {yearStore.map(x => <option value={x}>{x}</option>)}
-          {/* <option value={"Sem 1 2020/21"}>Sem 1 2020/21</option>
-          <option value={"Sem 2 2020/21"}>Sem 2 2020/21</option>
-          <option value={"Sem 1 2019/20"}>Sem 1 2019/20</option>
-          <option value={"Sem 2 2019/20"}>Sem 2 2019/20</option> */}
+          {yearStore.map((x) => (
+            <option value={x}>{x}</option>
+          ))}
         </NativeSelect>
       </FormControl>
     </div>
