@@ -142,7 +142,16 @@ const Constraints = [
   {
     id: 0,
     type: "Fix a class: ",
-    defaultTime: "Choose a class",
+    defaultTime: (mod) => {
+    return (mod.lessons[0].classNo +
+    " " +
+    mod.lessons[0].lessonType +
+    " " +
+    mod.lessons[0].day +
+    " from " +
+    mod.lessons[0].startTime +
+    " to " +
+    mod.lessons[0].endTime);},
     needToSpecifyMod: true,
     optionCode: (setTime, time, actualTimet) =>
       optionCodeForFixClass(setTime, time, actualTimet),
@@ -157,7 +166,7 @@ const Constraints = [
   {
     id: 1,
     type: "No lessons before",
-    defaultTime: "0600",
+    defaultTime: (mod) => "0600",
     needToSpecifyMod: false,
     optionCode: (setTime, time, actualTimet) => (
       <FormControl style={{ minWidth: 100, marginTop: 17 }}>
@@ -177,7 +186,7 @@ const Constraints = [
   {
     id: 2,
     type: "No lessons on",
-    defaultTime: "Monday",
+    defaultTime: (mod) => "Monday",
     needToSpecifyMod: false,
     optionCode: (setTime, time, actualTimet) => (
       // <Dropdown>
@@ -203,7 +212,7 @@ const Constraints = [
   {
     id: 3,
     type: "No lessons on __ from __ to __",
-    defaultTime: ["Monday", "0600", "0600"],
+    defaultTime: (mod) => ["Monday", "0800", "0800"],
     needToSpecifyMod: false,
     optionCode: (setTime, time, actualTimet) => (
       <div>
@@ -276,7 +285,7 @@ const Constraints = [
   {
     id: 4,
     type: "End as early as possible",
-    defaultTime: null,
+    defaultTime: (mod) => null,
     needToSpecifyMod: false,
     optionCode: (setTime, time, actualTimet) => <span></span>,
     displayCode: (constraint, needSpan) =>
@@ -301,7 +310,7 @@ const Constraints = [
   {
     id: 5,
     type: "Start as late as possible",
-    defaultTime: null,
+    defaultTime: (mod) => null,
     needToSpecifyMod: false,
     optionCode: (setTime, time, actualTimet) => <span></span>,
     displayCode: (constraint, needSpan) =>
@@ -326,7 +335,7 @@ const Constraints = [
   {
     id: 6,
     type: "Maximise online classes",
-    defaultTime: null,
+    defaultTime: (mod) => null,
     needToSpecifyMod: false,
     optionCode: (setTime, time, actualTimet) => <span></span>,
     displayCode: (constraint, needSpan) =>
@@ -356,7 +365,7 @@ const Constraints = [
   {
     id: 7,
     type: "Maximise offline classes",
-    defaultTime: null,
+    defaultTime: (mod) => null,
     needToSpecifyMod: false,
     optionCode: (setTime, time, actualTimet) => <span></span>,
     displayCode: (constraint, needSpan) =>
@@ -399,11 +408,6 @@ const handleStartTimeChange = (setTime, time, index) => (input) => {
 
 const optionCodeForFixClass = (setTime, time, actualTimet) => {
   return (
-    // <Dropdown>
-    //     <DropdownButton title={time} onSelect={handleChangeTime(setTime)}>
-    //         <ClassesDisplay actualTimet={actualTimet}/>
-    //     </DropdownButton>
-    // </Dropdown>
     <FormControl style={{ minWidth: 100, margin: 5, marginTop: 16 }}>
       {/* <InputLabel>{time}</InputLabel> */}
       <NativeSelect onChange={handleChangeTime(setTime)}>
@@ -424,7 +428,7 @@ const ClassesDisplay = ({ actualTimet }) => {
     lesson.startTime +
     " to " +
     lesson.endTime;
-  const copy = { ...actualTimet }.lessons.sort((x, y) =>
+  const copy = JSON.parse(JSON.stringify(actualTimet)).lessons.sort((x, y) =>
     x.classNo.localeCompare(y.classNo)
   );
   return copy.map((lesson) => (

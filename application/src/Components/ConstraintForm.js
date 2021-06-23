@@ -37,13 +37,11 @@ const ConstraintForm = ({
 }) => {
   const classes = useStyles();
   const [type, setType] = useState(0);
-  //dunno why by default it is undefined
   const [modCod, setModCod] = useState(mods[0].moduleCode);
   const [mod, setMod] = useState(mods[0]);
-  //Change default for this.
-  const [time, setTime] = useState(Constraints[0].defaultTime);
+  const [time, setTime] = useState(Constraints[0].defaultTime(actualTimet.filter(x => x.moduleCode === modCod)[0]));
   const defaultMod = mods[0].moduleCode;
-
+  
   return (
     <Paper className={classes.root}>
       <Grid container>
@@ -56,7 +54,7 @@ const ConstraintForm = ({
             <NativeSelect
               labedId="label"
               native
-              onChange={handleConstraintTypeChange(setType, setTime)}
+              onChange={handleConstraintTypeChange(setType, setTime, actualTimet, modCod)}
             >
               {Constraints.map(ConstraintDisplay)}
             </NativeSelect>
@@ -71,7 +69,8 @@ const ConstraintForm = ({
                   mods,
                   modCod,
                   type,
-                  setTime
+                  setTime, 
+                  actualTimet
                 )}
               >
                 {mods.map(ModDisplay)}
@@ -103,11 +102,10 @@ const ConstraintForm = ({
 };
 
 const handleModChange =
-  (setModCod, setMod, mods, modCod, type, setTime) => (event) => {
-    console.log(event.target.value);
+  (setModCod, setMod, mods, modCod, type, setTime, actualTimet) => (event) => {
     setModCod(event.target.value);
     setMod(mods.filter((y) => y.moduleCode === event.target.value)[0]);
-    setTime(Constraints[type].defaultTime);
+    setTime(Constraints[type].defaultTime(actualTimet.filter(x => x.moduleCode === modCod)[0]));
   };
 
 const handleSubmit =
@@ -135,10 +133,10 @@ const handleSubmit =
     }
   };
 
-const handleConstraintTypeChange = (setType, setTime) => (event) => {
+const handleConstraintTypeChange = (setType, setTime, actualTimet, modCod) => (event) => {
   const index = Constraints.findIndex((x) => x.type === event.target.value);
   setType(index);
-  setTime(Constraints[index].defaultTime);
+  setTime(Constraints[index].defaultTime(actualTimet.filter(x => x.moduleCode === modCod)[0]));
 };
 
 const ModDisplay = (mod) => {
@@ -151,7 +149,6 @@ const ModDisplay = (mod) => {
 
 const ConstraintDisplay = (constraint) => {
   const type = constraint.type;
-  console.log("constraint is", constraint);
   return (
     <option value={constraint.type} key={constraint.type}>
       {type}

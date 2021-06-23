@@ -20,6 +20,7 @@ import "react-confirm-alert/src/react-confirm-alert.css";
 import ClearModsButton from "./Components/ClearModsButton";
 import SubmitConstraint from "./Components/SubmitConstraint";
 import ClearConstraintsButton from "./Components/ClearConstraintsButton";
+import SaveTimetable from "./Components/SaveTimetable";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -60,6 +61,9 @@ function App() {
   const [actualTimet, setActualTimet] = useState(
     JSON.parse(localStorage.getItem('actualTimet')) || new Array(promiseTimetable.length)
   );
+  const [displayPrevious, setDisplayPrevious] = useState(false);
+ 
+  const [previousTimetable, setPreviousTimetable] = useState([]);
 
   useEffect(() => {
     localStorage.setItem('mods', JSON.stringify(mods))
@@ -79,7 +83,6 @@ function App() {
     localStorage.setItem('actualTimet', JSON.stringify(actualTimet))}
   , [JSON.stringify(actualTimet)
   ])
-
 
   useEffect(() => {
     const Mapped = mods.map((mod) => {
@@ -136,29 +139,10 @@ function App() {
     setConstraints([]);
     setPromiseTimetable([]);
     setActualTimet([]);
+    setPreviousTimetable([])
   };
 
-  function shuffleArray(array) {
-    for (var i = array.length - 1; i > 0; i--) {
-      var j = Math.floor(Math.random() * (i + 1));
-      var temp = array[i];
-      array[i] = array[j];
-      array[j] = temp;
-    }
-  }
 
-  const reshuffle = () => {
-    const copyTimetable = JSON.parse(JSON.stringify(actualTimet));
-    const mapped = copyTimetable.map(x => {
-      shuffleArray(x.lessons)
-      return ({
-        moduleCode: x.moduleCode,
-        lessons: x.lessons
-      });
-    })
-    shuffleArray(mapped);
-    setActualTimet(mapped);
-  };
 
   return (
     <Router>
@@ -198,11 +182,7 @@ function App() {
                       setDisplayConstraintForm={setDisplayConstraintForm}
                     />
                     <ClearModsButton
-                      setMods={setMods}
-                      setDisplayConstraintForm={setDisplayConstraintForm}
-                      setDisplayTimetable={setDisplayTimetable}
-                      setConstraints={setConstraints}
-                      setTentativeConstraints={setTentativeConstraints}
+                      restart={restart}
                     />
                   </Col>
                   <Col>
@@ -255,11 +235,17 @@ function App() {
                 <Timetable
                   constraints={constraints}
                   actualTimet={actualTimet}
+                  setActualTimet={setActualTimet}
+                  previousTimetable={previousTimetable}
+                  setPreviousTimetable={setPreviousTimetable}
+                  displayPrevious={displayPrevious}
+                  setDisplayPrevious={setDisplayPrevious}
                 />
               )}
-              {displayTimetable && (
-                <Button onClick={reshuffle}>Generate another</Button>
-              )}
+              {displayPrevious && 
+              previousTimetable.length !== 0 && 
+                <SaveTimetable 
+                previousTimetable={previousTimetable}/>}
             </Route>
             <Route exact path="/help" component={Help} />
           </Switch>

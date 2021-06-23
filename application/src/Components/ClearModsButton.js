@@ -10,11 +10,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const ClearModsButton = ({
-  setMods,
-  setDisplayConstraintForm,
-  setDisplayTimetable,
-  setConstraints,
-  setTentativeConstraints
+  restart
 }) => {
   const classes = useStyles();
   const handleSubmit = () => {
@@ -25,11 +21,7 @@ const ClearModsButton = ({
         {
           label: "Yes",
           onClick: () => {
-            setMods([]);
-            setDisplayConstraintForm(false);
-            setDisplayTimetable(false);
-            setConstraints([]);
-            setTentativeConstraints([]);
+            restart();
           },
         },
         {

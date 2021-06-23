@@ -4,12 +4,46 @@ import axios from 'axios'
 import Constraints from "./Constraints"
 import Timetable_lib from 'react-timetable-events'
 import moment from 'moment';
+import Switch from "react-switch";
+import {
+    Button,
+  } from "@material-ui/core";
 
 const Days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
 
-const Timetable = ({constraints, actualTimet}) => {
+const Timetable = ({constraints, actualTimet, setActualTimet, previousTimetable, setPreviousTimetable, displayPrevious, setDisplayPrevious}) => {
+    const [displayLecture, setDisplayLecture] = useState(true);
+    const [displayTutorial, setDisplayTutorial] = useState(true);
+    const [displayLab, setDisplayLab] = useState(true);
+    const [displayOthers, setDisplayOthers] = useState(true);
+
     if (!ConstrictConflict(constraints)) {
-        return <h1><Timetable_lib/></h1> //return empty timetable
+        return (
+            <div>
+                <h3>Timetable</h3>
+                <div className="timetable control">
+                    <ViewSwitches 
+                        displayLecture={displayLecture}
+                        setDisplayLecture={setDisplayLecture}
+                        displayTutorial={displayTutorial}
+                        setDisplayTutorial={setDisplayTutorial}
+                        displayLab={displayLab}
+                        setDisplayLab={setDisplayLab}
+                        displayOthers={displayOthers}
+                        setDisplayOthers={setDisplayOthers}/>
+                    <GenerateAnotherButton 
+                        actualTimet={actualTimet}
+                        setActualTimet={setActualTimet}
+                        confirmedLessons={null}
+                        previousTimetable={previousTimetable}
+                        setPreviousTimetable={setPreviousTimetable}/>
+                    <ViewPreviousButton 
+                    displayPrevious={displayPrevious}
+                    setDisplayPrevious={setDisplayPrevious}/>
+                    
+                </div>
+                <Timetable_lib/>
+            </div>); //return empty timetable
     }
     const sortedConstraints = constraints.map(x => x).sort((x, y) => x.type - y.type);
     const lessonType = actualTimet.map(LessonTypes)
@@ -28,7 +62,32 @@ const Timetable = ({constraints, actualTimet}) => {
             if (filteredNo !== originalNo) {
                 window.alert("Not possible. Consider removing " +
                     Constraints[currentConstraint.type].displayCode(currentConstraint, false))
-                return <Timetable_lib />
+                return (
+                    <div>
+                <h3>Timetable</h3>
+                <div className="timetable control">
+                    <ViewSwitches 
+                        displayLecture={displayLecture}
+                        setDisplayLecture={setDisplayLecture}
+                        displayTutorial={displayTutorial}
+                        setDisplayTutorial={setDisplayTutorial}
+                        displayLab={displayLab}
+                        setDisplayLab={setDisplayLab}
+                        displayOthers={displayOthers}
+                        setDisplayOthers={setDisplayOthers}/>
+                    <GenerateAnotherButton 
+                        actualTimet={actualTimet}
+                        setActualTimet={setActualTimet}
+                        confirmedLessons={confirmedLessons}
+                        previousTimetable={previousTimetable}
+                        setPreviousTimetable={setPreviousTimetable}/>
+                    <ViewPreviousButton 
+                    displayPrevious={displayPrevious}
+                    setDisplayPrevious={setDisplayPrevious}/>
+                </div>
+                <Timetable_lib/>
+            </div>
+                );
             }
         }
     }
@@ -37,12 +96,196 @@ const Timetable = ({constraints, actualTimet}) => {
     const confirmedLessons = GeneratePossible(Timetable, validLessons, lessonType, [])
     if (confirmedLessons === null) {
         window.alert("Not possible to generate timetable due to clashes")
-        return <Timetable_lib />
+        return (
+            <div>
+                <h3>Timetable</h3>
+                <div className="timetable control">
+                    <ViewSwitches 
+                        displayLecture={displayLecture}
+                        setDisplayLecture={setDisplayLecture}
+                        displayTutorial={displayTutorial}
+                        setDisplayTutorial={setDisplayTutorial}
+                        displayLab={displayLab}
+                        setDisplayLab={setDisplayLab}
+                        displayOthers={displayOthers}
+                        setDisplayOthers={setDisplayOthers}/>
+                    <GenerateAnotherButton 
+                        actualTimet={actualTimet}
+                        setActualTimet={setActualTimet}
+                        confirmedLessons={confirmedLessons}
+                        previousTimetable={previousTimetable}
+                        setPreviousTimetable={setPreviousTimetable}/>
+                    <ViewPreviousButton 
+                    displayPrevious={displayPrevious}
+                    setDisplayPrevious={setDisplayPrevious}/>
+                </div>
+                <Timetable_lib/>
+            </div>
+        );
     }
-    return TimetableGenerator(confirmedLessons);
+
+    return TimetableGenerator(confirmedLessons, 
+        displayLecture, setDisplayLecture, 
+        displayTutorial, setDisplayTutorial, 
+        displayLab, setDisplayLab, 
+        displayOthers, setDisplayOthers, 
+        actualTimet, setActualTimet, 
+        previousTimetable, setPreviousTimetable, 
+        displayPrevious, setDisplayPrevious);
 }
 
-const TimetableGenerator = (confirmedLessons) => {
+const GenerateAnotherButton = ({actualTimet, setActualTimet, confirmedLessons, previousTimetable, setPreviousTimetable}) => {
+    return (
+        <Button 
+            variant="contained"
+            onClick={() => {
+                reshuffle(actualTimet, setActualTimet);  
+                if (confirmedLessons !== null) {
+                    setPreviousTimetable([...previousTimetable, confirmedLessons])
+                }
+            }}>
+            Generate another
+        </Button>
+    );
+}
+
+const reshuffle = (actualTimet, setActualTimet) => {
+    const copyTimetable = JSON.parse(JSON.stringify(actualTimet));
+    const mapped = copyTimetable.map(x => {
+      const shuffled = shuffleArray(x.lessons);
+      return ({
+        moduleCode: x.moduleCode,
+        lessons: shuffled
+      });
+    })
+    shuffleArray(mapped);
+    setActualTimet(mapped);
+  };
+
+  const shuffleArray = array => {
+    for (let i = array.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      const temp = array[i];
+      array[i] = array[j];
+      array[j] = temp;
+    }
+    return array
+  }
+
+const ViewPreviousButton = ({displayPrevious, setDisplayPrevious}) => {
+    return (
+        <span className="view previous timetable switch">
+            <label>
+            <span>See previous timetables</span>
+            <Switch
+                checked={displayPrevious}
+                onChange={setDisplayPrevious}
+                onColor="#86d3ff"
+                onHandleColor="#2693e6"
+                handleDiameter={30}
+                uncheckedIcon={false}
+                checkedIcon={false}
+                boxShadow="0px 1px 5px rgba(0, 0, 0, 0.6)"
+                activeBoxShadow="0px 0px 1px 10px rgba(0, 0, 0, 0.2)"
+                height={20}
+                width={48}
+                className="react-switch"
+            />
+            </label>
+        </span>
+    );
+}
+const ViewSwitches = ({displayLecture, setDisplayLecture, 
+    displayTutorial, setDisplayTutorial, 
+    displayLab, setDisplayLab, 
+    displayOthers, setDisplayOthers}) => {
+    return (
+        <span className="view switches">
+        <label>
+            <span>View lectures</span>
+            <Switch
+                checked={displayLecture}
+                onChange={setDisplayLecture}
+                onColor="#86d3ff"
+                onHandleColor="#2693e6"
+                handleDiameter={30}
+                uncheckedIcon={false}
+                checkedIcon={false}
+                boxShadow="0px 1px 5px rgba(0, 0, 0, 0.6)"
+                activeBoxShadow="0px 0px 1px 10px rgba(0, 0, 0, 0.2)"
+                height={20}
+                width={48}
+                className="react-switch"
+                id="material-switch"
+            />
+        </label>
+        <label>
+            <span>View tutorials</span>
+            <Switch
+                checked={displayTutorial}
+                onChange={setDisplayTutorial}
+                onColor="#86d3ff"
+                onHandleColor="#2693e6"
+                handleDiameter={30}
+                uncheckedIcon={false}
+                checkedIcon={false}
+                boxShadow="0px 1px 5px rgba(0, 0, 0, 0.6)"
+                activeBoxShadow="0px 0px 1px 10px rgba(0, 0, 0, 0.2)"
+                height={20}
+                width={48}
+                className="react-switch"
+                id="material-switch"
+            />
+        </label>
+        <label>
+            <span>View labs</span>
+            <Switch
+                checked={displayLab}
+                onChange={setDisplayLab}
+                onColor="#86d3ff"
+                onHandleColor="#2693e6"
+                handleDiameter={30}
+                uncheckedIcon={false}
+                checkedIcon={false}
+                boxShadow="0px 1px 5px rgba(0, 0, 0, 0.6)"
+                activeBoxShadow="0px 0px 1px 10px rgba(0, 0, 0, 0.2)"
+                height={20}
+                width={48}
+                className="react-switch"
+                id="material-switch"
+            />
+        </label>
+        <label>
+            <span>View others</span>
+            <Switch
+                checked={displayOthers}
+                onChange={setDisplayOthers}
+                onColor="#86d3ff"
+                onHandleColor="#2693e6"
+                handleDiameter={30}
+                uncheckedIcon={false}
+                checkedIcon={false}
+                boxShadow="0px 1px 5px rgba(0, 0, 0, 0.6)"
+                activeBoxShadow="0px 0px 1px 10px rgba(0, 0, 0, 0.2)"
+                height={20}
+                width={48}
+                className="react-switch"
+                id="material-switch"
+            />
+        </label>
+    </span>
+    );
+}
+
+const TimetableGenerator = (confirmedLessons, 
+    displayLecture, setDisplayLecture, 
+    displayTutorial, setDisplayTutorial, 
+    displayLab, setDisplayLab, 
+    displayOthers, setDisplayOthers,
+    actualTimet, setActualTimet, 
+    previousTimetable, setPreviousTimetable, 
+    displayPrevious, setDisplayPrevious
+    ) => {
     let events = {
         monday: [], 
         tuesday: [], 
@@ -53,6 +296,21 @@ const TimetableGenerator = (confirmedLessons) => {
     let currentId = 1
     for (let i = 0; i < confirmedLessons.length; i++) {
         const currentLesson = confirmedLessons[i];
+        if (!displayLecture && currentLesson.lesson.lessonType === "Lecture") {
+            continue;
+        }
+        if (!displayTutorial && currentLesson.lesson.lessonType === "Tutorial") {
+            continue;
+        }
+        if (!displayLab && currentLesson.lesson.lessonType === "Lab") {
+            continue;
+        }
+        if (!displayOthers && (
+            currentLesson.lesson.lessonType !== "Lecture" && 
+            currentLesson.lesson.lessonType !== "Tutorial" && 
+            currentLesson.lesson.lessonType !== "Laboratory")) {
+            continue;
+        }
         const newEvent = {
             id: currentId, 
             name: currentLesson.moduleCode + " " + 
@@ -91,7 +349,32 @@ const TimetableGenerator = (confirmedLessons) => {
                 }
         }
     }
-    return <Timetable_lib events={events} />
+
+    return (
+        <div>
+            <h3>Timetable</h3>
+                <ViewSwitches 
+                    displayLecture={displayLecture}
+                    setDisplayLecture={setDisplayLecture}
+                    displayTutorial={displayTutorial}
+                    setDisplayTutorial={setDisplayTutorial}
+                    displayLab={displayLab}
+                    setDisplayLab={setDisplayLab}
+                    displayOthers={displayOthers}
+                    setDisplayOthers={setDisplayOthers}/>
+                <GenerateAnotherButton 
+                    actualTimet={actualTimet}
+                    setActualTimet={setActualTimet}
+                    confirmedLessons={events}
+                    previousTimetable={previousTimetable}
+                    setPreviousTimetable={setPreviousTimetable}/>
+                    <ViewPreviousButton 
+                    displayPrevious={displayPrevious}
+                    setDisplayPrevious={setDisplayPrevious}/>
+                <Timetable_lib events={events}/>
+                
+            </div>
+    );
 }
 
 //this function generates a possible timetable
@@ -164,50 +447,6 @@ function GeneratePossible(Timetable, validLessons, lessonType, confirmedLesson) 
     }
     return null;
 }
-
-//This function adds classes of which it is the only valid class of its lessontype in its mod
-// const SetConfirmed = (Timetable, validLesson, lessonType) => {
-//     let newValidLesson = [...validLesson]
-//     for (let i = 0; i < validLesson.length; i++) {
-//         const currentLessons = validLesson[i].lessons;
-//         const modLessonType = lessonType[i];
-//         for (let j = 0; j < modLessonType.length; j++) {
-//             const currentLessonType = modLessonType[j];
-//             const lessonOfThatType = currentLessons.filter(lesson => lesson.lessonType === currentLessonType)
-//             const uniqueLessonNo = lessonOfThatType.map(x => x.classNo).filter((item, i, ar) => ar.indexOf(item) === i)
-//             if (uniqueLessonNo.length === 1) {
-//                 if (!(lessonOfThatType.reduce((x, y) => AddClass(y, Timetable, validLesson[i].moduleCode) && x, true))) {
-//                     window.alert("Not possible due to clashes");
-//                     return null;
-//                 };
-//                 const newLessonT =  modLessonType.filter(x => x !== currentLessonType)
-//                 lessonType.splice(i, 1, 
-//                    newLessonT)
-//                 const removeConfirmed = 
-//                     currentLessons.filter(lesson => uniqueLessonNo.findIndex(each => each === lesson.classNo) === -1)
-//                 let firstSlice = validLesson.slice(0, i)
-//                 let secondSlice = validLesson.slice(i + 1, validLesson.length)
-                
-//                 for (let k = 0; k < lessonOfThatType.length; k++) {
-//                     const dummyConstraint = {
-//                         id: null,
-//                         type: 3,
-//                         time: [lessonOfThatType[k].day, lessonOfThatType[k].startTime, lessonOfThatType[k].endTime]
-//                     }
-//                     firstSlice = firstSlice.map(Constraints[3].filterMods(dummyConstraint))
-//                     secondSlice = secondSlice.map(Constraints[3].filterMods(dummyConstraint))
-//                 }
-//                 newValidLesson = [...firstSlice, {
-//                     moduleCode: validLesson[i].moduleCode, 
-//                     lessons: removeConfirmed
-//                 }
-//                     , ...secondSlice]
-//             }
-//         }
-//     }
-//     return newValidLesson;
-// }
-
 
 //This function is to generate a array of lesson types for this mod
 const LessonTypes = mod => mod.lessons.
@@ -307,49 +546,6 @@ const Alert = (constraint1, constraint2) => {
     const displayCode1 = Constraints[constraint1.type].displayCode(constraint1, false);
     window.alert("Clash between " + displayCode1 +
         " and " + Constraints[constraint2.type].displayCode(constraint2, false));
-}
-
-const Times = [...Array(2100).keys()].slice(1).
-    filter(x => x >= 700 && (x % 100 === 0 || x % 100 === 30))
-
-// const TimetableGenerator = (lessons) => {
-//     return (
-//     <table>
-//         <tr>
-//             <th></th>
-//             {Times.map(x => <th>{x}</th>)}
-//         </tr>
-//         {lessons.map((day, index) => {
-//             return (
-//                 <tr>
-//                     <th>{Days[index]}</th>
-//                     {day.map(lesson => {
-//                         if (lesson === null) {
-//                             return (<th></th>)
-//                         } else {
-//                             return (<th> {lesson.moduleCode} {lesson.lesson.classNo} {lesson.lesson.venue} </th>)
-//                         }
-//                         }
-//                     )}
-//                 </tr>);
-//         }
-//             )}  
-//     </table>
-//     );
-// }
-
-
-
-const BubbleSort = (array, compareFunction) => {
-    for (let i = 0; i < array.length; i++) {
-        for (let j = i + 1; j < array.length; j++) {
-            if (compareFunction(array[i], array[j]) > 0) {
-                const temp = array[i];
-                array[i] = array[j];
-                array[j] = temp;
-            }
-        }
-    }
 }
 
 export default Timetable

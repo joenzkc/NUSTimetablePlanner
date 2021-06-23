@@ -55,7 +55,7 @@ const TimeForm = ({ setTime, restart }) => {
 };
 
 const YearandSemForm = ({ setTime, restart }) => {
-  const [title, setTitle] = useState("Sem 1 2020/21");
+  const [title, setTitle] = useState("Sem 1 2021/22");
   const classes = useStyles();
 
   const handleChange = (event) => {
