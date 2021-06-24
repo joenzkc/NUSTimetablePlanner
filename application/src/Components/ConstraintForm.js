@@ -35,14 +35,16 @@ const ConstraintForm = ({
   setTentativeConstraints,
   actualTimet,
 }) => {
-  
   const classes = useStyles();
   const [type, setType] = useState(0);
   const [modCod, setModCod] = useState(mods[0].moduleCode);
   const [mod, setMod] = useState(mods[0]);
-  const [time, setTime] = useState(Constraints[0].defaultTime(actualTimet.filter(x => x.moduleCode === modCod)[0]));
+  const [time, setTime] = useState(
+    Constraints[0].defaultTime(
+      actualTimet.filter((x) => x.moduleCode === modCod)[0]
+    )
+  );
   const defaultMod = mods[0].moduleCode;
-  
 
   return (
     <Paper className={classes.root}>
@@ -52,10 +54,15 @@ const ConstraintForm = ({
         </Grid>
         <Grid item xs={12}>
           <FormControl className={classes.formControl}>
-            <InputLabel id="label">{Constraints[type].type}</InputLabel>
+            <InputLabel id="label">Constraint </InputLabel>
             <NativeSelect
               labelid="constraint type"
-              onChange={handleConstraintTypeChange(setType, setTime, actualTimet, modCod)}
+              onChange={handleConstraintTypeChange(
+                setType,
+                setTime,
+                actualTimet,
+                modCod
+              )}
             >
               {Constraints.map(ConstraintDisplay)}
             </NativeSelect>
@@ -70,7 +77,7 @@ const ConstraintForm = ({
                   mods,
                   modCod,
                   type,
-                  setTime, 
+                  setTime,
                   actualTimet
                 )}
               >
@@ -106,7 +113,11 @@ const handleModChange =
   (setModCod, setMod, mods, modCod, type, setTime, actualTimet) => (event) => {
     setModCod(event.target.value);
     setMod(mods.filter((y) => y.moduleCode === event.target.value)[0]);
-    setTime(Constraints[type].defaultTime(actualTimet.filter(x => x.moduleCode === modCod)[0]));
+    setTime(
+      Constraints[type].defaultTime(
+        actualTimet.filter((x) => x.moduleCode === modCod)[0]
+      )
+    );
   };
 
 const handleSubmit =
@@ -134,11 +145,16 @@ const handleSubmit =
     }
   };
 
-const handleConstraintTypeChange = (setType, setTime, actualTimet, modCod) => (event) => {
-  const index = Constraints.findIndex((x) => x.type === event.target.value);
-  setType(index);
-  setTime(Constraints[index].defaultTime(actualTimet.filter(x => x.moduleCode === modCod)[0]));
-};
+const handleConstraintTypeChange =
+  (setType, setTime, actualTimet, modCod) => (event) => {
+    const index = Constraints.findIndex((x) => x.type === event.target.value);
+    setType(index);
+    setTime(
+      Constraints[index].defaultTime(
+        actualTimet.filter((x) => x.moduleCode === modCod)[0]
+      )
+    );
+  };
 
 const ModDisplay = (mod) => {
   return (
