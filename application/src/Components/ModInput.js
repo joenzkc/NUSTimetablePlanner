@@ -55,7 +55,6 @@ const ModInput = ({
 
   return (
     <div>
-      <form onSubmit={handleSubmit}>
         <TextField
           label="Search for a module. Try 'CS' or 'GER'"
           id="margin-normal"
@@ -72,7 +71,6 @@ const ModInput = ({
         >
           Search
         </Button>
-      </form>
     </div>
   );
 };

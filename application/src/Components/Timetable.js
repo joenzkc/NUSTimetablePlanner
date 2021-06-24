@@ -1,8 +1,7 @@
-import React, { useState, useEffect } from 'react'
-import axios from 'axios'
+import React, { useState } from 'react'
 
 import Constraints from "./Constraints"
-import Timetable_lib from 'react-timetable-events'
+import TimetableLib from 'react-timetable-events'
 import moment from 'moment';
 import Switch from "react-switch";
 import {
@@ -16,34 +15,17 @@ const Timetable = ({constraints, actualTimet, setActualTimet, previousTimetable,
     const [displayTutorial, setDisplayTutorial] = useState(true);
     const [displayLab, setDisplayLab] = useState(true);
     const [displayOthers, setDisplayOthers] = useState(true);
+    const [shownBefore, setShownBefore] = useState(false);
 
     if (!ConstrictConflict(constraints)) {
         return (
-            <div>
-                <h3>Timetable</h3>
-                <div className="timetable control">
-                    <ViewSwitches 
-                        displayLecture={displayLecture}
-                        setDisplayLecture={setDisplayLecture}
-                        displayTutorial={displayTutorial}
-                        setDisplayTutorial={setDisplayTutorial}
-                        displayLab={displayLab}
-                        setDisplayLab={setDisplayLab}
-                        displayOthers={displayOthers}
-                        setDisplayOthers={setDisplayOthers}/>
-                    <GenerateAnotherButton 
-                        actualTimet={actualTimet}
-                        setActualTimet={setActualTimet}
-                        confirmedLessons={null}
-                        previousTimetable={previousTimetable}
-                        setPreviousTimetable={setPreviousTimetable}/>
-                    <ViewPreviousButton 
-                    displayPrevious={displayPrevious}
-                    setDisplayPrevious={setDisplayPrevious}/>
-                    
-                </div>
-                <Timetable_lib/>
-            </div>); //return empty timetable
+            TimetableMaker(null, displayLecture, setDisplayLecture, 
+                displayTutorial, setDisplayTutorial, 
+                displayLab, setDisplayLab, 
+                displayOthers, setDisplayOthers, 
+                actualTimet, setActualTimet, 
+                previousTimetable, setPreviousTimetable, 
+                displayPrevious, setDisplayPrevious)); //return empty timetable
     }
     const sortedConstraints = constraints.map(x => x).sort((x, y) => x.type - y.type);
     const lessonType = actualTimet.map(LessonTypes)
@@ -63,68 +45,49 @@ const Timetable = ({constraints, actualTimet, setActualTimet, previousTimetable,
                 window.alert("Not possible. Consider removing " +
                     Constraints[currentConstraint.type].displayCode(currentConstraint, false))
                 return (
-                    <div>
-                <h3>Timetable</h3>
-                <div className="timetable control">
-                    <ViewSwitches 
-                        displayLecture={displayLecture}
-                        setDisplayLecture={setDisplayLecture}
-                        displayTutorial={displayTutorial}
-                        setDisplayTutorial={setDisplayTutorial}
-                        displayLab={displayLab}
-                        setDisplayLab={setDisplayLab}
-                        displayOthers={displayOthers}
-                        setDisplayOthers={setDisplayOthers}/>
-                    <GenerateAnotherButton 
-                        actualTimet={actualTimet}
-                        setActualTimet={setActualTimet}
-                        confirmedLessons={confirmedLessons}
-                        previousTimetable={previousTimetable}
-                        setPreviousTimetable={setPreviousTimetable}/>
-                    <ViewPreviousButton 
-                    displayPrevious={displayPrevious}
-                    setDisplayPrevious={setDisplayPrevious}/>
-                </div>
-                <Timetable_lib/>
-            </div>
+                    TimetableMaker(null, displayLecture, setDisplayLecture, 
+                        displayTutorial, setDisplayTutorial, 
+                        displayLab, setDisplayLab, 
+                        displayOthers, setDisplayOthers, 
+                        actualTimet, setActualTimet, 
+                        previousTimetable, setPreviousTimetable, 
+                        displayPrevious, setDisplayPrevious)
                 );
             }
         }
     }
 
     let Timetable = new Array(5).fill(0).map(() => new Array(28).fill(null)); // a 5 x 28 array for each weekday and from 7am to 9pm
-    const confirmedLessons = GeneratePossible(Timetable, validLessons, lessonType, [])
+    const confirmedLessons = GeneratePossible(Timetable, validLessons, lessonType, [], previousTimetable)
     if (confirmedLessons === null) {
-        window.alert("Not possible to generate timetable due to clashes")
+        if (previousTimetable.length === 0) {
+            window.alert("Not possible to generate timetable due to clashes")
+            return (
+                TimetableMaker(null, displayLecture, setDisplayLecture, 
+                    displayTutorial, setDisplayTutorial, 
+                    displayLab, setDisplayLab, 
+                    displayOthers, setDisplayOthers, 
+                    actualTimet, setActualTimet, 
+                    previousTimetable, setPreviousTimetable, 
+                    displayPrevious, setDisplayPrevious)
+            );
+        } 
+        if (!shownBefore) {
+            window.alert("All possible combinations are shown")
+            setShownBefore(true)
+        }
         return (
-            <div>
-                <h3>Timetable</h3>
-                <div className="timetable control">
-                    <ViewSwitches 
-                        displayLecture={displayLecture}
-                        setDisplayLecture={setDisplayLecture}
-                        displayTutorial={displayTutorial}
-                        setDisplayTutorial={setDisplayTutorial}
-                        displayLab={displayLab}
-                        setDisplayLab={setDisplayLab}
-                        displayOthers={displayOthers}
-                        setDisplayOthers={setDisplayOthers}/>
-                    <GenerateAnotherButton 
-                        actualTimet={actualTimet}
-                        setActualTimet={setActualTimet}
-                        confirmedLessons={confirmedLessons}
-                        previousTimetable={previousTimetable}
-                        setPreviousTimetable={setPreviousTimetable}/>
-                    <ViewPreviousButton 
-                    displayPrevious={displayPrevious}
-                    setDisplayPrevious={setDisplayPrevious}/>
-                </div>
-                <Timetable_lib/>
-            </div>
+            TimetableMaker(previousTimetable[previousTimetable.length - 1], displayLecture, setDisplayLecture, 
+                displayTutorial, setDisplayTutorial, 
+                displayLab, setDisplayLab, 
+                displayOthers, setDisplayOthers, 
+                actualTimet, setActualTimet, 
+                previousTimetable, setPreviousTimetable, 
+                displayPrevious, setDisplayPrevious)
         );
     }
 
-    return TimetableGenerator(confirmedLessons, 
+    const events = EventGenerator(confirmedLessons, 
         displayLecture, setDisplayLecture, 
         displayTutorial, setDisplayTutorial, 
         displayLab, setDisplayLab, 
@@ -132,16 +95,132 @@ const Timetable = ({constraints, actualTimet, setActualTimet, previousTimetable,
         actualTimet, setActualTimet, 
         previousTimetable, setPreviousTimetable, 
         displayPrevious, setDisplayPrevious);
+    return (
+        TimetableMaker(events, displayLecture, setDisplayLecture, 
+            displayTutorial, setDisplayTutorial, 
+            displayLab, setDisplayLab, 
+            displayOthers, setDisplayOthers, 
+            actualTimet, setActualTimet, 
+            previousTimetable, setPreviousTimetable, 
+            displayPrevious, setDisplayPrevious)
+    );
 }
 
-const GenerateAnotherButton = ({actualTimet, setActualTimet, confirmedLessons, previousTimetable, setPreviousTimetable}) => {
+const TimetableMaker = (events, displayLecture, setDisplayLecture, 
+    displayTutorial, setDisplayTutorial, 
+    displayLab, setDisplayLab, 
+    displayOthers, setDisplayOthers, 
+    actualTimet, setActualTimet, 
+    previousTimetable, setPreviousTimetable, 
+    displayPrevious, setDisplayPrevious) => {
+    let filterEvents = {
+        monday: events.monday, 
+        tuesday: events.tuesday, 
+        wednesday: events.wednesday, 
+        thursday: events.thursday, 
+        friday: events.friday
+    }
+    if (!displayLecture) {
+        console.log("filtering lecture")
+        const filteredMon = filterEvents.monday.filter(x => x.type !== "Lecture");
+        
+        const filteredTue = filterEvents.tuesday.filter(x => x.type !== "Lecture");
+        const filteredWed = filterEvents.wednesday.filter(x => x.type !== "Lecture");
+        const filteredThu = filterEvents.thursday.filter(x => x.type !== "Lecture");
+        const filteredFri = filterEvents.friday.filter(x => x.type !== "Lecture");
+        console.log("filtered mon", filteredFri, filterEvents.friday)
+        filterEvents = {
+            monday: filteredMon, 
+            tuesday: filteredTue, 
+            wednesday: filteredWed, 
+            thursday: filteredThu, 
+            friday: filteredFri
+        }
+    }
+    
+
+    if (!displayTutorial) {
+        const filteredMon = filterEvents.monday.filter(x => x.type !== "Tutorial");
+        const filteredTue = filterEvents.tuesday.filter(x => x.type !== "Tutorial");
+        const filteredWed = filterEvents.wednesday.filter(x => x.type !== "Tutorial");
+        const filteredThu = filterEvents.thursday.filter(x => x.type !== "Tutorial");
+        const filteredFri = filterEvents.friday.filter(x => x.type !== "Tutorial");
+        filterEvents = {
+            monday: filteredMon, 
+            tuesday: filteredTue, 
+            wednesday: filteredWed, 
+            thursday: filteredThu, 
+            friday: filteredFri
+        }
+    }
+
+    if (!displayLab) {
+        const filteredMon = filterEvents.monday.filter(x => x.type !== "Laboratory");
+        const filteredTue = filterEvents.tuesday.filter(x => x.type !== "Laboratory");
+        const filteredWed = filterEvents.wednesday.filter(x => x.type !== "Laboratory");
+        const filteredThu = filterEvents.thursday.filter(x => x.type !== "Laboratory");
+        const filteredFri = filterEvents.friday.filter(x => x.type !== "Laboratory");
+        filterEvents = {
+            monday: filteredMon, 
+            tuesday: filteredTue, 
+            wednesday: filteredWed, 
+            thursday: filteredThu, 
+            friday: filteredFri
+        }
+    }
+
+    if (!displayOthers) {
+        const filteredMon = filterEvents.monday.filter(x => x.type === "Lecture" || x.type === "Tutorial" || x.type === "Laboratory");
+        const filteredTue = filterEvents.tuesday.filter(x => x.type === "Lecture" || x.type === "Tutorial" || x.type === "Laboratory");
+        const filteredWed = filterEvents.wednesday.filter(x => x.type === "Lecture" || x.type === "Tutorial" || x.type === "Laboratory");
+        const filteredThu = filterEvents.thursday.filter(x => x.type === "Lecture" || x.type === "Tutorial" || x.type === "Laboratory");
+        const filteredFri = filterEvents.friday.filter(x => x.type === "Lecture" || x.type === "Tutorial" || x.type === "Laboratory");
+        filterEvents = {
+            monday: filteredMon, 
+            tuesday: filteredTue, 
+            wednesday: filteredWed, 
+            thursday: filteredThu, 
+            friday: filteredFri
+        }
+    }
+
+    console.log("filter event", filterEvents, events)
+    return (
+    <div>
+        <h3>Timetable</h3>
+        <div className="timetable control">
+            <ViewSwitches 
+                displayLecture={displayLecture}
+                setDisplayLecture={setDisplayLecture}
+                displayTutorial={displayTutorial}
+                setDisplayTutorial={setDisplayTutorial}
+                displayLab={displayLab}
+                setDisplayLab={setDisplayLab}
+                displayOthers={displayOthers}
+                setDisplayOthers={setDisplayOthers}/>
+            <GenerateAnotherButton 
+                actualTimet={actualTimet}
+                setActualTimet={setActualTimet}
+                events={events}
+                previousTimetable={previousTimetable}
+                setPreviousTimetable={setPreviousTimetable}/>
+            <ViewPreviousButton 
+            displayPrevious={displayPrevious}
+            setDisplayPrevious={setDisplayPrevious}/>
+        </div>
+        <TimetableLib events={filterEvents}/>
+    </div>
+    );
+}
+
+const GenerateAnotherButton = ({actualTimet, setActualTimet, events, previousTimetable, setPreviousTimetable}) => {
     return (
         <Button 
             variant="contained"
             onClick={() => {
                 reshuffle(actualTimet, setActualTimet);  
-                if (confirmedLessons !== null) {
-                    setPreviousTimetable([...previousTimetable, confirmedLessons])
+                if (events !== null && (previousTimetable.findIndex(x => JSON.stringify(x).localeCompare(events) === 0) === -1)) {
+                    setPreviousTimetable([...previousTimetable, events])
                 }
             }}>
             Generate another
@@ -277,14 +356,7 @@ const ViewSwitches = ({displayLecture, setDisplayLecture,
     );
 }
 
-const TimetableGenerator = (confirmedLessons, 
-    displayLecture, setDisplayLecture, 
-    displayTutorial, setDisplayTutorial, 
-    displayLab, setDisplayLab, 
-    displayOthers, setDisplayOthers,
-    actualTimet, setActualTimet, 
-    previousTimetable, setPreviousTimetable, 
-    displayPrevious, setDisplayPrevious
+const EventGenerator = (confirmedLessons
     ) => {
     let events = {
         monday: [], 
@@ -296,21 +368,6 @@ const TimetableGenerator = (confirmedLessons,
     let currentId = 1
     for (let i = 0; i < confirmedLessons.length; i++) {
         const currentLesson = confirmedLessons[i];
-        if (!displayLecture && currentLesson.lesson.lessonType === "Lecture") {
-            continue;
-        }
-        if (!displayTutorial && currentLesson.lesson.lessonType === "Tutorial") {
-            continue;
-        }
-        if (!displayLab && currentLesson.lesson.lessonType === "Lab") {
-            continue;
-        }
-        if (!displayOthers && (
-            currentLesson.lesson.lessonType !== "Lecture" && 
-            currentLesson.lesson.lessonType !== "Tutorial" && 
-            currentLesson.lesson.lessonType !== "Laboratory")) {
-            continue;
-        }
         const newEvent = {
             id: currentId, 
             name: currentLesson.moduleCode + " " + 
@@ -322,6 +379,7 @@ const TimetableGenerator = (confirmedLessons,
             endTime: moment(currentLesson.lesson.endTime.substring(0, 2) + ":" + 
                 currentLesson.lesson.endTime.substring(2, 4), 'HH:mm')
         }
+        currentId++;
         switch (Days.findIndex(x => x === currentLesson.lesson.day)) {
             case 0: 
                 events = {
@@ -347,38 +405,18 @@ const TimetableGenerator = (confirmedLessons,
                 events = {
                     ...events, friday: [...events.friday, newEvent]
                 }
+            break;
+            default: 
+                console.log("lesson is not on weekdays")
         }
     }
-
     return (
-        <div>
-            <h3>Timetable</h3>
-                <ViewSwitches 
-                    displayLecture={displayLecture}
-                    setDisplayLecture={setDisplayLecture}
-                    displayTutorial={displayTutorial}
-                    setDisplayTutorial={setDisplayTutorial}
-                    displayLab={displayLab}
-                    setDisplayLab={setDisplayLab}
-                    displayOthers={displayOthers}
-                    setDisplayOthers={setDisplayOthers}/>
-                <GenerateAnotherButton 
-                    actualTimet={actualTimet}
-                    setActualTimet={setActualTimet}
-                    confirmedLessons={events}
-                    previousTimetable={previousTimetable}
-                    setPreviousTimetable={setPreviousTimetable}/>
-                    <ViewPreviousButton 
-                    displayPrevious={displayPrevious}
-                    setDisplayPrevious={setDisplayPrevious}/>
-                <Timetable_lib events={events}/>
-                
-            </div>
+        events
     );
 }
 
 //this function generates a possible timetable
-function GeneratePossible(Timetable, validLessons, lessonType, confirmedLesson) {
+function GeneratePossible(Timetable, validLessons, lessonType, confirmedLesson, previousTimetable) {
     //When all lessonTypes are done and lesson type is an empty arr
     if (lessonType.map(x => x.length).reduce((x, y) => x + y, 0) === 0) {
         return confirmedLesson;
@@ -440,17 +478,20 @@ function GeneratePossible(Timetable, validLessons, lessonType, confirmedLesson) 
             copyConfirmedLesson.push({moduleCode: firstMod.moduleCode, lesson: allLessonsToPush[i]})
         }
         const Possible = GeneratePossible(copyTimetable, newValidLesson, 
-            copyLessonType, copyConfirmedLesson);
+            copyLessonType, copyConfirmedLesson, previousTimetable);
         if (Possible !== null) {
-            return Possible;
+            const mapped = EventGenerator(Possible, true, true, true, true)
+            if (previousTimetable.findIndex(x => JSON.stringify(x).localeCompare(JSON.stringify(mapped)) === 0) === -1) { 
+                return Possible;
+            }
         }
     }
     return null;
 }
 
 //This function is to generate a array of lesson types for this mod
-const LessonTypes = mod => mod.lessons.
-    map(lesson => lesson.lessonType).filter((item, i, ar) => ar.indexOf(item) === i)
+const LessonTypes = mod => mod.lessons
+    .map(lesson => lesson.lessonType).filter((item, i, ar) => ar.indexOf(item) === i)
 
 
 //this function is to add the lesson into the timetable if there is space

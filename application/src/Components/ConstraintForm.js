@@ -23,7 +23,7 @@ const useStyles = makeStyles((theme) => ({
     flexWrap: "wrap",
   },
   formControl: {
-    minWidth: 100,
+    minwidth: 100,
     marginRight: theme.spacing(1),
   },
   button: { marginTop: theme.spacing(1), marginRight: theme.spacing(1) },
@@ -35,6 +35,7 @@ const ConstraintForm = ({
   setTentativeConstraints,
   actualTimet,
 }) => {
+  
   const classes = useStyles();
   const [type, setType] = useState(0);
   const [modCod, setModCod] = useState(mods[0].moduleCode);
@@ -42,6 +43,7 @@ const ConstraintForm = ({
   const [time, setTime] = useState(Constraints[0].defaultTime(actualTimet.filter(x => x.moduleCode === modCod)[0]));
   const defaultMod = mods[0].moduleCode;
   
+
   return (
     <Paper className={classes.root}>
       <Grid container>
@@ -52,8 +54,7 @@ const ConstraintForm = ({
           <FormControl className={classes.formControl}>
             <InputLabel id="label">{Constraints[type].type}</InputLabel>
             <NativeSelect
-              labedId="label"
-              native
+              labelid="constraint type"
               onChange={handleConstraintTypeChange(setType, setTime, actualTimet, modCod)}
             >
               {Constraints.map(ConstraintDisplay)}

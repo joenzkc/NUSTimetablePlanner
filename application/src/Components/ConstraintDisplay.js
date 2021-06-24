@@ -28,7 +28,7 @@ const ConstraintDisplay = ({ constraints, setConstraints }) => {
   const classes = useStyles();
   const Display = (setConstraints, constraints) => (x) => {
     return (
-      <Card>
+      <Card key={Constraints[x.type].displayCode(x, false)}>
         <List className={classes.root}>
           <ListItem>
             <ListItemText>

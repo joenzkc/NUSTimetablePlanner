@@ -34,7 +34,7 @@ const ModDisplay = ({ mods, setMods }) => {
   return (
     <Card>
       {mods.map((mod) => (
-        <List className={classes.root}>
+        <List className={classes.root} key={mod.moduleCode}>
           <ListItem>
             <ListItemText>
               {mod.moduleCode} {mod.title}

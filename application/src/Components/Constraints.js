@@ -27,28 +27,28 @@ const standardDisplayCode = (constraint, type, needSpan) => {
 
 const TimeOption = (
   <Fragment>
-    <option value="0800">0800</option>
-    <option value="0900">0900</option>
-    <option value="1000">1000</option>
-    <option value="1100">1100</option>
-    <option value="1200">1200</option>
-    <option value="1300">1300</option>
-    <option value="1400">1400</option>
-    <option value="1500">1500</option>
-    <option value="1600">1600</option>
-    <option value="1700">1700</option>
-    <option value="1800">1800</option>
-    <option value="1900">1900</option>
+    <option value="0800" key="0800">0800</option>
+    <option value="0900" key="0900">0900</option>
+    <option value="1000" key="1000">1000</option>
+    <option value="1100" key="1100">1100</option>
+    <option value="1200" key="1200">1200</option>
+    <option value="1300" key="1300">1300</option>
+    <option value="1400" key="1400">1400</option>
+    <option value="1500" key="1500">1500</option>
+    <option value="1600" key="1600">1600</option>
+    <option value="1700" key="1700">1700</option>
+    <option value="1800" key="1800">1800</option>
+    <option value="1900" key="1900">1900</option>
   </Fragment>
 );
 
 const DayOption = (
   <Fragment>
-    <option value="Monday">Monday</option>
-    <option value="Tuesday">Tuesday</option>
-    <option value="Wednesday">Wednesday</option>
-    <option value="Thursday">Thursday</option>
-    <option value="Friday">Friday</option>
+    <option value="Monday" key="Monday">Monday</option>
+    <option value="Tuesday" key="Tuesday">Tuesday</option>
+    <option value="Wednesday" key="Wednesday">Wednesday</option>
+    <option value="Thursday" key="Thursday">Thursday</option>
+    <option value="Friday" key="Friday">Friday</option>
   </Fragment>
 );
 
@@ -169,7 +169,7 @@ const Constraints = [
     defaultTime: (mod) => "0600",
     needToSpecifyMod: false,
     optionCode: (setTime, time, actualTimet) => (
-      <FormControl style={{ minWidth: 100, marginTop: 17 }}>
+      <FormControl style={{ minwidth: 100, marginTop: 17 }}>
         <NativeSelect onChange={handleChangeTime(setTime)}>
           {TimeOption}
         </NativeSelect>
@@ -194,7 +194,7 @@ const Constraints = [
       //         {DayOption}
       //     </DropdownButton>
       // </Dropdown>,
-      <FormControl style={{ minWidth: 100, margin: 5, marginTop: 16 }}>
+      <FormControl style={{ minwidth: 100, margin: 5, marginTop: 16 }}>
         {/* <InputLabel>{time}</InputLabel> */}
         <NativeSelect onChange={handleChangeTime(setTime)}>
           {DayOption}
@@ -218,10 +218,9 @@ const Constraints = [
       <div>
         {/* <Grid container spacing={2}>
           <Grid item xs={3}> */}
-        <FormControl style={{ minWidth: 100, margin: 5, marginTop: 16 }}>
+        <FormControl style={{ minwidth: 100, margin: 5, marginTop: 16 }}>
           {/* <InputLabel>{time[0]}</InputLabel> */}
           <NativeSelect
-            native
             onChange={handleStartTimeChange(setTime, time, 0)}
           >
             {DayOption}
@@ -229,22 +228,20 @@ const Constraints = [
         </FormControl>
         {/* </Grid>
           <Grid item xs={2}> */}
-        <FormControl style={{ minWidth: 100, margin: 5, marginTop: 16 }}>
+        <FormControl style={{ minwidth: 100, margin: 5, marginTop: 16 }}>
           {/* <InputLabel>title={time[1]}</InputLabel> */}
           <NativeSelect
-            native
             onChange={handleStartTimeChange(setTime, time, 1)}
-            minWidth={150}
+            minwidth={150}
           >
             {TimeOption}
           </NativeSelect>
         </FormControl>
         {/* </Grid>
           <Grid item xs={2}> */}
-        <FormControl style={{ minWidth: 100, margin: 5, marginTop: 16 }}>
+        <FormControl style={{ minwidth: 100, margin: 5, marginTop: 16 }}>
           {/* <InputLabel>{time[2]}</InputLabel> */}
           <NativeSelect
-            native
             onChange={handleStartTimeChange(setTime, time, 2)}
           >
             {TimeOption}
@@ -408,7 +405,7 @@ const handleStartTimeChange = (setTime, time, index) => (input) => {
 
 const optionCodeForFixClass = (setTime, time, actualTimet) => {
   return (
-    <FormControl style={{ minWidth: 100, margin: 5, marginTop: 16 }}>
+    <FormControl style={{ minwidth: 100, margin: 5, marginTop: 16 }}>
       {/* <InputLabel>{time}</InputLabel> */}
       <NativeSelect onChange={handleChangeTime(setTime)}>
         <ClassesDisplay actualTimet={actualTimet} />
@@ -432,7 +429,7 @@ const ClassesDisplay = ({ actualTimet }) => {
     x.classNo.localeCompare(y.classNo)
   );
   return copy.map((lesson) => (
-    <option value={classString(lesson)}>{classString(lesson)}</option>
+    <option value={classString(lesson)} key={classString(lesson)}>{classString(lesson)}</option>
   ));
 };
 

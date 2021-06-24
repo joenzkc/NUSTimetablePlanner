@@ -55,7 +55,7 @@ const SearchResults = ({ searchTerm, setMods, mods, time }) => {
 
   const DisplayMod = (setMods, mods) => (mod) => {
     return (
-      <Card>
+      <Card key={mod.moduleCode}>
         <List className={classes.root}>
           <ListItem>
             <ListItemText>

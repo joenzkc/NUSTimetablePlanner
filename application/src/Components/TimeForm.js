@@ -93,16 +93,16 @@ const YearandSemForm = ({ setTime, restart }) => {
   return (
     <div>
       <FormControl className={classes.margin}>
+        <InputLabel>{title}</InputLabel>
         <NativeSelect
           id="demo-customized-select-native"
           value={title}
           onChange={handleChange}
           input={<BootstrapInput />}
         >
-          <InputLabel>{title}</InputLabel>
           <option aria-label="None" value="" />
           {yearStore.map((x) => (
-            <option value={x}>{x}</option>
+            <option value={x} key={x}>{x}</option>
           ))}
         </NativeSelect>
       </FormControl>

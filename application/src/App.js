@@ -12,7 +12,7 @@ import ConstraintForm from "./Components/ConstraintForm";
 import ConstraintDisplay from "./Components/ConstraintDisplay";
 import Timetable from "./Components/Timetable";
 import Help from "./Components/Help";
-import { Container, Row, Col, Form, Button } from "react-bootstrap";
+import { Container, Row, Col, Form } from "react-bootstrap";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import { makeStyles, Card } from "@material-ui/core";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -67,21 +67,21 @@ function App() {
 
   useEffect(() => {
     localStorage.setItem('mods', JSON.stringify(mods))
-  }, [JSON.stringify(mods)]);
+  }, [mods]);
 
   useEffect(() => {
     localStorage.setItem('tentativeConstraints', JSON.stringify(tentativeConstraints))
     }
-  , [JSON.stringify(tentativeConstraints)
+  , [tentativeConstraints
   ])
 
   useEffect(() => {
     localStorage.setItem('time', JSON.stringify(time));
-  }, [JSON.stringify(time)])
+  }, [time])
 
   useEffect(() => {
     localStorage.setItem('actualTimet', JSON.stringify(actualTimet))}
-  , [JSON.stringify(actualTimet)
+  , [actualTimet
   ])
 
   useEffect(() => {
@@ -108,7 +108,7 @@ function App() {
     });
     setPromiseTimetable(Mapped);
     localStorage.setItem('promiseTimetable', JSON.stringify(Mapped));
-  }, [mods.length]);
+  }, [mods, time.year, time.sem]);
 
   
 
