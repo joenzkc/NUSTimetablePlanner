@@ -38,51 +38,55 @@ const useStyles = makeStyles((theme) => ({
 
 function App() {
   const classes = useStyles();
-  const [time, setTime] = useState(JSON.parse(localStorage.getItem('time')) || {
-    year: "2020-2021",
-    sem: "1",
-  });
+  const [time, setTime] = useState(
+    JSON.parse(localStorage.getItem("time")) || {
+      year: "2020-2021",
+      sem: "1",
+    }
+  );
   const [tentativeTime, setTentativeTime] = useState({
     year: "2020-2021",
     sem: "1",
   });
 
   const [mods, setMods] = useState(
-    JSON.parse(localStorage.getItem('mods')) || []);
-  const [promiseTimetable, setPromiseTimetable] = 
-    useState([]); //this stores a promise of the mod timetable
+    JSON.parse(localStorage.getItem("mods")) || []
+  );
+  const [promiseTimetable, setPromiseTimetable] = useState([]); //this stores a promise of the mod timetable
   const [searchTerm, setSearchTerm] = useState("");
   const [displaySearchResults, setDisplaySearchResults] = useState(false);
   const [displayConstraintForm, setDisplayConstraintForm] = useState(false);
   const [displayTimetable, setDisplayTimetable] = useState(false);
   const [constraints, setConstraints] = useState([]);
-  const [tentativeConstraints, setTentativeConstraints] = 
-    useState(JSON.parse(localStorage.getItem('tentativeConstraints')) || []);
+  const [tentativeConstraints, setTentativeConstraints] = useState(
+    JSON.parse(localStorage.getItem("tentativeConstraints")) || []
+  );
   const [actualTimet, setActualTimet] = useState(
-    JSON.parse(localStorage.getItem('actualTimet')) || new Array(promiseTimetable.length)
+    JSON.parse(localStorage.getItem("actualTimet")) ||
+      new Array(promiseTimetable.length)
   );
   const [displayPrevious, setDisplayPrevious] = useState(false);
- 
+
   const [previousTimetable, setPreviousTimetable] = useState([]);
 
   useEffect(() => {
-    localStorage.setItem('mods', JSON.stringify(mods))
+    localStorage.setItem("mods", JSON.stringify(mods));
   }, [mods]);
 
   useEffect(() => {
-    localStorage.setItem('tentativeConstraints', JSON.stringify(tentativeConstraints))
-    }
-  , [tentativeConstraints
-  ])
+    localStorage.setItem(
+      "tentativeConstraints",
+      JSON.stringify(tentativeConstraints)
+    );
+  }, [tentativeConstraints]);
 
   useEffect(() => {
-    localStorage.setItem('time', JSON.stringify(time));
-  }, [time])
+    localStorage.setItem("time", JSON.stringify(time));
+  }, [time]);
 
   useEffect(() => {
-    localStorage.setItem('actualTimet', JSON.stringify(actualTimet))}
-  , [actualTimet
-  ])
+    localStorage.setItem("actualTimet", JSON.stringify(actualTimet));
+  }, [actualTimet]);
 
   useEffect(() => {
     const Mapped = mods.map((mod) => {
@@ -107,10 +111,8 @@ function App() {
       };
     });
     setPromiseTimetable(Mapped);
-    localStorage.setItem('promiseTimetable', JSON.stringify(Mapped));
+    localStorage.setItem("promiseTimetable", JSON.stringify(Mapped));
   }, [mods, time.year, time.sem]);
-
-  
 
   useEffect(() => {
     for (let i = 0; i < promiseTimetable.length; i++) {
@@ -129,7 +131,6 @@ function App() {
     }
   }, [promiseTimetable.length]);
 
-
   const restart = () => {
     setDisplayConstraintForm(false);
     setDisplaySearchResults(false);
@@ -139,15 +140,13 @@ function App() {
     setConstraints([]);
     setPromiseTimetable([]);
     setActualTimet([]);
-    setPreviousTimetable([])
+    setPreviousTimetable([]);
   };
-
-
 
   return (
     <Router>
       <div className="App">
-        <Container>
+        <Container fluid="lg">
           <CssBaseline />
           <Header />
           <Switch>
@@ -181,9 +180,7 @@ function App() {
                       setDisplaySearchResults={setDisplaySearchResults}
                       setDisplayConstraintForm={setDisplayConstraintForm}
                     />
-                    <ClearModsButton
-                      restart={restart}
-                    />
+                    <ClearModsButton restart={restart} />
                   </Col>
                   <Col>
                     {displaySearchResults && (
@@ -242,10 +239,9 @@ function App() {
                   setDisplayPrevious={setDisplayPrevious}
                 />
               )}
-              {displayPrevious && 
-              previousTimetable.length !== 0 && 
-                <SaveTimetable 
-                previousTimetable={previousTimetable}/>}
+              {displayPrevious && previousTimetable.length !== 0 && (
+                <SaveTimetable previousTimetable={previousTimetable} />
+              )}
             </Route>
             <Route exact path="/help" component={Help} />
           </Switch>
