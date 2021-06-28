@@ -117,6 +117,7 @@ const filterClassesForNoLessonsOn = (constraint) => (mod) => {
 
 //Filters mods if users decides to have no lessons on certain day and on certain time
 const filterClassesForNoLessonsFromTo = (constraint) => (mod) => {
+  
   const time = constraint.time;
   const day = time[0];
   const startTime = parseInt(time[1]);
@@ -128,9 +129,9 @@ const filterClassesForNoLessonsFromTo = (constraint) => (mod) => {
         ((lesson.endTime <= endTime && lesson.endTime > startTime) ||
           (lesson.startTime < endTime && lesson.startTime >= startTime))
     )
-    .map((x) => x.classNo);
+
   const promiseLessons = mod.lessons.filter(
-    (lesson) => rejectLessons.findIndex((x) => x === lesson.classNo) === -1
+    (lesson) => rejectLessons.findIndex((x) => x.classNo === lesson.classNo && x.lessonType === lesson.lessonType) === -1
   );
   return {
     moduleCode: mod.moduleCode,
@@ -348,9 +349,9 @@ const Constraints = [
         return {
           moduleCode: mod.moduleCode,
           lessons: BubbleSort(mod.lessons, (x, y) => {
-            if (x.venue === "E-Learn_C" && y.venue === "E-Learn_C") {
+            if (x.venue.substring(0, 7) === "E-Learn" && y.venue.substring(0, 7) === "E-Learn") {
               return 0;
-            } else if (x.venue === "E-Learn_C") {
+            } else if (x.venue.substring(0, 7) === "E-Learn") {
               return -1;
             } else {
               return 1;

@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import Constraints from "./Constraints";
 import TimetableLib from "react-timetable-events";
 import moment from "moment";
+import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import {
   Switch,
   FormGroup,
@@ -11,6 +12,9 @@ import {
   Card,
   Typography,
   Grid,
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
 } from "@material-ui/core";
 // import Switch from "react-switch";
 // import { Button } from "@material-ui/core";
@@ -32,9 +36,7 @@ const Timetable = ({
     tutorial: true,
     others: true,
   });
-  const [displayTutorial, setDisplayTutorial] = useState(true);
-  const [displayLab, setDisplayLab] = useState(true);
-  const [displayOthers, setDisplayOthers] = useState(true);
+
   const [shownBefore, setShownBefore] = useState(false);
 
   if (!ConstrictConflict(constraints)) {
@@ -42,12 +44,6 @@ const Timetable = ({
       null,
       state,
       setState,
-      displayTutorial,
-      setDisplayTutorial,
-      displayLab,
-      setDisplayLab,
-      displayOthers,
-      setDisplayOthers,
       actualTimet,
       setActualTimet,
       previousTimetable,
@@ -89,12 +85,6 @@ const Timetable = ({
           null,
           state,
           setState,
-          displayTutorial,
-          setDisplayTutorial,
-          displayLab,
-          setDisplayLab,
-          displayOthers,
-          setDisplayOthers,
           actualTimet,
           setActualTimet,
           previousTimetable,
@@ -121,12 +111,6 @@ const Timetable = ({
         null,
         state,
         setState,
-        displayTutorial,
-        setDisplayTutorial,
-        displayLab,
-        setDisplayLab,
-        displayOthers,
-        setDisplayOthers,
         actualTimet,
         setActualTimet,
         previousTimetable,
@@ -143,12 +127,6 @@ const Timetable = ({
       previousTimetable[previousTimetable.length - 1],
       state,
       setState,
-      displayTutorial,
-      setDisplayTutorial,
-      displayLab,
-      setDisplayLab,
-      displayOthers,
-      setDisplayOthers,
       actualTimet,
       setActualTimet,
       previousTimetable,
@@ -158,23 +136,8 @@ const Timetable = ({
     );
   }
 
-  const events = EventGenerator(
-    confirmedLessons,
-    state,
-    setState,
-    displayTutorial,
-    setDisplayTutorial,
-    displayLab,
-    setDisplayLab,
-    displayOthers,
-    setDisplayOthers,
-    actualTimet,
-    setActualTimet,
-    previousTimetable,
-    setPreviousTimetable,
-    displayPrevious,
-    setDisplayPrevious
-  );
+  const events = EventGenerator(confirmedLessons);
+
   return TimetableMaker(
     events,
     state,
@@ -184,7 +147,8 @@ const Timetable = ({
     previousTimetable,
     setPreviousTimetable,
     displayPrevious,
-    setDisplayPrevious
+    setDisplayPrevious, 
+    confirmedLessons
   );
 };
 
@@ -197,8 +161,59 @@ const TimetableMaker = (
   previousTimetable,
   setPreviousTimetable,
   displayPrevious,
-  setDisplayPrevious
+  setDisplayPrevious, 
+  confirmedLessons
 ) => {
+  if (events === null) {
+    return (
+      <div style={{ marginTop: "7px", marginBottom: "7px" }}>
+        <Card>
+          {/* <Typography variant="h6" align="center" gutterBottom>
+            Timetable
+          </Typography> */}
+          <div className="timetable control">
+            {/* <Grid container alignItems="center" justify="center">
+              <ViewSwitches state={state} setState={setState} />
+  
+              <ViewPreviousButton
+                displayPrevious={displayPrevious}
+                setDisplayPrevious={setDisplayPrevious}
+              />
+            </Grid>
+            <Grid container alignItems="center" justify="center">
+              <GenerateAnotherButton
+                actualTimet={actualTimet}
+                setActualTimet={setActualTimet}
+                events={events}
+                previousTimetable={previousTimetable}
+                setPreviousTimetable={setPreviousTimetable}
+              />
+            </Grid> */}
+            <Grid container direction="row" alignItems="center" justify="center">
+              <Grid item xs={2}>
+                <ViewSwitches state={state} setState={setState} />
+                <ViewPreviousButton
+                  displayPrevious={displayPrevious}
+                  setDisplayPrevious={setDisplayPrevious}
+                />
+                <GenerateAnotherButton
+                  actualTimet={actualTimet}
+                  setActualTimet={setActualTimet}
+                  events={events}
+                  previousTimetable={previousTimetable}
+                  setPreviousTimetable={setPreviousTimetable}
+                />
+                <DisplayLessons lessons={[]}/>
+              </Grid>
+              <Grid item xs={9}>
+                <TimetableLib events={{monday: [], tuesday: [], wednesday: [], thursday: [], friday: []}}/>
+              </Grid>
+            </Grid>
+          </div>
+        </Card>
+      </div>
+    );
+  }
   let filterEvents = {
     monday: events.monday,
     tuesday: events.tuesday,
@@ -207,7 +222,7 @@ const TimetableMaker = (
     friday: events.friday,
   };
   if (!state.lecture) {
-    console.log("filtering lecture");
+
     const filteredMon = filterEvents.monday.filter((x) => x.type !== "Lecture");
 
     const filteredTue = filterEvents.tuesday.filter(
@@ -220,7 +235,6 @@ const TimetableMaker = (
       (x) => x.type !== "Lecture"
     );
     const filteredFri = filterEvents.friday.filter((x) => x.type !== "Lecture");
-    console.log("filtered mon", filteredFri, filterEvents.friday);
     filterEvents = {
       monday: filteredMon,
       tuesday: filteredTue,
@@ -310,7 +324,6 @@ const TimetableMaker = (
     };
   }
 
-  console.log("filter event", filterEvents, events);
   return (
     <div style={{ marginTop: "7px", marginBottom: "7px" }}>
       <Card>
@@ -350,6 +363,7 @@ const TimetableMaker = (
                 previousTimetable={previousTimetable}
                 setPreviousTimetable={setPreviousTimetable}
               />
+              <DisplayLessons lessons={confirmedLessons}/>
             </Grid>
             <Grid item xs={9}>
               <TimetableLib events={filterEvents} />
@@ -360,6 +374,58 @@ const TimetableMaker = (
     </div>
   );
 };
+
+const DisplayLessons = ({lessons}) => {
+  const moduleCodes = lessons.map(x => x.moduleCode).filter((item, i, ar) => ar.indexOf(item) === i).sort((x, y) => x.localeCompare(y));
+  const lessonsByMod = moduleCodes.map(modCod => lessons.filter(lesson => lesson.moduleCode === modCod)
+    .sort((x, y) => x.lesson.lessonType.localeCompare(y.lesson.lessonType))
+    );
+  return (
+    <Grid>
+      <Typography variant="h5">
+        Lessons
+      </Typography>
+      {lessonsByMod.map(lessonsOfMod => {
+        return (
+          <Accordion>
+            <AccordionSummary
+              expandIcon={<ExpandMoreIcon />}
+              aria-controls="panel1a-content"
+              id="panel1a-header"
+            >
+              <Typography>
+                Lessons of {lessonsOfMod[0].moduleCode}
+              </Typography>
+            </AccordionSummary>
+            <AccordionDetails>
+              <ol>
+                {lessonsOfMod.map(x => {
+                  return (<li>{x.moduleCode} {x.lesson.lessonType} {x.lesson.classNo} {" on "} {x.lesson.day} {" from "}{x.lesson.startTime} {" to "} {x.lesson.endTime}</li>);
+                })}
+              </ol>
+            </AccordionDetails>
+          </Accordion>
+        );
+      })}
+    </Grid>
+    // <Accordion>
+    //   <AccordionSummary
+    //     expandIcon={<ExpandMoreIcon />}
+    //     aria-controls="panel1a-content"
+    //     id="panel1a-header"
+    //   >
+    //     <Typography variant="h5">
+    //       What is this application for?
+    //     </Typography>
+    //   </AccordionSummary>
+    //   <AccordionDetails>
+    //     <Typography>
+
+    //     </Typography>
+    //   </AccordionDetails>
+    // </Accordion>
+  );
+}
 
 const GenerateAnotherButton = ({
   actualTimet,
@@ -581,6 +647,7 @@ function GeneratePossible(
   confirmedLesson,
   previousTimetable
 ) {
+
   //When all lessonTypes are done and lesson type is an empty arr
   if (lessonType.map((x) => x.length).reduce((x, y) => x + y, 0) === 0) {
     return confirmedLesson;
@@ -590,6 +657,7 @@ function GeneratePossible(
   if (validLessons.map((x) => x.length).reduce((x, y) => x + y, 0) === 0) {
     return null;
   }
+
   const firstIndex = lessonType.map((x) => x.length).findIndex((x) => x !== 0);
   const firstMod = validLessons[firstIndex]; //this is the first mod in which there is still unconfirmed lesson types
   const firstLessonTypes = lessonType[firstIndex];
@@ -601,13 +669,14 @@ function GeneratePossible(
   const classNoOfThatType = lessonOfThatType
     .map((x) => x.classNo)
     .filter((item, i, ar) => ar.indexOf(item) === i);
-  let store = [];
+
   for (let i = 0; i < classNoOfThatType.length; i++) {
     const copyTimetable = JSON.parse(JSON.stringify(Timetable));
     const classNo = classNoOfThatType[i];
     const classOfClassNo = lessonOfThatType.filter(
       (x) => x.classNo === classNo
     );
+
     if (
       !classOfClassNo.reduce(
         (x, y) => AddClass(y, copyTimetable, firstMod.moduleCode) && x,
@@ -618,7 +687,7 @@ function GeneratePossible(
     }
 
     const removeConfirmed = firstMod.lessons.filter(
-      (x) => x.classNo !== classNo
+      (x) => x.lessonType !== firstLessonT
     );
 
     const copyLessonType = JSON.parse(JSON.stringify(lessonType));
@@ -630,6 +699,7 @@ function GeneratePossible(
 
     let firstSlice = validLessons.slice(0, firstIndex);
     let secondSlice = validLessons.slice(firstIndex + 1, validLessons.length);
+
     for (let k = 0; k < classOfClassNo.length; k++) {
       const dummyConstraint = {
         id: null,
@@ -652,25 +722,15 @@ function GeneratePossible(
       ...secondSlice,
     ];
 
-    store = [
-      ...store,
-      {
-        timetable: copyTimetable,
-        validLessons: newValidLesson,
-        lessonType: removeLessonT,
-      },
-    ];
-
     const copyConfirmedLesson = JSON.parse(JSON.stringify(confirmedLesson));
-    const allLessonsToPush = firstMod.lessons.filter(
-      (x) => x.classNo === classNo
-    );
-    for (let i = 0; i < allLessonsToPush.length; i++) {
+
+    for (let i = 0; i < classOfClassNo.length; i++) {
       copyConfirmedLesson.push({
         moduleCode: firstMod.moduleCode,
-        lesson: allLessonsToPush[i],
+        lesson: classOfClassNo[i],
       });
     }
+
     const Possible = GeneratePossible(
       copyTimetable,
       newValidLesson,
@@ -679,7 +739,7 @@ function GeneratePossible(
       previousTimetable
     );
     if (Possible !== null) {
-      const mapped = EventGenerator(Possible, true, true, true, true);
+      const mapped = EventGenerator(Possible);
       if (
         previousTimetable.findIndex(
           (x) => JSON.stringify(x).localeCompare(JSON.stringify(mapped)) === 0
