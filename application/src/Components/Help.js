@@ -95,30 +95,33 @@ const Help = () => {
             <AccordionDetails>
               <Typography className={classes.details}>
                 <ol>
-                  Start by selecting the semester and academic year. We provide
-                  this option so students can see mods offered in the previous
-                  semesters
-                </ol>
-                <ol>
-                  Search for a module by entering the module code in the search
-                  box. Example of module codes are CS1010, GER1000 and MA1521.
-                  If your mod is not found, it will not be displayed
-                </ol>
-                <ol>
-                  Click the plus icon at the right side of the module displayed
-                  after finding the module you wish to take. Repeat this until
-                  you have added all the modules you wish to take this semester.
-                </ol>
-                <ol>
-                  Click on submit mods, afterwhich a list of constraints will
-                  show up. Select which ever constraint you wish to apply and
-                  press add constraint. Repeat this until you have added all the
-                  constraints you wish to apply.
-                </ol>
-                <ol>
-                  Click submit constraints. A timetable will be generated for
-                  you if possible. If not possible, it will suggest which
-                  constraint to remove.
+                  <li>
+                    Start by selecting the semester and academic year. We
+                    provide this option so students can see mods offered in the
+                    previous semesters
+                  </li>
+                  <li>
+                    Search for a module by entering the module code in the
+                    search box. Example of module codes are CS1010, GER1000 and
+                    MA1521. If your mod is not found, it will not be displayed
+                  </li>
+                  <li>
+                    Click the plus icon at the right side of the module
+                    displayed after finding the module you wish to take. Repeat
+                    this until you have added all the modules you wish to take
+                    this semester.
+                  </li>
+                  <li>
+                    Click on submit mods, afterwhich a list of constraints will
+                    show up. Select which ever constraint you wish to apply and
+                    press add constraint. Repeat this until you have added all
+                    the constraints you wish to apply.
+                  </li>
+                  <li>
+                    Click submit constraints. A timetable will be generated for
+                    you if possible. If not possible, it will suggest which
+                    constraint to remove.
+                  </li>
                 </ol>
               </Typography>
             </AccordionDetails>
@@ -138,41 +141,43 @@ const Help = () => {
                 Constraints refer to the "filter" which we apply on all the
                 possible lessons:
                 <br />
-                <br />
                 <ol>
-                  Fix a class: This is intended for students who have already
-                  pre-planned to take certain lessons. For example, they wish to
-                  take a class with another student, so they fix that tutorial
-                  slot, and the timetable generator will not shift that lesson.
-                </ol>
-                <ol>
-                  No lessons before: Have no lessons before a certain timing.
-                </ol>
-                <ol>No lessons on: Have no lessons on a certain day.</ol>
-                <ol>
-                  No lessons on _ from _ to _: This is intended for students who
-                  wish to block out a period of time on a certain day. For
-                  example, some students want to have lunch breaks with friends
-                  on a certain day, so they will block out that time period of
-                  the day. Or some students may have certain things they wish to
-                  use the time for i.e. part time jobs, so they block out that
-                  part of the day.
-                </ol>
-                <ol>
-                  End as early as possible: End classes as early as possible.
-                </ol>
-                <ol>
-                  Start as late as possible: Start classes as late as possible
-                  (for the sleepers and night owls).
-                </ol>
-                <ol>
-                  Maximise online classes: This is intended for the students who
-                  do not wish to come to campus when both online and offline
-                  lessons are offered.
-                </ol>
-                <ol>
-                  Maximise offline classes: This is intended for students who
-                  want to come to school as often as possible.
+                  <li>
+                    Fix a class: This is intended for students who have already
+                    pre-planned to take certain lessons. For example, they wish
+                    to take a class with another student, so they fix that
+                    tutorial slot, and the timetable generator will not shift
+                    that lesson.
+                  </li>
+                  <li>
+                    No lessons before: Have no lessons before a certain timing.
+                  </li>
+                  <li>No lessons on: Have no lessons on a certain day.</li>
+                  <li>
+                    No lessons on _ from _ to _: This is intended for students
+                    who wish to block out a period of time on a certain day. For
+                    example, some students want to have lunch breaks with
+                    friends on a certain day, so they will block out that time
+                    period of the day. Or some students may have certain things
+                    they wish to use the time for i.e. part time jobs, so they
+                    block out that part of the day.
+                  </li>
+                  <li>
+                    End as early as possible: End classes as early as possible.
+                  </li>
+                  <li>
+                    Start as late as possible: Start classes as late as possible
+                    (for the sleepers and night owls).
+                  </li>
+                  <li>
+                    Maximise online classes: This is intended for the students
+                    who do not wish to come to campus when both online and
+                    offline lessons are offered.
+                  </li>
+                  <li>
+                    Maximise offline classes: This is intended for students who
+                    want to come to school as often as possible.
+                  </li>
                 </ol>
               </Typography>
             </AccordionDetails>
