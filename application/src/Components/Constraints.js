@@ -72,13 +72,17 @@ const filterClassesForFixClass = (constraint) => (mod) => {
   if (mod.moduleCode !== modCode) {
     return mod;
   }
+  
   const classTiming = constraint.time;
   const lessonNumber = classTiming.split(" ")[0];
-  const lessonType = classTiming.split(" ")[1];
+  const Days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]
+  const lastIndex = classTiming.split(" ").findIndex(x => Days.findIndex(y => y.localeCompare(x) === 0) !== -1);
+  const lessonType = classTiming.split(" ").slice(1, lastIndex).join(' ');
   const promiseLessons = mod.lessons.filter(
     (lesson) =>
       lesson.classNo === lessonNumber || lesson.lessonType !== lessonType
   );
+  console.log("in fix class filter", constraint, promiseLessons, lessonType)
   return {
     moduleCode: modCode,
     lessons: promiseLessons,
@@ -416,6 +420,7 @@ const optionCodeForFixClass = (setTime, time, actualTimet) => {
 };
 
 const ClassesDisplay = ({ actualTimet }) => {
+  console.log("actual time t in classes display", actualTimet)
   const classString = (lesson) =>
     lesson.classNo +
     " " +

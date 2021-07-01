@@ -50,7 +50,7 @@ const SearchResults = ({ searchTerm, setMods, mods, time }) => {
   );
 
   const furtherFilteredMods = filterModsSem.filter(
-    (x) => mods.findIndex((y) => y === x) === -1
+    (x) => mods.findIndex((y) => y.moduleCode === x.moduleCode) === -1
   );
 
   const DisplayMod = (setMods, mods) => (mod) => {

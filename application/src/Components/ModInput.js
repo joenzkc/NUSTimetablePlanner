@@ -37,6 +37,7 @@ const ModInput = ({
   setDisplayConstraintForm,
   tentativeTime,
   setTime,
+  setDisplayTimetable
 }) => {
   const classes = useStyles();
   const [newSearchTerm, setNewSearchTerm] = useState("");
@@ -44,6 +45,7 @@ const ModInput = ({
   const handleSubmit = (event) => {
     event.preventDefault();
     setTime(tentativeTime);
+    setDisplayTimetable(false);
     setDisplaySearchResults(true);
     setDisplayConstraintForm(false);
     setSearchTerm(newSearchTerm);

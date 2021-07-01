@@ -30,6 +30,8 @@ const Timetable = ({
   displayPrevious,
   setDisplayPrevious,
 }) => {
+  console.log("actual time t is", actualTimet)
+  console.log("constraints are", constraints)
   const [state, setState] = useState({
     lecture: true,
     labs: true,
@@ -67,6 +69,7 @@ const Timetable = ({
       Constraints[currentConstraint.type].filterMods(currentConstraint)(
         validLessons
       );
+    console.log("valid lessons are", validLessons, "constraint is", currentConstraint)
     const noLessonTypesFiltered = validLessons
       .map(LessonTypes)
       .map((x) => x.length);

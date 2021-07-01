@@ -35,16 +35,26 @@ const ConstraintForm = ({
   setTentativeConstraints,
   actualTimet,
 }) => {
+  console.log("mods", mods)
   const classes = useStyles();
   const [type, setType] = useState(0);
+  const initialMod = mods[0];
   const [modCod, setModCod] = useState(mods[0].moduleCode);
-  const [mod, setMod] = useState(mods[0]);
+  const [mod, setMod] = useState(initialMod);
+
+  const currentMod = actualTimet.filter((x) => x.moduleCode === initialMod.moduleCode)[0];
+  const copyLessons = JSON.parse(JSON.stringify(currentMod.lessons));
+  const modSortedLessons = {
+    moduleCode: currentMod.moduleCode, 
+    lessons: copyLessons.sort((x, y) => x.classNo.localeCompare(y.classNo))
+  }
   const [time, setTime] = useState(
     Constraints[0].defaultTime(
-      actualTimet.filter((x) => x.moduleCode === modCod)[0]
+      modSortedLessons
     )
   );
   const defaultMod = mods[0].moduleCode;
+  console.log("actual time t", actualTimet, modCod, initialMod)
 
   return (
     <Paper className={classes.root}>
@@ -89,7 +99,7 @@ const ConstraintForm = ({
             Constraints[type].optionCode(
               setTime,
               time,
-              actualTimet.filter((x) => x.moduleCode === modCod)[0]
+              actualTimet.filter((x) => x.moduleCode === modCod)[0] 
             )}
         </Grid>
         <Grid item xs={12}>
@@ -113,9 +123,15 @@ const handleModChange =
   (setModCod, setMod, mods, modCod, type, setTime, actualTimet) => (event) => {
     setModCod(event.target.value);
     setMod(mods.filter((y) => y.moduleCode === event.target.value)[0]);
+    const modClass = actualTimet.filter((x) => x.moduleCode === event.target.value)[0];
+    const sortedClasses = {
+      moduleCode: modClass.moduleCode, 
+      lessons: modClass.lessons.sort((x, y) => x.classNo.localeCompare(y.classNo))
+    }
+    console.log("in mod change", sortedClasses)
     setTime(
       Constraints[type].defaultTime(
-        actualTimet.filter((x) => x.moduleCode === modCod)[0]
+        sortedClasses
       )
     );
   };
@@ -149,9 +165,14 @@ const handleConstraintTypeChange =
   (setType, setTime, actualTimet, modCod) => (event) => {
     const index = Constraints.findIndex((x) => x.type === event.target.value);
     setType(index);
+    const sortedLessons = 
+      actualTimet.filter((x) => x.moduleCode === modCod)[0].lessons.sort((x, y) => x.classNo.localeCompare(y.classNo));
     setTime(
       Constraints[index].defaultTime(
-        actualTimet.filter((x) => x.moduleCode === modCod)[0]
+        {
+          moduleCode: modCod, 
+          lessons: sortedLessons
+        }
       )
     );
   };

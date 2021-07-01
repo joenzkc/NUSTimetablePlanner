@@ -40,12 +40,12 @@ function App() {
   const classes = useStyles();
   const [time, setTime] = useState(
     JSON.parse(localStorage.getItem("time")) || {
-      year: "2020-2021",
+      year: "2021-2022",
       sem: "1",
     }
   );
   const [tentativeTime, setTentativeTime] = useState({
-    year: "2020-2021",
+    year: "2021-2022",
     sem: "1",
   });
 
@@ -169,11 +169,21 @@ function App() {
                             setDisplayConstraintForm={setDisplayConstraintForm}
                             tentativeTime={tentativeTime}
                             setTime={setTime}
+                            setDisplayTimetable={setDisplayTimetable}
                           />
                         </Col>
                       </Row>
                     </Card>
-                    <ModDisplay mods={mods} setMods={setMods} />
+                    <ModDisplay 
+                      mods={mods} 
+                      setMods={setMods}
+                      tentativeConstraints={tentativeConstraints}
+                      constraints={constraints}
+                      setTentativeConstraints={setTentativeConstraints}
+                      setConstraints={setConstraints}
+                      setActualTimet={setActualTimet}
+                      actualTimet={actualTimet}
+                      setDisplayConstraintForm={setDisplayConstraintForm} />
                     <ModSubmit
                       className={classes.button}
                       mods={mods}
@@ -191,7 +201,8 @@ function App() {
                         time={time}
                       />
                     )}
-                    {displayConstraintForm && (
+                    {displayConstraintForm && 
+                    mods.length !== 0 && (
                       <ConstraintForm
                         mods={mods}
                         tentativeConstraints={tentativeConstraints}
@@ -203,6 +214,7 @@ function App() {
                       />
                     )}
                     {displayConstraintForm &&
+                    mods.length !== 0 && 
                       tentativeConstraints.length !== 0 && (
                         <ConstraintDisplay
                           constraints={tentativeConstraints}
@@ -211,6 +223,7 @@ function App() {
                         />
                       )}
                     {displayConstraintForm &&
+                    mods.length !== 0 &&
                       tentativeConstraints.length !== 0 && (
                         <ClearConstraintsButton
                           setConstraints={setConstraints}
@@ -219,6 +232,7 @@ function App() {
                         />
                       )}
                     {displayConstraintForm && (
+                      mods.length !== 0 &&
                       <SubmitConstraint
                         setDisplayTimetable={setDisplayTimetable}
                         setConstraints={setConstraints}
