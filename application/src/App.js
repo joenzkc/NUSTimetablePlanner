@@ -251,6 +251,7 @@ function App() {
                   setPreviousTimetable={setPreviousTimetable}
                   displayPrevious={displayPrevious}
                   setDisplayPrevious={setDisplayPrevious}
+                  yearSem={time}
                 />
               )}
               {displayPrevious && previousTimetable.length !== 0 && (

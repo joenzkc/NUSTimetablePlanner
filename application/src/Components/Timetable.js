@@ -29,6 +29,7 @@ const Timetable = ({
   setPreviousTimetable,
   displayPrevious,
   setDisplayPrevious,
+  yearSem
 }) => {
   console.log("actual time t is", actualTimet)
   console.log("constraints are", constraints)
@@ -51,7 +52,8 @@ const Timetable = ({
       previousTimetable,
       setPreviousTimetable,
       displayPrevious,
-      setDisplayPrevious
+      setDisplayPrevious, 
+      yearSem
     ); //return empty timetable
   }
   const sortedConstraints = constraints
@@ -93,7 +95,9 @@ const Timetable = ({
           previousTimetable,
           setPreviousTimetable,
           displayPrevious,
-          setDisplayPrevious
+          setDisplayPrevious, 
+          [], 
+          yearSem
         );
       }
     }
@@ -119,7 +123,9 @@ const Timetable = ({
         previousTimetable,
         setPreviousTimetable,
         displayPrevious,
-        setDisplayPrevious
+        setDisplayPrevious, 
+        [], 
+        yearSem
       );
     }
     if (!shownBefore) {
@@ -135,7 +141,9 @@ const Timetable = ({
       previousTimetable,
       setPreviousTimetable,
       displayPrevious,
-      setDisplayPrevious
+      setDisplayPrevious, 
+      [], 
+      yearSem
     );
   }
 
@@ -151,7 +159,8 @@ const Timetable = ({
     setPreviousTimetable,
     displayPrevious,
     setDisplayPrevious, 
-    confirmedLessons
+    confirmedLessons, 
+    yearSem
   );
 };
 
@@ -165,7 +174,8 @@ const TimetableMaker = (
   setPreviousTimetable,
   displayPrevious,
   setDisplayPrevious, 
-  confirmedLessons
+  confirmedLessons, 
+  yearSem
 ) => {
   if (events === null) {
     return (
@@ -330,27 +340,7 @@ const TimetableMaker = (
   return (
     <div style={{ marginTop: "7px", marginBottom: "7px" }}>
       <Card>
-        {/* <Typography variant="h6" align="center" gutterBottom>
-          Timetable
-        </Typography> */}
         <div className="timetable control">
-          {/* <Grid container alignItems="center" justify="center">
-            <ViewSwitches state={state} setState={setState} />
-
-            <ViewPreviousButton
-              displayPrevious={displayPrevious}
-              setDisplayPrevious={setDisplayPrevious}
-            />
-          </Grid>
-          <Grid container alignItems="center" justify="center">
-            <GenerateAnotherButton
-              actualTimet={actualTimet}
-              setActualTimet={setActualTimet}
-              events={events}
-              previousTimetable={previousTimetable}
-              setPreviousTimetable={setPreviousTimetable}
-            />
-          </Grid> */}
           <Grid container direction="row" alignItems="center" justify="center">
             <Grid item xs={2}>
               <ViewSwitches state={state} setState={setState} />
@@ -367,6 +357,7 @@ const TimetableMaker = (
                 setPreviousTimetable={setPreviousTimetable}
               />
               <DisplayLessons lessons={confirmedLessons}/>
+              <NUSModsExportButton lessons={confirmedLessons} yearSem={yearSem}/>
             </Grid>
             <Grid item xs={9}>
               <TimetableLib events={filterEvents} />
@@ -377,6 +368,29 @@ const TimetableMaker = (
     </div>
   );
 };
+
+const NUSModsExportButton = ({lessons, yearSem}) => {
+  console.log("in nus mods button", lessons);
+  var startLink = `https://nusmods.com/timetable/sem-${parseInt(yearSem.sem)}/share?`
+  const allModCods = lessons.map(x => x.moduleCode).filter((v, i, arr) => arr.findIndex(x => x.localeCompare(v) === 0) === i);
+  for (let i = 0; i < allModCods.length; i++) {
+    if (i !== 0) {
+      startLink += `&`;
+    }
+    const currentModCod = allModCods[i];
+    const lessonsOfMod = lessons.filter(x => x.moduleCode.localeCompare(currentModCod) === 0);
+    // console.log("lessons of mods", lessonsOfMod.map(x => x.lesson.lessonType.subString(0, 3)))
+    const mappedLessons = lessonsOfMod.map(lesson => `${lesson.lesson.lessonType.substring(0, 3).toUpperCase()}:${lesson.lesson.classNo}`);
+    const modString = mappedLessons.join(',');
+    startLink += currentModCod.toUpperCase() + `=` + modString;
+  }
+  console.log("link is", startLink);
+  return (
+    <Button variant="contained" href={startLink}>
+      Export this timetable to NUSMods
+    </Button>
+  );
+}
 
 const DisplayLessons = ({lessons}) => {
   const moduleCodes = lessons.map(x => x.moduleCode).filter((item, i, ar) => ar.indexOf(item) === i).sort((x, y) => x.localeCompare(y));
