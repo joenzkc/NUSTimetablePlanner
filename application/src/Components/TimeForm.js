@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { makeStyles, withStyles } from "@material-ui/core/styles";
-import InputLabel from "@material-ui/core/InputLabel";
 import { FormControl, NativeSelect, InputBase } from "@material-ui/core";
 
 const BootstrapInput = withStyles((theme) => ({

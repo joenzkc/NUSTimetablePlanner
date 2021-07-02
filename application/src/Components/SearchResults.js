@@ -11,6 +11,7 @@ import {
   ListItemText,
   ListItemIcon,
   Card,
+  Button,
 } from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
@@ -53,7 +54,14 @@ const SearchResults = ({ searchTerm, setMods, mods, time }) => {
     (x) => mods.findIndex((y) => y.moduleCode === x.moduleCode) === -1
   );
 
+  const [displayNumber, setDisplayNumber] = useState(25);
+
+  useEffect(() => {
+    setDisplayNumber(25)
+  }, [searchTerm])
+
   const DisplayMod = (setMods, mods) => (mod) => {
+    
     return (
       <Card key={mod.moduleCode}>
         <List className={classes.root}>
@@ -77,8 +85,10 @@ const SearchResults = ({ searchTerm, setMods, mods, time }) => {
       <ListGroup>
         {furtherFilteredMods.length === 0
           ? <span> Sorry, no search results </span>
-          : furtherFilteredMods.map(DisplayMod(setMods, mods))}
+          : furtherFilteredMods.map(DisplayMod(setMods, mods)).slice(0, displayNumber)}
       </ListGroup>
+      {furtherFilteredMods.length > displayNumber && 
+      <Button variant="contained" onClick ={() => setDisplayNumber(displayNumber + 25)}>Display more</Button>}
     </Col>
   );
 };
