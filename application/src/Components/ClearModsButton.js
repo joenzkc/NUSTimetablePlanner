@@ -72,9 +72,7 @@ const ClearModsButton = ({ restart }) => {
             <Grid
               container
               direction="row"
-              // alignItems="center"
               alignItems="flex-end"
-              // justify="center"
               className={classes.controls}
             >
               <Grid item xs={7}></Grid>

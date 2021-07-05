@@ -129,7 +129,7 @@ function App() {
         }
       });
     }
-  }, [promiseTimetable.length]);
+  }, [promiseTimetable.length]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const restart = () => {
     setDisplayConstraintForm(false);
@@ -174,8 +174,8 @@ function App() {
                         </Col>
                       </Row>
                     </Card>
-                    <ModDisplay 
-                      mods={mods} 
+                    <ModDisplay
+                      mods={mods}
                       setMods={setMods}
                       tentativeConstraints={tentativeConstraints}
                       constraints={constraints}
@@ -183,7 +183,8 @@ function App() {
                       setConstraints={setConstraints}
                       setActualTimet={setActualTimet}
                       actualTimet={actualTimet}
-                      setDisplayConstraintForm={setDisplayConstraintForm} />
+                      setDisplayConstraintForm={setDisplayConstraintForm}
+                    />
                     <ModSubmit
                       className={classes.button}
                       mods={mods}
@@ -201,8 +202,7 @@ function App() {
                         time={time}
                       />
                     )}
-                    {displayConstraintForm && 
-                    mods.length !== 0 && (
+                    {displayConstraintForm && mods.length !== 0 && (
                       <ConstraintForm
                         mods={mods}
                         tentativeConstraints={tentativeConstraints}
@@ -214,7 +214,7 @@ function App() {
                       />
                     )}
                     {displayConstraintForm &&
-                    mods.length !== 0 && 
+                      mods.length !== 0 &&
                       tentativeConstraints.length !== 0 && (
                         <ConstraintDisplay
                           constraints={tentativeConstraints}
@@ -223,7 +223,7 @@ function App() {
                         />
                       )}
                     {displayConstraintForm &&
-                    mods.length !== 0 &&
+                      mods.length !== 0 &&
                       tentativeConstraints.length !== 0 && (
                         <ClearConstraintsButton
                           setConstraints={setConstraints}
@@ -231,8 +231,7 @@ function App() {
                           setDisplayTimetable={setDisplayTimetable}
                         />
                       )}
-                    {displayConstraintForm && (
-                      mods.length !== 0 &&
+                    {displayConstraintForm && mods.length !== 0 && (
                       <SubmitConstraint
                         setDisplayTimetable={setDisplayTimetable}
                         setConstraints={setConstraints}
