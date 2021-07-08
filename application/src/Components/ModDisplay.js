@@ -23,16 +23,19 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const ModDisplay = ({ mods, setMods, tentativeConstraints, constraints, setTentativeConstraints, setConstraints, setActualTimet, actualTimet, setDisplayConstraintForm }) => {
+const ModDisplay = ({ mods, setMods, tentativeConstraints, constraints, setTentativeConstraints, setConstraints, setActualTimet, actualTimet, setDisplayConstraintForm, setDisplayTimetable, setDisplayPrevious }) => {
   const classes = useStyles();
 
   const deleteMod = (setMods, mods) => (x) => {
     const index = mods.findIndex((y) => y === x);
     setMods([...mods.slice(0, index), ...mods.slice(index + 1, mods.length)]);
-    setTentativeConstraints(tentativeConstraints.filter(x => x.mod.moduleCode !== mods[index].moduleCode));
-    setConstraints(constraints.filter(x => x.mod.moduleCode !== mods[index].moduleCode));
+    console.log("tentative constraints", tentativeConstraints);
+    setTentativeConstraints(tentativeConstraints.filter(x => x.mod === null || x.mod.moduleCode !== mods[index].moduleCode));
+    setConstraints(constraints.filter(x => x.mod === null || x.mod.moduleCode !== mods[index].moduleCode));
     setActualTimet(actualTimet.filter(x => x.moduleCode !== mods[index].moduleCode))
     setDisplayConstraintForm(false);
+    setDisplayTimetable(false);
+    setDisplayPrevious(false);
   };
 
   return (

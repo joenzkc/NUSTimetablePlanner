@@ -183,7 +183,9 @@ function App() {
                       setConstraints={setConstraints}
                       setActualTimet={setActualTimet}
                       actualTimet={actualTimet}
-                      setDisplayConstraintForm={setDisplayConstraintForm} />
+                      setDisplayConstraintForm={setDisplayConstraintForm} 
+                      setDisplayTimetable={setDisplayTimetable}
+                      setDisplayPrevious={setDisplayPrevious}/>
                     <ModSubmit
                       className={classes.button}
                       mods={mods}

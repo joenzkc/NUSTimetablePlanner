@@ -337,6 +337,14 @@ const TimetableMaker = (
     };
   }
 
+  const renderHour = (hour, defaultAttributes, styles) => {
+    return (
+      <div {...defaultAttributes} key={hour}>
+        {hour}
+      </div>
+    );
+  }
+
   return (
     <div style={{ marginTop: "7px", marginBottom: "7px" }}>
       <Card>
@@ -360,7 +368,9 @@ const TimetableMaker = (
               <NUSModsExportButton lessons={confirmedLessons} yearSem={yearSem}/>
             </Grid>
             <Grid item xs={9}>
-              <TimetableLib events={filterEvents} />
+              <TimetableLib 
+                events={filterEvents} 
+                renderHour={renderHour}/>
             </Grid>
           </Grid>
         </div>
