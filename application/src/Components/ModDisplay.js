@@ -23,7 +23,19 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const ModDisplay = ({ mods, setMods, tentativeConstraints, constraints, setTentativeConstraints, setConstraints, setActualTimet, actualTimet, setDisplayConstraintForm, setDisplayTimetable, setDisplayPrevious }) => {
+const ModDisplay = ({
+  mods,
+  setMods,
+  tentativeConstraints,
+  constraints,
+  setTentativeConstraints,
+  setConstraints,
+  setActualTimet,
+  actualTimet,
+  setDisplayConstraintForm,
+  setDisplayTimetable, 
+  setDisplayPrevious
+}) => {
   const classes = useStyles();
 
   const deleteMod = (setMods, mods) => (x) => {

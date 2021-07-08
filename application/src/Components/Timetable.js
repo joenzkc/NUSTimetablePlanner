@@ -4,22 +4,41 @@ import Constraints from "./Constraints";
 import TimetableLib from "react-timetable-events";
 import moment from "moment";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
+import HelpOutlineIcon from "@material-ui/icons/HelpOutline";
+import IconButton from "@material-ui/core/IconButton";
 import {
   Switch,
   FormGroup,
   FormControlLabel,
   Button,
-  Card,
   Typography,
   Grid,
   Accordion,
   AccordionSummary,
   AccordionDetails,
+  List,
+  ListItem,
+  Tooltip,
 } from "@material-ui/core";
+import { withStyles } from "@material-ui/core/styles";
 // import Switch from "react-switch";
 // import { Button } from "@material-ui/core";
 
 const Days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
+
+// const theme = createMuiTheme()
+
+// theme.
+
+const HtmlTooltip = withStyles((theme) => ({
+  tooltip: {
+    backgroundColor: "#f5f5f9",
+    color: "rgba(0, 0, 0, 0.87)",
+    maxWidth: 220,
+    fontSize: theme.typography.pxToRem(12),
+    border: "1px solid #dadde9",
+  },
+}))(Tooltip);
 
 const Timetable = ({
   constraints,
@@ -29,10 +48,10 @@ const Timetable = ({
   setPreviousTimetable,
   displayPrevious,
   setDisplayPrevious,
-  yearSem
+  yearSem,
 }) => {
-  console.log("actual time t is", actualTimet)
-  console.log("constraints are", constraints)
+  console.log("actual time t is", actualTimet);
+  console.log("constraints are", constraints);
   const [state, setState] = useState({
     lecture: true,
     labs: true,
@@ -52,7 +71,7 @@ const Timetable = ({
       previousTimetable,
       setPreviousTimetable,
       displayPrevious,
-      setDisplayPrevious, 
+      setDisplayPrevious,
       yearSem
     ); //return empty timetable
   }
@@ -71,7 +90,12 @@ const Timetable = ({
       Constraints[currentConstraint.type].filterMods(currentConstraint)(
         validLessons
       );
-    console.log("valid lessons are", validLessons, "constraint is", currentConstraint)
+    console.log(
+      "valid lessons are",
+      validLessons,
+      "constraint is",
+      currentConstraint
+    );
     const noLessonTypesFiltered = validLessons
       .map(LessonTypes)
       .map((x) => x.length);
@@ -95,8 +119,8 @@ const Timetable = ({
           previousTimetable,
           setPreviousTimetable,
           displayPrevious,
-          setDisplayPrevious, 
-          [], 
+          setDisplayPrevious,
+          [],
           yearSem
         );
       }
@@ -123,8 +147,8 @@ const Timetable = ({
         previousTimetable,
         setPreviousTimetable,
         displayPrevious,
-        setDisplayPrevious, 
-        [], 
+        setDisplayPrevious,
+        [],
         yearSem
       );
     }
@@ -141,8 +165,8 @@ const Timetable = ({
       previousTimetable,
       setPreviousTimetable,
       displayPrevious,
-      setDisplayPrevious, 
-      [], 
+      setDisplayPrevious,
+      [],
       yearSem
     );
   }
@@ -158,8 +182,8 @@ const Timetable = ({
     previousTimetable,
     setPreviousTimetable,
     displayPrevious,
-    setDisplayPrevious, 
-    confirmedLessons, 
+    setDisplayPrevious,
+    confirmedLessons,
     yearSem
   );
 };
@@ -173,42 +197,78 @@ const TimetableMaker = (
   previousTimetable,
   setPreviousTimetable,
   displayPrevious,
-  setDisplayPrevious, 
-  confirmedLessons, 
+  setDisplayPrevious,
+  confirmedLessons,
   yearSem
 ) => {
   if (events === null) {
     return (
       <div style={{ marginTop: "7px", marginBottom: "7px" }}>
-        <Card>
-          {/* <Typography variant="h6" align="center" gutterBottom>
-            Timetable
-          </Typography> */}
-          <div className="timetable control">
-            {/* <Grid container alignItems="center" justify="center">
-              <ViewSwitches state={state} setState={setState} />
-  
-              <ViewPreviousButton
-                displayPrevious={displayPrevious}
-                setDisplayPrevious={setDisplayPrevious}
-              />
-            </Grid>
-            <Grid container alignItems="center" justify="center">
-              <GenerateAnotherButton
-                actualTimet={actualTimet}
-                setActualTimet={setActualTimet}
-                events={events}
-                previousTimetable={previousTimetable}
-                setPreviousTimetable={setPreviousTimetable}
-              />
-            </Grid> */}
-            <Grid container direction="row" alignItems="center" justify="center">
-              <Grid item xs={2}>
+        {/* <Card> */}
+        <div className="timetable control">
+          <Grid
+            container
+            spacing={2}
+            direction="row"
+            alignItems="center"
+            justify="center"
+          >
+            <Grid
+              item
+              xs={2}
+              container
+              direction="row"
+              spacing={2}
+              alignItems="center"
+              alignContent="center"
+              justify="center"
+            >
+              <Grid item xs={9}>
+                <Typography
+                  variant="button"
+                  style={{ fontSize: "20px", fontWeight: "bolder" }}
+                >
+                  Filters
+                </Typography>
+              </Grid>
+              <Grid item xs={3}>
+                <HtmlTooltip
+                  title={
+                    <React.Fragment>
+                      <Typography variant="subtitle">
+                        {" "}
+                        Filters are for you to easily view only the specific
+                        classes you wish to view.
+                      </Typography>
+                      <br />
+                      <br />
+                      <Typography variant="subtitle">
+                        Generate another allows you to generate another version
+                        of the timetable. See the help page for more details.
+                      </Typography>
+                      <br />
+                      <br />
+                      <Typography variant="subtitle">
+                        Export to NUSMods allows you to view this timetable on
+                        NUSMods.
+                      </Typography>
+                    </React.Fragment>
+                  }
+                >
+                  <IconButton>
+                    <HelpOutlineIcon />
+                  </IconButton>
+                </HtmlTooltip>
+              </Grid>
+              <Grid item xs={12}>
                 <ViewSwitches state={state} setState={setState} />
+
                 <ViewPreviousButton
                   displayPrevious={displayPrevious}
                   setDisplayPrevious={setDisplayPrevious}
                 />
+              </Grid>
+              <Grid item xs={12}>
                 <GenerateAnotherButton
                   actualTimet={actualTimet}
                   setActualTimet={setActualTimet}
@@ -216,14 +276,31 @@ const TimetableMaker = (
                   previousTimetable={previousTimetable}
                   setPreviousTimetable={setPreviousTimetable}
                 />
-                <DisplayLessons lessons={[]}/>
               </Grid>
-              <Grid item xs={9}>
-                <TimetableLib events={{monday: [], tuesday: [], wednesday: [], thursday: [], friday: []}}/>
+              <Grid item xs={12}>
+                <DisplayLessons lessons={confirmedLessons} />
+              </Grid>
+              <Grid item xs={12}>
+                <NUSModsExportButton
+                  lessons={confirmedLessons}
+                  yearSem={yearSem}
+                />
               </Grid>
             </Grid>
-          </div>
-        </Card>
+            <Grid item xs={10}>
+              <TimetableLib
+                events={{
+                  monday: [],
+                  tuesday: [],
+                  wednesday: [],
+                  thursday: [],
+                  friday: [],
+                }}
+              />
+            </Grid>
+          </Grid>
+        </div>
+        {/* </Card> */}
       </div>
     );
   }
@@ -235,7 +312,6 @@ const TimetableMaker = (
     friday: events.friday,
   };
   if (!state.lecture) {
-
     const filteredMon = filterEvents.monday.filter((x) => x.type !== "Lecture");
 
     const filteredTue = filterEvents.tuesday.filter(
@@ -347,16 +423,71 @@ const TimetableMaker = (
 
   return (
     <div style={{ marginTop: "7px", marginBottom: "7px" }}>
-      <Card>
-        <div className="timetable control">
-          <Grid container direction="row" alignItems="center" justify="center">
-            <Grid item xs={2}>
+      {/* <Card> */}
+      <div className="timetable control">
+        <Grid
+          container
+          spacing={2}
+          direction="row"
+          alignItems="center"
+          justify="center"
+        >
+          <Grid
+            item
+            xs={2}
+            container
+            direction="row"
+            spacing={2}
+            alignItems="center"
+            alignContent="center"
+            justify="center"
+          >
+            <Grid item xs={9}>
+              <Typography
+                variant="button"
+                style={{ fontSize: "20px", fontWeight: "bolder" }}
+              >
+                Filters
+              </Typography>
+            </Grid>
+            <Grid item xs={3}>
+              <HtmlTooltip
+                title={
+                  <React.Fragment>
+                    <Typography variant="subtitle">
+                      {" "}
+                      Filters are for you to easily view only the specific
+                      classes you wish to view.
+                    </Typography>
+                    <br />
+                    <br />
+                    <Typography variant="subtitle">
+                      Generate another allows you to generate another version of
+                      the timetable. See the help page for more details.
+                    </Typography>
+                    <br />
+                    <br />
+                    <Typography variant="subtitle">
+                      Export to NUSMods allows you to view this timetable on
+                      NUSMods.
+                    </Typography>
+                  </React.Fragment>
+                }
+              >
+                <IconButton>
+                  <HelpOutlineIcon />
+                </IconButton>
+              </HtmlTooltip>
+            </Grid>
+            <Grid item xs={12}>
               <ViewSwitches state={state} setState={setState} />
 
               <ViewPreviousButton
                 displayPrevious={displayPrevious}
                 setDisplayPrevious={setDisplayPrevious}
               />
+            </Grid>
+            <Grid item xs={12}>
               <GenerateAnotherButton
                 actualTimet={actualTimet}
                 setActualTimet={setActualTimet}
@@ -364,95 +495,127 @@ const TimetableMaker = (
                 previousTimetable={previousTimetable}
                 setPreviousTimetable={setPreviousTimetable}
               />
-              <DisplayLessons lessons={confirmedLessons}/>
-              <NUSModsExportButton lessons={confirmedLessons} yearSem={yearSem}/>
             </Grid>
-            <Grid item xs={9}>
-              <TimetableLib 
-                events={filterEvents} 
-                renderHour={renderHour}/>
+            <Grid item xs={12}>
+              <DisplayLessons lessons={confirmedLessons} />
+            </Grid>
+            <Grid item xs={12}>
+              <NUSModsExportButton
+                lessons={confirmedLessons}
+                yearSem={yearSem}
+              />
             </Grid>
           </Grid>
-        </div>
-      </Card>
+          <Grid item xs={10}>
+            <TimetableLib events={filterEvents} />
+          </Grid>
+        </Grid>
+      </div>
+      {/* </Card> */}
     </div>
   );
 };
 
-const NUSModsExportButton = ({lessons, yearSem}) => {
+const NUSModsExportButton = ({ lessons, yearSem }) => {
   console.log("in nus mods button", lessons);
-  var startLink = `https://nusmods.com/timetable/sem-${parseInt(yearSem.sem)}/share?`
-  const allModCods = lessons.map(x => x.moduleCode).filter((v, i, arr) => arr.findIndex(x => x.localeCompare(v) === 0) === i);
+  var startLink = `https://nusmods.com/timetable/sem-${parseInt(
+    yearSem.sem
+  )}/share?`;
+  const allModCods = lessons
+    .map((x) => x.moduleCode)
+    .filter(
+      (v, i, arr) => arr.findIndex((x) => x.localeCompare(v) === 0) === i
+    );
   for (let i = 0; i < allModCods.length; i++) {
     if (i !== 0) {
       startLink += `&`;
     }
     const currentModCod = allModCods[i];
-    const lessonsOfMod = lessons.filter(x => x.moduleCode.localeCompare(currentModCod) === 0);
+    const lessonsOfMod = lessons.filter(
+      (x) => x.moduleCode.localeCompare(currentModCod) === 0
+    );
     // console.log("lessons of mods", lessonsOfMod.map(x => x.lesson.lessonType.subString(0, 3)))
-    const mappedLessons = lessonsOfMod.map(lesson => `${lesson.lesson.lessonType.substring(0, 3).toUpperCase()}:${lesson.lesson.classNo}`);
-    const modString = mappedLessons.join(',');
+    const mappedLessons = lessonsOfMod.map(
+      (lesson) =>
+        `${lesson.lesson.lessonType.substring(0, 3).toUpperCase()}:${
+          lesson.lesson.classNo
+        }`
+    );
+    const modString = mappedLessons.join(",");
     startLink += currentModCod.toUpperCase() + `=` + modString;
   }
   console.log("link is", startLink);
   return (
-    <Button variant="contained" href={startLink}>
-      Export this timetable to NUSMods
+    <Button target="_blank" variant="contained" href={startLink}>
+      Export to NUSMods
     </Button>
   );
-}
+};
 
-const DisplayLessons = ({lessons}) => {
-  const moduleCodes = lessons.map(x => x.moduleCode).filter((item, i, ar) => ar.indexOf(item) === i).sort((x, y) => x.localeCompare(y));
-  const lessonsByMod = moduleCodes.map(modCod => lessons.filter(lesson => lesson.moduleCode === modCod)
-    .sort((x, y) => x.lesson.lessonType.localeCompare(y.lesson.lessonType))
-    );
-  return (
-    <Grid>
-      <Typography variant="h5">
-        Lessons
-      </Typography>
-      {lessonsByMod.map(lessonsOfMod => {
-        return (
-          <Accordion>
-            <AccordionSummary
-              expandIcon={<ExpandMoreIcon />}
-              aria-controls="panel1a-content"
-              id="panel1a-header"
-            >
-              <Typography>
-                Lessons of {lessonsOfMod[0].moduleCode}
-              </Typography>
-            </AccordionSummary>
-            <AccordionDetails>
-              <ol>
-                {lessonsOfMod.map(x => {
-                  return (<li>{x.moduleCode} {x.lesson.lessonType} {x.lesson.classNo} {" on "} {x.lesson.day} {" from "}{x.lesson.startTime} {" to "} {x.lesson.endTime}</li>);
-                })}
-              </ol>
-            </AccordionDetails>
-          </Accordion>
-        );
-      })}
-    </Grid>
-    // <Accordion>
-    //   <AccordionSummary
-    //     expandIcon={<ExpandMoreIcon />}
-    //     aria-controls="panel1a-content"
-    //     id="panel1a-header"
-    //   >
-    //     <Typography variant="h5">
-    //       What is this application for?
-    //     </Typography>
-    //   </AccordionSummary>
-    //   <AccordionDetails>
-    //     <Typography>
-
-    //     </Typography>
-    //   </AccordionDetails>
-    // </Accordion>
+const DisplayLessons = ({ lessons }) => {
+  const moduleCodes = lessons
+    .map((x) => x.moduleCode)
+    .filter((item, i, ar) => ar.indexOf(item) === i)
+    .sort((x, y) => x.localeCompare(y));
+  const lessonsByMod = moduleCodes.map((modCod) =>
+    lessons
+      .filter((lesson) => lesson.moduleCode === modCod)
+      .sort((x, y) => x.lesson.lessonType.localeCompare(y.lesson.lessonType))
   );
-}
+  return (
+    <Grid container spacing={2}>
+      <Grid item>
+        <Typography
+          variant="button"
+          style={{ fontSize: "20px", fontWeight: "bolder" }}
+        >
+          Lessons
+        </Typography>
+      </Grid>
+      <Grid item>
+        {lessonsByMod.map((lessonsOfMod) => {
+          return (
+            <Accordion>
+              <AccordionSummary
+                expandIcon={<ExpandMoreIcon />}
+                aria-controls="panel1a-content"
+                id="panel1a-header"
+              >
+                <Typography style={{ fontSize: "15px", fontWeight: "bold" }}>
+                  {lessonsOfMod[0].moduleCode}
+                </Typography>
+              </AccordionSummary>
+              <AccordionDetails>
+                {/* <ol>
+                {lessonsOfMod.map((x) => {
+                  return (
+                    <li>
+                      {x.moduleCode} {x.lesson.lessonType} {x.lesson.classNo}{" "}
+                      {" on "} {x.lesson.day} {" from "}
+                      {x.lesson.startTime} {" to "} {x.lesson.endTime}
+                    </li>
+                  );
+                })}
+              </ol> */}
+                <List>
+                  {lessonsOfMod.map((mod) => {
+                    return (
+                      <ListItem button>
+                        {mod.lesson.lessonType} {mod.lesson.classNo} {" on "}{" "}
+                        {mod.lesson.day} {" from "} {mod.lesson.startTime}{" "}
+                        {" to "} {mod.lesson.endTime}
+                      </ListItem>
+                    );
+                  })}
+                </List>
+              </AccordionDetails>
+            </Accordion>
+          );
+        })}
+      </Grid>
+    </Grid>
+  );
+};
 
 const GenerateAnotherButton = ({
   actualTimet,
@@ -521,7 +684,7 @@ const ViewPreviousButton = ({ displayPrevious, setDisplayPrevious }) => {
             label="Primary"
           />
         }
-        label="Toggle Previous"
+        label="View previous"
       />
     </FormGroup>
   );
@@ -547,7 +710,7 @@ const ViewSwitches = ({ state, setState }) => {
             label="Primary"
           />
         }
-        label="Toggle Lectures"
+        label="View lectures"
       />
       <FormControlLabel
         control={
@@ -560,7 +723,7 @@ const ViewSwitches = ({ state, setState }) => {
             label="Primary"
           />
         }
-        label="Toggle Labs"
+        label="View labs"
       />
       <FormControlLabel
         control={
@@ -573,7 +736,7 @@ const ViewSwitches = ({ state, setState }) => {
             label="Primary"
           />
         }
-        label="Toggle Tutorials"
+        label="View tutorials"
       />
       <FormControlLabel
         control={
@@ -586,7 +749,7 @@ const ViewSwitches = ({ state, setState }) => {
             label="Primary"
           />
         }
-        label="Toggle others"
+        label="View others"
       />
     </FormGroup>
   );
@@ -674,7 +837,6 @@ function GeneratePossible(
   confirmedLesson,
   previousTimetable
 ) {
-
   //When all lessonTypes are done and lesson type is an empty arr
   if (lessonType.map((x) => x.length).reduce((x, y) => x + y, 0) === 0) {
     return confirmedLesson;
