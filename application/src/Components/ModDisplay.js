@@ -19,7 +19,6 @@ const useStyles = makeStyles((theme) => ({
   },
   root: {
     width: "100%",
-    // backgroundColor: theme.palette.background.paper,
   },
   card: {
     margin: 1,
@@ -81,7 +80,6 @@ const ModDisplay = ({
                 </IconButton>
               </ListItemIcon>
             </ListItem>
-            {/* <Divider /> */}
           </List>
         </Card>
       ))}

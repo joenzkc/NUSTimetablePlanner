@@ -10,9 +10,11 @@ import {
   ListItem,
   ListItemText,
   ListItemIcon,
+  Typography,
   Card,
-  Button,
+  Grid,
 } from "@material-ui/core";
+import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 
 const useStyles = makeStyles((theme) => ({
   modCode: {
@@ -31,15 +33,18 @@ const SearchResults = ({ searchTerm, setMods, mods, time }) => {
   const link = "https://api.nusmods.com/v2/" + time.year + "/moduleList.json";
 
   useEffect(() => {
-    axios.get(link).then((response) => {
-      setAllMods(response.data);
-    }).catch(err => {
-      if (err.response.status === 404) {
-        window.alert("Sorry, data regarding modules is not available yet");
-      } else {
-        throw err;
-      }
-    });
+    axios
+      .get(link)
+      .then((response) => {
+        setAllMods(response.data);
+      })
+      .catch((err) => {
+        if (err.response.status === 404) {
+          window.alert("Sorry, data regarding modules is not available yet");
+        } else {
+          throw err;
+        }
+      });
   }, [link]);
 
   const filterModsSearchTerm = allMods.filter((x) =>
@@ -57,13 +62,12 @@ const SearchResults = ({ searchTerm, setMods, mods, time }) => {
   const [displayNumber, setDisplayNumber] = useState(25);
 
   useEffect(() => {
-    setDisplayNumber(25)
-  }, [searchTerm])
+    setDisplayNumber(25);
+  }, [searchTerm]);
 
   const DisplayMod = (setMods, mods) => (mod) => {
-    
     return (
-      <Card key={mod.moduleCode}>
+      <Card key={mod.moduleCode} style={{ margin: 1 }}>
         <List className={classes.root}>
           <ListItem>
             <ListItemText>
@@ -83,12 +87,41 @@ const SearchResults = ({ searchTerm, setMods, mods, time }) => {
   return (
     <Col>
       <ListGroup>
-        {furtherFilteredMods.length === 0
-          ? <span> Sorry, no search results </span>
-          : furtherFilteredMods.map(DisplayMod(setMods, mods)).slice(0, displayNumber)}
+        {furtherFilteredMods.length === 0 ? (
+          <span> Sorry, no search results </span>
+        ) : (
+          furtherFilteredMods
+            .map(DisplayMod(setMods, mods))
+            .slice(0, displayNumber)
+        )}
       </ListGroup>
-      {furtherFilteredMods.length > displayNumber && 
-      <Button variant="contained" onClick ={() => setDisplayNumber(displayNumber + 25)}>Display more</Button>}
+      {furtherFilteredMods.length > displayNumber && (
+        // <Button
+        //   variant="contained"
+        //   onClick={() => setDisplayNumber(displayNumber + 25)}
+        // >
+        //   Display more
+        // </Button>
+        <Grid container>
+          <Grid item>
+            <IconButton
+              edge="end"
+              onClick={() => setDisplayNumber(displayNumber + 25)}
+            >
+              <ExpandMoreIcon />
+            </IconButton>
+          </Grid>
+          <Grid
+            item
+            align="center"
+            style={{
+              padding: 10,
+            }}
+          >
+            <Typography align="justify">Display more</Typography>
+          </Grid>
+        </Grid>
+      )}
     </Col>
   );
 };
