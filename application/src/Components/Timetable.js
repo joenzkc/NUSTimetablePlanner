@@ -24,7 +24,15 @@ import { withStyles } from "@material-ui/core/styles";
 // import Switch from "react-switch";
 // import { Button } from "@material-ui/core";
 
-const Days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
+const Days = [
+  "Monday",
+  "Tuesday",
+  "Wednesday",
+  "Thursday",
+  "Friday",
+  "Saturday",
+  "Sunday",
+];
 
 // const theme = createMuiTheme()
 
@@ -127,7 +135,7 @@ const Timetable = ({
     }
   }
 
-  let Timetable = new Array(5).fill(0).map(() => new Array(28).fill(null)); // a 5 x 28 array for each weekday and from 7am to 9pm
+  let Timetable = new Array(7).fill(0).map(() => new Array(28).fill(null)); // a 5 x 28 array for each weekday and from 7am to 9pm
   const confirmedLessons = GeneratePossible(
     Timetable,
     validLessons,
@@ -308,7 +316,10 @@ const TimetableMaker = (
     wednesday: events.wednesday,
     thursday: events.thursday,
     friday: events.friday,
+    saturday: events.saturday,
+    sunday: events.sunday,
   };
+
   if (!state.lecture) {
     const filteredMon = filterEvents.monday.filter((x) => x.type !== "Lecture");
 
@@ -322,12 +333,18 @@ const TimetableMaker = (
       (x) => x.type !== "Lecture"
     );
     const filteredFri = filterEvents.friday.filter((x) => x.type !== "Lecture");
+    const filteredSat = filterEvents.saturday.filter(
+      (x) => x.type !== "Lecture"
+    );
+    const filteredSun = filterEvents.sunday.filter((x) => x.type !== "Lecture");
     filterEvents = {
       monday: filteredMon,
       tuesday: filteredTue,
       wednesday: filteredWed,
       thursday: filteredThu,
       friday: filteredFri,
+      saturday: filteredSat,
+      sunday: filteredSun,
     };
   }
 
@@ -347,12 +364,20 @@ const TimetableMaker = (
     const filteredFri = filterEvents.friday.filter(
       (x) => x.type !== "Tutorial"
     );
+    const filteredSat = filterEvents.saturday.filter(
+      (x) => x.type !== "Tutorial"
+    );
+    const filteredSun = filterEvents.sunday.filter(
+      (x) => x.type !== "Tutorial"
+    );
     filterEvents = {
       monday: filteredMon,
       tuesday: filteredTue,
       wednesday: filteredWed,
       thursday: filteredThu,
       friday: filteredFri,
+      saturday: filteredSat,
+      sunday: filteredSun,
     };
   }
 
@@ -372,12 +397,20 @@ const TimetableMaker = (
     const filteredFri = filterEvents.friday.filter(
       (x) => x.type !== "Laboratory"
     );
+    const filteredSat = filterEvents.saturday.filter(
+      (x) => x.type !== "Laboratory"
+    );
+    const filteredSun = filterEvents.sunday.filter(
+      (x) => x.type !== "Laboratory"
+    );
     filterEvents = {
       monday: filteredMon,
       tuesday: filteredTue,
       wednesday: filteredWed,
       thursday: filteredThu,
       friday: filteredFri,
+      saturday: filteredSat,
+      sunday: filteredSun,
     };
   }
 
@@ -402,22 +435,34 @@ const TimetableMaker = (
       (x) =>
         x.type === "Lecture" || x.type === "Tutorial" || x.type === "Laboratory"
     );
+    const filteredSat = filterEvents.saturday.filter(
+      (x) =>
+        x.type === "Lecture" || x.type === "Tutorial" || x.type === "Laboratory"
+    );
+    const filteredSun = filterEvents.sunday.filter(
+      (x) =>
+        x.type === "Lecture" || x.type === "Tutorial" || x.type === "Laboratory"
+    );
     filterEvents = {
       monday: filteredMon,
       tuesday: filteredTue,
       wednesday: filteredWed,
       thursday: filteredThu,
       friday: filteredFri,
+      saturday: filteredSat,
+      sunday: filteredSun,
     };
   }
 
-  // const renderHour = (hour, defaultAttributes, styles) => {
-  //   return (
-  //     <div {...defaultAttributes} key={hour}>
-  //       {hour}
-  //     </div>
-  //   );
-  // };
+  if (filterEvents.saturday.length === 0 && filterEvents.sunday.length === 0) {
+    filterEvents = {
+      monday: filterEvents.monday,
+      tuesday: filterEvents.tuesday,
+      wednesday: filterEvents.wednesday,
+      thursday: filterEvents.thursday,
+      friday: filterEvents.friday,
+    };
+  }
 
   return (
     <div style={{ marginTop: "7px", marginBottom: "7px" }}>
@@ -740,6 +785,8 @@ const EventGenerator = (confirmedLessons) => {
     wednesday: [],
     thursday: [],
     friday: [],
+    saturday: [],
+    sunday: [],
   };
   let currentId = 1;
   for (let i = 0; i < confirmedLessons.length; i++) {
@@ -798,6 +845,18 @@ const EventGenerator = (confirmedLessons) => {
         events = {
           ...events,
           friday: [...events.friday, newEvent],
+        };
+        break;
+      case 5:
+        events = {
+          ...events,
+          saturday: [...events.saturday, newEvent],
+        };
+        break;
+      case 6:
+        events = {
+          ...events,
+          sunday: [...events.sunday, newEvent],
         };
         break;
       default:
@@ -952,6 +1011,7 @@ const TimetableIndex = (Lesson) => {
   const sTimeMin = Math.floor((parseInt(Lesson.startTime) % 100) / 30);
   const eTimeHr = Math.floor((parseInt(Lesson.endTime) - 700) / 100) * 2;
   const eTimeMin = Math.ceil((parseInt(Lesson.endTime) % 100) / 30);
+  console.log("day index", dayIndex);
   return [dayIndex, sTimeHr + sTimeMin, eTimeHr + eTimeMin - 1];
 };
 
