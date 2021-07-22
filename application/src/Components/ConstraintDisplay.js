@@ -20,7 +20,12 @@ const useStyles = makeStyles((theme) => ({
   },
   root: {
     width: "100%",
-    backgroundColor: theme.palette.background.paper,
+    // backgroundColor: theme.palette.background.paper,
+    // backgroundColor: "pink",
+    // margin: 10,
+  },
+  card: {
+    margin: 1,
   },
 }));
 
@@ -28,7 +33,10 @@ const ConstraintDisplay = ({ constraints, setConstraints }) => {
   const classes = useStyles();
   const Display = (setConstraints, constraints) => (x) => {
     return (
-      <Card key={Constraints[x.type].displayCode(x, false)}>
+      <Card
+        className={classes.card}
+        key={Constraints[x.type].displayCode(x, false)}
+      >
         <List className={classes.root}>
           <ListItem>
             <ListItemText>
@@ -43,13 +51,13 @@ const ConstraintDisplay = ({ constraints, setConstraints }) => {
               </IconButton>
             </ListItemIcon>
           </ListItem>
-          <Divider />
+          {/* <Divider /> */}
         </List>
       </Card>
     );
   };
 
-  return <Card>{constraints.map(Display(setConstraints, constraints))}</Card>;
+  return <div>{constraints.map(Display(setConstraints, constraints))}</div>;
 };
 
 const deleteConstraint = (setConstraints, constraints) => (x) => {

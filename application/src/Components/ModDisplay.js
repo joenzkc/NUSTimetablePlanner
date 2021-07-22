@@ -19,7 +19,10 @@ const useStyles = makeStyles((theme) => ({
   },
   root: {
     width: "100%",
-    backgroundColor: theme.palette.background.paper,
+    // backgroundColor: theme.palette.background.paper,
+  },
+  card: {
+    margin: 1,
   },
 }));
 
@@ -33,8 +36,8 @@ const ModDisplay = ({
   setActualTimet,
   actualTimet,
   setDisplayConstraintForm,
-  setDisplayTimetable, 
-  setDisplayPrevious
+  setDisplayTimetable,
+  setDisplayPrevious,
 }) => {
   const classes = useStyles();
 
@@ -42,35 +45,47 @@ const ModDisplay = ({
     const index = mods.findIndex((y) => y === x);
     setMods([...mods.slice(0, index), ...mods.slice(index + 1, mods.length)]);
     console.log("tentative constraints", tentativeConstraints);
-    setTentativeConstraints(tentativeConstraints.filter(x => x.mod === null || x.mod.moduleCode !== mods[index].moduleCode));
-    setConstraints(constraints.filter(x => x.mod === null || x.mod.moduleCode !== mods[index].moduleCode));
-    setActualTimet(actualTimet.filter(x => x.moduleCode !== mods[index].moduleCode))
+    setTentativeConstraints(
+      tentativeConstraints.filter(
+        (x) => x.mod === null || x.mod.moduleCode !== mods[index].moduleCode
+      )
+    );
+    setConstraints(
+      constraints.filter(
+        (x) => x.mod === null || x.mod.moduleCode !== mods[index].moduleCode
+      )
+    );
+    setActualTimet(
+      actualTimet.filter((x) => x.moduleCode !== mods[index].moduleCode)
+    );
     setDisplayConstraintForm(false);
     setDisplayTimetable(false);
     setDisplayPrevious(false);
   };
 
   return (
-    <Card>
+    <div>
       {mods.map((mod) => (
-        <List className={classes.root} key={mod.moduleCode}>
-          <ListItem>
-            <ListItemText>
-              {mod.moduleCode} {mod.title}
-            </ListItemText>
-            <ListItemIcon>
-              <IconButton
-                edge="end"
-                onClick={() => deleteMod(setMods, mods)(mod)}
-              >
-                <DeleteIcon />
-              </IconButton>
-            </ListItemIcon>
-          </ListItem>
-          <Divider />
-        </List>
+        <Card className={classes.card}>
+          <List className={classes.root} key={mod.moduleCode}>
+            <ListItem>
+              <ListItemText>
+                {mod.moduleCode} {mod.title}
+              </ListItemText>
+              <ListItemIcon>
+                <IconButton
+                  edge="end"
+                  onClick={() => deleteMod(setMods, mods)(mod)}
+                >
+                  <DeleteIcon />
+                </IconButton>
+              </ListItemIcon>
+            </ListItem>
+            {/* <Divider /> */}
+          </List>
+        </Card>
       ))}
-    </Card>
+    </div>
   );
 };
 

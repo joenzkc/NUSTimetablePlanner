@@ -16,7 +16,7 @@ const useStyles = makeStyles((theme) => ({
   },
   card: {
     minWidth: 400,
-    minHeight: 100,
+    minHeight: 200,
   },
   content: {
     flex: "1 0 auto",
@@ -39,23 +39,6 @@ const useStyles = makeStyles((theme) => ({
 const ClearModsButton = ({ restart }) => {
   const classes = useStyles();
   const handleSubmit = () => {
-    // confirmAlert({
-    //   title: "Clear all mods?",
-    //   message: "Click yes to continue",
-    //   buttons: [
-    //     {
-    //       label: "Yes",
-    //       onClick: () => {
-    //         restart();
-    //       },
-    //     },
-    //     {
-    //       label: "No",
-    //       onClick: () => {},
-    //     },
-    //   ],
-    // });
-
     confirmAlert({
       customUI: ({ onClose }) => {
         return (
@@ -69,36 +52,38 @@ const ClearModsButton = ({ restart }) => {
               </Typography>
             </CardContent>
             <Divider style={{ background: "black" }} variant="middle" />
-            <Grid
-              container
-              direction="row"
-              alignItems="flex-end"
-              className={classes.controls}
-            >
-              <Grid item xs={7}></Grid>
-              <Grid item xs>
-                <Button
-                  disableElevation
-                  className={classes.button}
-                  variant="contained"
-                  color="secondary"
-                  edge="end"
-                  onClick={() => {
-                    restart();
-                    onClose();
-                  }}
-                >
-                  Yes
-                </Button>
-                <Button
-                  disableElevation
-                  variant="contained"
-                  onClick={onClose}
-                  edge="end"
-                >
-                  {" "}
-                  No{" "}
-                </Button>
+            <Grid container direction="column" alignItems="flex-start">
+              <Grid
+                container
+                direction="row"
+                alignItems="flex-end"
+                className={classes.controls}
+              >
+                <Grid item xs={7}></Grid>
+                <Grid item xs>
+                  <Button
+                    disableElevation
+                    className={classes.button}
+                    variant="contained"
+                    color="secondary"
+                    edge="end"
+                    onClick={() => {
+                      restart();
+                      onClose();
+                    }}
+                  >
+                    Yes
+                  </Button>
+                  <Button
+                    disableElevation
+                    variant="contained"
+                    onClick={onClose}
+                    edge="end"
+                  >
+                    {" "}
+                    No{" "}
+                  </Button>
+                </Grid>
               </Grid>
             </Grid>
           </Card>

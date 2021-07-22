@@ -204,7 +204,6 @@ const TimetableMaker = (
   if (events === null) {
     return (
       <div style={{ marginTop: "7px", marginBottom: "7px" }}>
-        {/* <Card> */}
         <div className="timetable control">
           <Grid
             container
@@ -300,7 +299,6 @@ const TimetableMaker = (
             </Grid>
           </Grid>
         </div>
-        {/* </Card> */}
       </div>
     );
   }
@@ -413,17 +411,16 @@ const TimetableMaker = (
     };
   }
 
-  const renderHour = (hour, defaultAttributes, styles) => {
-    return (
-      <div {...defaultAttributes} key={hour}>
-        {hour}
-      </div>
-    );
-  }
+  // const renderHour = (hour, defaultAttributes, styles) => {
+  //   return (
+  //     <div {...defaultAttributes} key={hour}>
+  //       {hour}
+  //     </div>
+  //   );
+  // };
 
   return (
     <div style={{ marginTop: "7px", marginBottom: "7px" }}>
-      {/* <Card> */}
       <div className="timetable control">
         <Grid
           container
@@ -434,7 +431,8 @@ const TimetableMaker = (
         >
           <Grid
             item
-            xs={2}
+            xs={12}
+            sm={2}
             container
             direction="row"
             spacing={2}
@@ -506,12 +504,11 @@ const TimetableMaker = (
               />
             </Grid>
           </Grid>
-          <Grid item xs={10}>
+          <Grid item xs={12} sm={10}>
             <TimetableLib events={filterEvents} />
           </Grid>
         </Grid>
       </div>
-      {/* </Card> */}
     </div>
   );
 };
@@ -521,32 +518,13 @@ const NUSModsExportButton = ({ lessons, yearSem }) => {
   var startLink = `https://nusmods.com/timetable/sem-${parseInt(
     yearSem.sem
   )}/share?`;
-  const allModCods = lessons
-    .map((x) => x.moduleCode)
-    .filter(
-      (v, i, arr) => arr.findIndex((x) => x.localeCompare(v) === 0) === i
-    );
-  for (let i = 0; i < allModCods.length; i++) {
-    if (i !== 0) {
-      startLink += `&`;
-    }
-    const currentModCod = allModCods[i];
-    const lessonsOfMod = lessons.filter(
-      (x) => x.moduleCode.localeCompare(currentModCod) === 0
-    );
-    // console.log("lessons of mods", lessonsOfMod.map(x => x.lesson.lessonType.subString(0, 3)))
-    const mappedLessons = lessonsOfMod.map(
-      (lesson) =>
-        `${lesson.lesson.lessonType.substring(0, 3).toUpperCase()}:${
-          lesson.lesson.classNo
-        }`
-    );
-    const modString = mappedLessons.join(",");
-    startLink += currentModCod.toUpperCase() + `=` + modString;
-  }
-  console.log("link is", startLink);
   return (
-    <Button target="_blank" variant="contained" href={startLink}>
+    <Button
+      target="_blank"
+      variant="contained"
+      href={startLink}
+      style={{ fontSize: 13 }}
+    >
       Export to NUSMods
     </Button>
   );
@@ -564,7 +542,7 @@ const DisplayLessons = ({ lessons }) => {
   );
   return (
     <Grid container spacing={2}>
-      <Grid item>
+      <Grid item xs={12}>
         <Typography
           variant="button"
           style={{ fontSize: "20px", fontWeight: "bolder" }}
@@ -572,7 +550,7 @@ const DisplayLessons = ({ lessons }) => {
           Lessons
         </Typography>
       </Grid>
-      <Grid item>
+      <Grid item xs={12}>
         {lessonsByMod.map((lessonsOfMod) => {
           return (
             <Accordion>
@@ -586,17 +564,6 @@ const DisplayLessons = ({ lessons }) => {
                 </Typography>
               </AccordionSummary>
               <AccordionDetails>
-                {/* <ol>
-                {lessonsOfMod.map((x) => {
-                  return (
-                    <li>
-                      {x.moduleCode} {x.lesson.lessonType} {x.lesson.classNo}{" "}
-                      {" on "} {x.lesson.day} {" from "}
-                      {x.lesson.startTime} {" to "} {x.lesson.endTime}
-                    </li>
-                  );
-                })}
-              </ol> */}
                 <List>
                   {lessonsOfMod.map((mod) => {
                     return (
@@ -627,6 +594,7 @@ const GenerateAnotherButton = ({
   return (
     <Button
       variant="contained"
+      style={{ fontSize: 13 }}
       onClick={() => {
         reshuffle(actualTimet, setActualTimet);
         if (
@@ -698,60 +666,70 @@ const ViewSwitches = ({ state, setState }) => {
   };
 
   return (
-    <FormGroup row>
-      <FormControlLabel
-        control={
-          <Switch
-            checked={state.lecture}
-            onChange={handleChange}
-            name="lecture"
-            color="primary"
-            id="material-switch"
-            label="Primary"
+    <Grid container justify="center">
+      <FormGroup row>
+        <Grid item xs={12} alignContent="center" alignItems="center">
+          <FormControlLabel
+            control={
+              <Switch
+                checked={state.lecture}
+                onChange={handleChange}
+                name="lecture"
+                color="primary"
+                id="material-switch"
+                label="Primary"
+              />
+            }
+            label="View lectures"
           />
-        }
-        label="View lectures"
-      />
-      <FormControlLabel
-        control={
-          <Switch
-            checked={state.labs}
-            onChange={handleChange}
-            name="labs"
-            color="primary"
-            id="material-switch"
-            label="Primary"
+        </Grid>
+        <Grid item xs={12}>
+          <FormControlLabel
+            control={
+              <Switch
+                checked={state.labs}
+                onChange={handleChange}
+                name="labs"
+                color="primary"
+                id="material-switch"
+                label="Primary"
+              />
+            }
+            label="View labs"
           />
-        }
-        label="View labs"
-      />
-      <FormControlLabel
-        control={
-          <Switch
-            checked={state.tutorial}
-            onChange={handleChange}
-            name="tutorial"
-            color="primary"
-            id="material-switch"
-            label="Primary"
+        </Grid>
+        <Grid item xs={12}>
+          <FormControlLabel
+            control={
+              <Switch
+                checked={state.tutorial}
+                onChange={handleChange}
+                name="tutorial"
+                color="primary"
+                id="material-switch"
+                label="Primary"
+              />
+            }
+            label="View tutorials"
           />
-        }
-        label="View tutorials"
-      />
-      <FormControlLabel
-        control={
-          <Switch
-            checked={state.others}
-            onChange={handleChange}
-            name="others"
-            color="primary"
-            id="material-switch"
-            label="Primary"
+        </Grid>
+        <Grid item xs={12}>
+          <FormControlLabel
+            control={
+              <Switch
+                checked={state.others}
+                onChange={handleChange}
+                name="others"
+                color="primary"
+                id="material-switch"
+                label="Primary"
+              />
+            }
+            label="View others"
           />
-        }
-        label="View others"
-      />
-    </FormGroup>
+        </Grid>
+      </FormGroup>
+    </Grid>
   );
 };
 
