@@ -559,10 +559,34 @@ const TimetableMaker = (
 };
 
 const NUSModsExportButton = ({ lessons, yearSem }) => {
-  console.log("in nus mods button", lessons);
   var startLink = `https://nusmods.com/timetable/sem-${parseInt(
     yearSem.sem
   )}/share?`;
+
+  const allModCods = lessons
+    .map((x) => x.moduleCode)
+    .filter(
+      (v, i, arr) => arr.findIndex((x) => x.localeCompare(v) === 0) === i
+    );
+  for (let i = 0; i < allModCods.length; i++) {
+    if (i !== 0) {
+      startLink += `&`;
+    }
+    const currentModCod = allModCods[i];
+    const lessonsOfMod = lessons.filter(
+      (x) => x.moduleCode.localeCompare(currentModCod) === 0
+    );
+    // console.log("lessons of mods", lessonsOfMod.map(x => x.lesson.lessonType.subString(0, 3)))
+    const mappedLessons = lessonsOfMod.map(
+      (lesson) =>
+        `${lesson.lesson.lessonType.substring(0, 3).toUpperCase()}:${
+          lesson.lesson.classNo
+        }`
+    );
+    const modString = mappedLessons.join(",");
+    startLink += currentModCod.toUpperCase() + `=` + modString;
+  }
+
   return (
     <Button
       target="_blank"

@@ -7,7 +7,6 @@ import {
   ListItem,
   ListItemText,
   ListItemIcon,
-  Divider,
   Card,
 } from "@material-ui/core";
 
@@ -21,7 +20,7 @@ const useStyles = makeStyles((theme) => ({
     width: "100%",
   },
   card: {
-    margin: 1,
+    margin: 2,
   },
 }));
 

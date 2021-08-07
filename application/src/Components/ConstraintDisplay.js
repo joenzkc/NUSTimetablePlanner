@@ -8,7 +8,6 @@ import {
   ListItem,
   ListItemText,
   ListItemIcon,
-  Divider,
   Card,
   makeStyles,
 } from "@material-ui/core";
@@ -20,12 +19,9 @@ const useStyles = makeStyles((theme) => ({
   },
   root: {
     width: "100%",
-    // backgroundColor: theme.palette.background.paper,
-    // backgroundColor: "pink",
-    // margin: 10,
   },
   card: {
-    margin: 1,
+    margin: 2,
   },
 }));
 
@@ -51,7 +47,6 @@ const ConstraintDisplay = ({ constraints, setConstraints }) => {
               </IconButton>
             </ListItemIcon>
           </ListItem>
-          {/* <Divider /> */}
         </List>
       </Card>
     );
