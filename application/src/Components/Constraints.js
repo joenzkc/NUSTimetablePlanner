@@ -27,28 +27,62 @@ const standardDisplayCode = (constraint, type, needSpan) => {
 
 const TimeOption = (
   <Fragment>
-    <option value="0800" key="0800">0800</option>
-    <option value="0900" key="0900">0900</option>
-    <option value="1000" key="1000">1000</option>
-    <option value="1100" key="1100">1100</option>
-    <option value="1200" key="1200">1200</option>
-    <option value="1300" key="1300">1300</option>
-    <option value="1400" key="1400">1400</option>
-    <option value="1500" key="1500">1500</option>
-    <option value="1600" key="1600">1600</option>
-    <option value="1700" key="1700">1700</option>
-    <option value="1800" key="1800">1800</option>
-    <option value="1900" key="1900">1900</option>
+    <option value="0800" key="0800">
+      0800
+    </option>
+    <option value="0900" key="0900">
+      0900
+    </option>
+    <option value="1000" key="1000">
+      1000
+    </option>
+    <option value="1100" key="1100">
+      1100
+    </option>
+    <option value="1200" key="1200">
+      1200
+    </option>
+    <option value="1300" key="1300">
+      1300
+    </option>
+    <option value="1400" key="1400">
+      1400
+    </option>
+    <option value="1500" key="1500">
+      1500
+    </option>
+    <option value="1600" key="1600">
+      1600
+    </option>
+    <option value="1700" key="1700">
+      1700
+    </option>
+    <option value="1800" key="1800">
+      1800
+    </option>
+    <option value="1900" key="1900">
+      1900
+    </option>
   </Fragment>
 );
 
 const DayOption = (
   <Fragment>
-    <option value="Monday" key="Monday">Monday</option>
-    <option value="Tuesday" key="Tuesday">Tuesday</option>
-    <option value="Wednesday" key="Wednesday">Wednesday</option>
-    <option value="Thursday" key="Thursday">Thursday</option>
-    <option value="Friday" key="Friday">Friday</option>
+    <option value="Monday" key="Monday">
+      Monday
+    </option>
+    <option value="Tuesday" key="Tuesday">
+      Tuesday
+    </option>
+    <option value="Wednesday" key="Wednesday">
+      Wednesday
+    </option>
+    <option value="Thursday" key="Thursday">
+      Thursday
+    </option>
+    <option value="Friday" key="Friday">
+      Friday
+    </option>
   </Fragment>
 );
 
@@ -72,17 +106,18 @@ const filterClassesForFixClass = (constraint) => (mod) => {
   if (mod.moduleCode !== modCode) {
     return mod;
   }
-  
+
   const classTiming = constraint.time;
   const lessonNumber = classTiming.split(" ")[0];
-  const Days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]
-  const lastIndex = classTiming.split(" ").findIndex(x => Days.findIndex(y => y.localeCompare(x) === 0) !== -1);
-  const lessonType = classTiming.split(" ").slice(1, lastIndex).join(' ');
+  const Days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
+  const lastIndex = classTiming
+    .split(" ")
+    .findIndex((x) => Days.findIndex((y) => y.localeCompare(x) === 0) !== -1);
+  const lessonType = classTiming.split(" ").slice(1, lastIndex).join(" ");
   const promiseLessons = mod.lessons.filter(
     (lesson) =>
       lesson.classNo === lessonNumber || lesson.lessonType !== lessonType
   );
-  console.log("in fix class filter", constraint, promiseLessons, lessonType)
   return {
     moduleCode: modCode,
     lessons: promiseLessons,
@@ -121,21 +156,23 @@ const filterClassesForNoLessonsOn = (constraint) => (mod) => {
 
 //Filters mods if users decides to have no lessons on certain day and on certain time
 const filterClassesForNoLessonsFromTo = (constraint) => (mod) => {
-  
   const time = constraint.time;
   const day = time[0];
   const startTime = parseInt(time[1]);
   const endTime = parseInt(time[2]);
-  const rejectLessons = mod.lessons
-    .filter(
-      (lesson) =>
-        lesson.day === day &&
-        ((lesson.endTime <= endTime && lesson.endTime > startTime) ||
-          (lesson.startTime < endTime && lesson.startTime >= startTime))
-    )
+  const rejectLessons = mod.lessons.filter(
+    (lesson) =>
+      lesson.day === day &&
+      ((lesson.endTime <= endTime && lesson.endTime > startTime) ||
+        (lesson.startTime < endTime && lesson.startTime >= startTime))
+  );
 
   const promiseLessons = mod.lessons.filter(
-    (lesson) => rejectLessons.findIndex((x) => x.classNo === lesson.classNo && x.lessonType === lesson.lessonType) === -1
+    (lesson) =>
+      rejectLessons.findIndex(
+        (x) =>
+          x.classNo === lesson.classNo && x.lessonType === lesson.lessonType
+      ) === -1
   );
   return {
     moduleCode: mod.moduleCode,
@@ -148,15 +185,18 @@ const Constraints = [
     id: 0,
     type: "Fix a class: ",
     defaultTime: (mod) => {
-    return (mod.lessons[0].classNo +
-    " " +
-    mod.lessons[0].lessonType +
-    " " +
-    mod.lessons[0].day +
-    " from " +
-    mod.lessons[0].startTime +
-    " to " +
-    mod.lessons[0].endTime);},
+      return (
+        mod.lessons[0].classNo +
+        " " +
+        mod.lessons[0].lessonType +
+        " " +
+        mod.lessons[0].day +
+        " from " +
+        mod.lessons[0].startTime +
+        " to " +
+        mod.lessons[0].endTime
+      );
+    },
     needToSpecifyMod: true,
     optionCode: (setTime, time, actualTimet) =>
       optionCodeForFixClass(setTime, time, actualTimet),
@@ -194,13 +234,7 @@ const Constraints = [
     defaultTime: (mod) => "Monday",
     needToSpecifyMod: false,
     optionCode: (setTime, time, actualTimet) => (
-      // <Dropdown>
-      //     <DropdownButton title={time} onSelect={handleChangeTime(setTime)}>
-      //         {DayOption}
-      //     </DropdownButton>
-      // </Dropdown>,
       <FormControl style={{ minwidth: 100, margin: 5, marginTop: 16 }}>
-        {/* <InputLabel>{time}</InputLabel> */}
         <NativeSelect onChange={handleChangeTime(setTime)}>
           {DayOption}
         </NativeSelect>
@@ -221,20 +255,12 @@ const Constraints = [
     needToSpecifyMod: false,
     optionCode: (setTime, time, actualTimet) => (
       <div>
-        {/* <Grid container spacing={2}>
-          <Grid item xs={3}> */}
         <FormControl style={{ minwidth: 100, margin: 5, marginTop: 16 }}>
-          {/* <InputLabel>{time[0]}</InputLabel> */}
-          <NativeSelect
-            onChange={handleStartTimeChange(setTime, time, 0)}
-          >
+          <NativeSelect onChange={handleStartTimeChange(setTime, time, 0)}>
             {DayOption}
           </NativeSelect>
         </FormControl>
-        {/* </Grid>
-          <Grid item xs={2}> */}
         <FormControl style={{ minwidth: 100, margin: 5, marginTop: 16 }}>
-          {/* <InputLabel>title={time[1]}</InputLabel> */}
           <NativeSelect
             onChange={handleStartTimeChange(setTime, time, 1)}
             minwidth={150}
@@ -242,18 +268,11 @@ const Constraints = [
             {TimeOption}
           </NativeSelect>
         </FormControl>
-        {/* </Grid>
-          <Grid item xs={2}> */}
         <FormControl style={{ minwidth: 100, margin: 5, marginTop: 16 }}>
-          {/* <InputLabel>{time[2]}</InputLabel> */}
-          <NativeSelect
-            onChange={handleStartTimeChange(setTime, time, 2)}
-          >
+          <NativeSelect onChange={handleStartTimeChange(setTime, time, 2)}>
             {TimeOption}
           </NativeSelect>
         </FormControl>
-        {/* </Grid>
-        </Grid> */}
       </div>
     ),
     displayCode: (constraint, needSpan) => {
@@ -353,7 +372,10 @@ const Constraints = [
         return {
           moduleCode: mod.moduleCode,
           lessons: BubbleSort(mod.lessons, (x, y) => {
-            if (x.venue.substring(0, 7) === "E-Learn" && y.venue.substring(0, 7) === "E-Learn") {
+            if (
+              x.venue.substring(0, 7) === "E-Learn" &&
+              y.venue.substring(0, 7) === "E-Learn"
+            ) {
               return 0;
             } else if (x.venue.substring(0, 7) === "E-Learn") {
               return -1;
@@ -411,7 +433,6 @@ const handleStartTimeChange = (setTime, time, index) => (input) => {
 const optionCodeForFixClass = (setTime, time, actualTimet) => {
   return (
     <FormControl style={{ minwidth: 100, margin: 5, marginTop: 16 }}>
-      {/* <InputLabel>{time}</InputLabel> */}
       <NativeSelect onChange={handleChangeTime(setTime)}>
         <ClassesDisplay actualTimet={actualTimet} />
       </NativeSelect>
@@ -420,7 +441,6 @@ const optionCodeForFixClass = (setTime, time, actualTimet) => {
 };
 
 const ClassesDisplay = ({ actualTimet }) => {
-  console.log("actual time t in classes display", actualTimet)
   const classString = (lesson) =>
     lesson.classNo +
     " " +
@@ -435,7 +455,9 @@ const ClassesDisplay = ({ actualTimet }) => {
     x.classNo.localeCompare(y.classNo)
   );
   return copy.map((lesson) => (
-    <option value={classString(lesson)} key={classString(lesson)}>{classString(lesson)}</option>
+    <option value={classString(lesson)} key={classString(lesson)}>
+      {classString(lesson)}
+    </option>
   ));
 };
 

@@ -23,13 +23,10 @@ const useStyles = makeStyles((theme) => ({
     alignItems: "center",
   },
   controls: {
-    // display: "flex",
     flex: "1 0 auto",
     alignItems: "center",
     justify: "center",
     padding: theme.spacing(1),
-    // paddingLeft: theme.spacing(1),
-    // paddingBottom: theme.spacing(1),
   },
   button: {
     margin: theme.spacing(1),

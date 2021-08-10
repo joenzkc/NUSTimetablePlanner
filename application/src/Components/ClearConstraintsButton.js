@@ -24,13 +24,10 @@ const useStyles = makeStyles((theme) => ({
     alignItems: "center",
   },
   controls: {
-    // display: "flex",
     flex: "1 0 auto",
     alignItems: "center",
     justify: "center",
     padding: theme.spacing(1),
-    // paddingLeft: theme.spacing(1),
-    // paddingBottom: theme.spacing(1),
   },
   button: {
     margin: theme.spacing(1),
@@ -43,25 +40,6 @@ const ClearConstraintsButton = ({
   setDisplayTimetable,
 }) => {
   const classes = useStyles();
-  // const handleSubmit = () => {
-  //   confirmAlert({
-  //     title: "Clear all constraints?",
-  //     message: "Click yes to continue",
-  //     buttons: [
-  //       {
-  //         label: "Yes",
-  //         onClick: () => {
-  // setConstraints([]);
-  // setTentativeConstraints([]);
-  // setDisplayTimetable(false);
-  //         },
-  //       },
-  //       {
-  //         label: "No",
-  //         onClick: () => {},
-  //       },
-  //     ],
-  //   });
   const handleSubmit = () => {
     confirmAlert({
       customUI: ({ onClose }) => {

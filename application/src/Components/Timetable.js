@@ -58,8 +58,6 @@ const Timetable = ({
   setDisplayPrevious,
   yearSem,
 }) => {
-  console.log("actual time t is", actualTimet);
-  console.log("constraints are", constraints);
   const [state, setState] = useState({
     lecture: true,
     labs: true,
@@ -98,12 +96,6 @@ const Timetable = ({
       Constraints[currentConstraint.type].filterMods(currentConstraint)(
         validLessons
       );
-    console.log(
-      "valid lessons are",
-      validLessons,
-      "constraint is",
-      currentConstraint
-    );
     const noLessonTypesFiltered = validLessons
       .map(LessonTypes)
       .map((x) => x.length);
@@ -576,7 +568,7 @@ const NUSModsExportButton = ({ lessons, yearSem }) => {
     const lessonsOfMod = lessons.filter(
       (x) => x.moduleCode.localeCompare(currentModCod) === 0
     );
-    // console.log("lessons of mods", lessonsOfMod.map(x => x.lesson.lessonType.subString(0, 3)))
+
     const mappedLessons = lessonsOfMod.map(
       (lesson) =>
         `${lesson.lesson.lessonType.substring(0, 3).toUpperCase()}:${
@@ -884,7 +876,6 @@ const EventGenerator = (confirmedLessons) => {
         };
         break;
       default:
-        console.log("lesson is not on weekdays");
     }
   }
   return events;
@@ -1035,7 +1026,6 @@ const TimetableIndex = (Lesson) => {
   const sTimeMin = Math.floor((parseInt(Lesson.startTime) % 100) / 30);
   const eTimeHr = Math.floor((parseInt(Lesson.endTime) - 700) / 100) * 2;
   const eTimeMin = Math.ceil((parseInt(Lesson.endTime) % 100) / 30);
-  console.log("day index", dayIndex);
   return [dayIndex, sTimeHr + sTimeMin, eTimeHr + eTimeMin - 1];
 };
 

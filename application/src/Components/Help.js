@@ -13,7 +13,6 @@ import {
 const useStyles = makeStyles((theme) => ({
   root: {
     margin: theme.spacing(3),
-    // minWidth: 300,
     width: "100%",
     marginRight: theme.spacing(10),
   },

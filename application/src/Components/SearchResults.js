@@ -96,12 +96,6 @@ const SearchResults = ({ searchTerm, setMods, mods, time }) => {
         )}
       </ListGroup>
       {furtherFilteredMods.length > displayNumber && (
-        // <Button
-        //   variant="contained"
-        //   onClick={() => setDisplayNumber(displayNumber + 25)}
-        // >
-        //   Display more
-        // </Button>
         <Grid container>
           <Grid item>
             <IconButton

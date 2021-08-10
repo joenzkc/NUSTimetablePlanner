@@ -45,7 +45,6 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const TimeForm = ({ setTime, restart }) => {
-  //time = tentativeTime, setTime = setTentative time
   return (
     <div className="btn-group" id="TimeForm">
       <YearandSemForm setTime={setTime} restart={restart} />
@@ -71,7 +70,6 @@ const YearandSemForm = ({ setTime, restart }) => {
   };
 
   const cYear = new Date().getUTCFullYear();
-  // const cMonth = new Date().getMonth();
   const cMonth = 11;
   const earliestYear = 2019;
 
